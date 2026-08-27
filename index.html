@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
-    <!-- Lien vers le fichier CSS externe mis à jour -->
-    <link rel="stylesheet" href="style.css?v=14">
-    <!-- Inclusion de html2canvas pour l'export en image propre -->
+    <link rel="stylesheet" href="style.css?v=15">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
@@ -22,7 +20,7 @@
         </div>
     </div>
 
-    <!-- Panneau de contrôle de la police en live -->
+    <!-- Panneau de contrôle de la police -->
     <div class="font-control-panel">
         <div class="font-control-group">
             <label>Taille du texte :</label>
@@ -43,7 +41,7 @@
     
     <div class="grimoire-spread">
 
-        <!-- ===== PAGE 1 : Avatar, Identité, Caractéristiques, Combat & PV ===== -->
+        <!-- ===== PAGE 1 : Avatar, Identité, Caractéristiques, Combat, PV & Compagnon ===== -->
         <div class="grimoire-page">
             
             <!-- Bloc Avatar Dédié -->
@@ -292,6 +290,51 @@
                 <div class="info-box info-box-margin">
                     <label class="info-box-label">Spécificités de la Famille :</label>
                     <div id="familyBonusText" class="family-bonus-desc">-</div>
+                </div>
+            </div>
+
+            <!-- ===== NOUVEAU BLOC : Compagnon animal / Familier ===== -->
+            <div class="section-box">
+                <div class="bg-watermark"></div>
+                <h2>
+                    🐾 <input type="text" id="compName" class="companion-header-input" value="LOUP" oninput="autoSaveData()">
+                </h2>
+                
+                <input type="text" id="compType" class="companion-type-input" value="CRÉATURE VIVANTE" oninput="autoSaveData()">
+
+                <!-- Caractéristiques du Compagnon -->
+                <div class="companion-stats-grid">
+                    <div class="companion-stat-box"><label>AGI</label><input type="text" id="compAGI" value="+1" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>CON</label><input type="text" id="compCON" value="+1*" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>FOR</label><input type="text" id="compFOR" value="+2" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>PER</label><input type="text" id="compPER" value="+2*" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>CHA</label><input type="text" id="compCHA" value="-2" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>INT</label><input type="text" id="compINT" value="-3" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>VOL</label><input type="text" id="compVOL" value="+2" oninput="autoSaveData()"></div>
+                </div>
+
+                <!-- Lignes Défense, PV, Initiative -->
+                <div class="companion-line-row">
+                    <label>🛡️ Défense</label>
+                    <input type="text" id="compDef" value="[12 + rang dans la voie]" oninput="autoSaveData()">
+                </div>
+                <div class="companion-line-row">
+                    <label>❤️ Points de Vigueurs</label>
+                    <input type="text" id="compPv" value="[niv. du rôdeur × 4]" oninput="autoSaveData()">
+                </div>
+                <div class="companion-line-row">
+                    <label>⚡ Initiative</label>
+                    <input type="text" id="compInit" value="[Init. du rôdeur]" oninput="autoSaveData()">
+                </div>
+                <div class="companion-line-row">
+                    <label>⚔️ Attaque & DM</label>
+                    <input type="text" id="compAtkDm" value="[Atq. magique] DM 1d4+2" oninput="autoSaveData()">
+                </div>
+
+                <!-- Entrée demandée : Description / gestion du compagnon -->
+                <div class="field-group field-group-margin">
+                    <label for="compDescription">Description / gestion du compagnon / familier</label>
+                    <textarea id="compDescription" placeholder="Notes, règles spéciales, ex: *Le loup obtient un dé bonus sur ses tests..." oninput="autoSaveData()"></textarea>
                 </div>
             </div>
 
@@ -815,6 +858,22 @@
             peupleChoices: { 
                 opt1: document.getElementById('opt_bonus1')?.value, 
                 optMalus1: document.getElementById('opt_malus1')?.value
+            },
+            companion: {
+                name: document.getElementById('compName').value,
+                type: document.getElementById('compType').value,
+                agi: document.getElementById('compAGI').value,
+                con: document.getElementById('compCON').value,
+                for: document.getElementById('compFOR').value,
+                per: document.getElementById('compPER').value,
+                cha: document.getElementById('compCHA').value,
+                int: document.getElementById('compINT').value,
+                vol: document.getElementById('compVOL').value,
+                def: document.getElementById('compDef').value,
+                pv: document.getElementById('compPv').value,
+                init: document.getElementById('compInit').value,
+                atkDm: document.getElementById('compAtkDm').value,
+                description: document.getElementById('compDescription').value
             }
         };
     }
@@ -874,6 +933,23 @@
             if (data.peupleChoices) {
                 if(document.getElementById('opt_bonus1')) document.getElementById('opt_bonus1').value = data.peupleChoices.opt1 || '';
                 if(document.getElementById('opt_malus1')) document.getElementById('opt_malus1').value = data.peupleChoices.optMalus1 || '';
+            }
+
+            if (data.companion) {
+                document.getElementById('compName').value = data.companion.name || 'LOUP';
+                document.getElementById('compType').value = data.companion.type || 'CRÉATURE VIVANTE';
+                document.getElementById('compAGI').value = data.companion.agi || '+1';
+                document.getElementById('compCON').value = data.companion.con || '+1*';
+                document.getElementById('compFOR').value = data.companion.for || '+2';
+                document.getElementById('compPER').value = data.companion.per || '+2*';
+                document.getElementById('compCHA').value = data.companion.cha || '-2';
+                document.getElementById('compINT').value = data.companion.int || '-3';
+                document.getElementById('compVOL').value = data.companion.vol || '+2';
+                document.getElementById('compDef').value = data.companion.def || '[12 + rang dans la voie]';
+                document.getElementById('compPv').value = data.companion.pv || '[niv. du rôdeur × 4]';
+                document.getElementById('compInit').value = data.companion.init || '[Init. du rôdeur]';
+                document.getElementById('compAtkDm').value = data.companion.atkDm || '[Atq. magique] DM 1d4+2';
+                document.getElementById('compDescription').value = data.companion.description || '';
             }
 
             document.getElementById('weaponsContainer').innerHTML = '';
