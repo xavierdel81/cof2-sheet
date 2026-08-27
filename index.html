@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
     <!-- Lien vers le fichier CSS externe -->
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=7">
     <!-- Inclusion de html2canvas pour l'export en image propre -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -437,7 +437,6 @@
             }
         });
         
-        // Rafraîchir les options spécifiques du peuple (comme l'humain qui dépend des stats actuelles)
         updatePeupleOptionsDynamic();
     }
 
@@ -478,7 +477,7 @@
             bonuses.FOR -= 1;
         } else if (peuple === 'Humain') {
             let opt1 = document.getElementById('opt_bonus1')?.value;
-            if (opt1) bonuses[opt1] += 1; // +1 sur la carac la plus faible choisie (ex: FOR ou CHA)
+            if (opt1) bonuses[opt1] += 1;
         } else if (peuple === 'Nain') {
             let opt1 = document.getElementById('opt_bonus1')?.value;
             if (opt1) bonuses[opt1] += 1;
@@ -524,9 +523,7 @@
 
         if (!choicesContainer) return;
         
-        // Sauvegarde de l'ancienne sélection si possible pour éviter de l'écraser bêtement
         let oldOpt1 = document.getElementById('opt_bonus1')?.value;
-
         choicesContainer.innerHTML = '';
 
         if (peuple === 'Demi-elfe') {
@@ -540,7 +537,6 @@
             instruction.innerText = `Ajustements de l'${peuple} : +1 au choix, et -1 FOR.`;
             choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();">${options}</select></div><div class="malus-text-badge">Malus : -1 FOR</div>`;
         } else if (peuple === 'Humain') {
-            // Recherche des caractéristiques les plus faibles selon les valeurs actuellement assignées (attribuées via le profil)
             let minVal = Math.min(...statsList.map(s => assignedStats[s] !== null ? assignedStats[s] : 0));
             let lowestStats = statsList.filter(s => (assignedStats[s] !== null ? assignedStats[s] : 0) === minVal);
 
@@ -714,7 +710,6 @@
             assignedStats: assignedStats, availableTokens: availableTokens,
             peupleChoices: { 
                 opt1: document.getElementById('opt_bonus1')?.value, 
-                opt2: document.getElementById('opt_bonus2')?.value,
                 optMalus1: document.getElementById('opt_malus1')?.value
             }
         };
@@ -761,12 +756,11 @@
             if (data.availableTokens) availableTokens = data.availableTokens;
             else onProfileModeChange();
 
-            renderPoolAndSlots();
+            onPeupleChange();
 
             if (data.peupleChoices) {
                 if(document.getElementById('opt_bonus1')) document.getElementById('opt_bonus1').value = data.peupleChoices.opt1 || '';
-                if(document.getElementById('opt_bonus2')) document.getElementById('opt_bonus2').value = data.peupleChoices.opt2 || '';
-                if(document.getElementById('opt_malus1')) document.getElementById('opt_malus1').value = data.peupleChoices.optMalus1 || data.peupleChoices.opt2 || '';
+                if(document.getElementById('opt_malus1')) document.getElementById('opt_malus1').value = data.peupleChoices.optMalus1 || '';
             }
 
             document.getElementById('weaponsContainer').innerHTML = '';
