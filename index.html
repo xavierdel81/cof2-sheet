@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
     <!-- Lien vers le fichier CSS externe -->
-    <link rel="stylesheet" href="style.css?v=9">
+    <link rel="stylesheet" href="style.css?v=10">
     <!-- Inclusion de html2canvas pour l'export en image propre -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -19,6 +19,16 @@
             border-radius: 4px;
             text-align: center;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+        }
+        /* Correction alignement et taille du label 1d20 fixe */
+        .fixed-die-inline {
+            font-size: 0.95rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            padding: 0 6px;
+            color: #4a3525;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -232,21 +242,21 @@
                         <label for="armorBonus">🛡️ Armure (DEF)</label>
                         <select id="armorBonus" onchange="calculateTotals(); autoSaveData();">
                             <option value="0">Aucune (+0)</option>
-                            <option value="1">Habits renforcés (+1)</option>
-                            <option value="2">Armure de cuir (+2)</option>
-                            <option value="3">Cotte de mailles (+3)</option>
-                            <option value="4">Harnois / Plaques (+4)</option>
-                            <option value="5">Armure lourde +1 (+5)</option>
-                            <option value="6">Armure lourde +2 (+6)</option>
-                            <option value="7">Armure lourde +3 (+7)</option>
+                            <option value="1">Tissus matelassés, fourrures (+1)</option>
+                            <option value="2">Cuir simple (+2)</option>
+                            <option value="3">Cuir renforcé, broigne (+3)</option>
+                            <option value="4">Chemise de mailles (+4)</option>
+                            <option value="5">Cotte de mailles (+5)</option>
+                            <option value="6">Armure de plaques (+6)</option>
+                            <option value="7">Plaque complète (+7)</option>
                         </select>
                     </div>
                     <div class="field-group">
                         <label for="shieldBonus">🛡️ Bouclier (DEF)</label>
                         <select id="shieldBonus" onchange="calculateTotals(); autoSaveData();">
                             <option value="0">Aucun (+0)</option>
-                            <option value="2">Bouclier standard (+2)</option>
                             <option value="1">Petit bouclier (+1)</option>
+                            <option value="2">Grand bouclier (+2)</option>
                         </select>
                     </div>
                     <div class="field-group">
@@ -266,15 +276,27 @@
                 <div class="grid-identity grid-identity-combat-4">
                     <div class="framed-stat-card">
                         <label class="flex-label"><span>⚔️ Atk. Contact</span><select id="contactStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR</option><option value="AGI">AGI</option></select></label>
-                        <div class="flex-atk-row"><div id="displayAtkContact" class="display-card flex-grow-card">--</div><input type="number" id="extraAtkContact" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();"></div>
+                        <div class="flex-atk-row">
+                            <span class="fixed-die-inline">1d20</span>
+                            <div id="displayAtkContact" class="display-card flex-grow-card">--</div>
+                            <input type="number" id="extraAtkContact" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
+                        </div>
                     </div>
                     <div class="framed-stat-card">
                         <label class="flex-label"><span>🏹 Atk. Distance</span><select id="distanceStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="AGI">AGI</option><option value="PER">PER</option></select></label>
-                        <div class="flex-atk-row"><div id="displayAtkDistance" class="display-card flex-grow-card">--</div><input type="number" id="extraAtkDistance" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();"></div>
+                        <div class="flex-atk-row">
+                            <span class="fixed-die-inline">1d20</span>
+                            <div id="displayAtkDistance" class="display-card flex-grow-card">--</div>
+                            <input type="number" id="extraAtkDistance" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
+                        </div>
                     </div>
                     <div class="framed-stat-card">
-                        <label>🔮 Atk. Magique (1d20)</label>
-                        <div class="flex-atk-row"><div id="displayAtkMagique" class="display-card flex-grow-card">--</div><input type="number" id="extraAtkMagique" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();"></div>
+                        <label>🔮 Atk. Magique</label>
+                        <div class="flex-atk-row">
+                            <span class="fixed-die-inline">1d20</span>
+                            <div id="displayAtkMagique" class="display-card flex-grow-card">--</div>
+                            <input type="number" id="extraAtkMagique" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
+                        </div>
                     </div>
                 </div>
 
@@ -385,6 +407,48 @@
         "Mage": [{ name: "Ensorceleur", page: "p92" }, { name: "Forgesort", page: "p97" }, { name: "Magicien", page: "p102" }, { name: "Sorcier", page: "p107" }],
         "Mystique": [{ name: "Druide", page: "p113" }, { name: "Moine", page: "p118" }, { name: "Prêtre", page: "p122" }]
     };
+
+    // Liste complète des armes officielles (Contact & Distance)
+    const officialWeapons = [
+        { name: "-- Arme personnalisée --", die: "1d6" },
+        // Contact
+        { name: "Mains nues", die: "1d3" },
+        { name: "Bâton", die: "1d4" },
+        { name: "Bâton ferré", die: "1d6" },
+        { name: "Dague", die: "1d4" },
+        { name: "Épée à deux mains", die: "2d6" },
+        { name: "Épée bâtarde", die: "1d8" },
+        { name: "Épée courte", die: "1d6" },
+        { name: "Épée longue", die: "1d8" },
+        { name: "Épieu", die: "1d6" },
+        { name: "Fléau", die: "1d6" },
+        { name: "Fléau à deux mains", die: "1d10" },
+        { name: "Gourdin", die: "1d4" },
+        { name: "Hache", die: "1d8" },
+        { name: "Hache à deux mains", die: "2d6" },
+        { name: "Lance (Contact)", die: "1d6" },
+        { name: "Lance de cavalerie", die: "2d6" },
+        { name: "Marteau", die: "1d6" },
+        { name: "Masse", die: "1d6" },
+        { name: "Pique", die: "1d10" },
+        { name: "Rapière", die: "1d6" },
+        { name: "Stylet", die: "1d3" },
+        { name: "Vivelame", die: "1d10" },
+        // Distance
+        { name: "Arbalète de poing", die: "1d6" },
+        { name: "Arbalète légère", die: "2d4" },
+        { name: "Arbalète lourde", die: "2d6" },
+        { name: "Arc court", die: "1d6" },
+        { name: "Arc long", die: "1d8" },
+        { name: "Couteaux de lancer", die: "1d4" },
+        { name: "Fronde", die: "1d4" },
+        { name: "Hachette (lancer)", die: "1d6" },
+        { name: "Javelot", die: "1d6" },
+        { name: "Lance (lancer)", die: "1d6" },
+        { name: "Lance-pierre", die: "1d3" },
+        { name: "Pétoire", die: "1d10" },
+        { name: "Mousquet", die: "2d6" }
+    ];
 
     function loadAvatar(event) {
         const file = event.target.files[0];
@@ -572,7 +636,8 @@
     function addWeaponRow(data = {}) {
         const container = document.getElementById('weaponsContainer');
         const rowId = 'weapon_' + Date.now() + Math.random().toString(36).substr(2, 5);
-        const diceOptions = ['1d4', '1d6', '1d8', '1d10', '1d12', '1d20', '2d6'];
+        
+        const diceOptions = ['1d3', '1d4', '1d6', '1d8', '1d10', '1d12', '1d20', '2d4', '2d6'];
         let dmDieOpts = diceOptions.map(d => `<option value="${d}" ${d === (data.dmDie || '1d6') ? 'selected' : ''}>${d}</option>`).join('');
 
         let scaleOpts = (selectedVal) => {
@@ -584,15 +649,59 @@
             return opts;
         };
 
+        // Liste des armes pour le select
+        let weaponSelectOpts = officialWeapons.map(w => `<option value="${w.name}" data-die="${w.die}" ${w.name === data.weaponPreset ? 'selected' : ''}>${w.name}</option>`).join('');
+
         const row = document.createElement('div');
         row.className = 'weapon-row';
         row.id = rowId;
         row.innerHTML = `
-            <div class="field-group"><label>⚔️ Arme / Sort</label><input type="text" class="w-name" value="${data.name || ''}" placeholder="Nom" oninput="autoSaveData()"></div>
-            <div class="field-group"><label>🎯 Atk (1d20)</label><div class="sub-flex-row"><span class="fixed-die-badge">1d20</span><select class="w-atk-mod" onchange="autoSaveData()">${scaleOpts(data.atkMod !== undefined ? data.atkMod : '+0')}</select></div></div>
-            <div class="field-group"><label>💥 DM</label><div class="sub-flex-row"><select class="w-dm-die" onchange="autoSaveData()">${dmDieOpts}</select><select class="w-dm-mod" onchange="autoSaveData()">${scaleOpts(data.dmMod !== undefined ? data.dmMod : '+0')}</select><button type="button" class="btn-delete-row" onclick="document.getElementById('${rowId}').remove(); autoSaveData();">×</button></div></div>
+            <div class="field-group">
+                <label>⚔️ Arme / Sort</label>
+                <div class="sub-flex-row" style="gap: 4px;">
+                    <select class="w-preset" onchange="onWeaponPresetChange('${rowId}')">${weaponSelectOpts}</select>
+                    <input type="text" class="w-name" value="${data.name || ''}" placeholder="Nom perso." oninput="autoSaveData()">
+                </div>
+            </div>
+            <div class="field-group">
+                <label>🎯 Atk (1d20)</label>
+                <div class="sub-flex-row">
+                    <span class="fixed-die-inline">1d20</span>
+                    <select class="w-atk-mod" onchange="autoSaveData()">${scaleOpts(data.atkMod !== undefined ? data.atkMod : '+0')}</select>
+                </div>
+            </div>
+            <div class="field-group">
+                <label>💥 DM</label>
+                <div class="sub-flex-row">
+                    <select class="w-dm-die" onchange="autoSaveData()">${dmDieOpts}</select>
+                    <select class="w-dm-mod" onchange="autoSaveData()">${scaleOpts(data.dmMod !== undefined ? data.dmMod : '+0')}</select>
+                    <button type="button" class="btn-delete-row" onclick="document.getElementById('${rowId}').remove(); autoSaveData();">×</button>
+                </div>
+            </div>
         `;
         container.appendChild(row);
+    }
+
+    function onWeaponPresetChange(rowId) {
+        const row = document.getElementById(rowId);
+        if(!row) return;
+        const presetSelect = row.querySelector('.w-preset');
+        const nameInput = row.querySelector('.w-name');
+        const dieSelect = row.querySelector('.w-dm-die');
+        
+        const selectedOpt = presetSelect.options[presetSelect.selectedIndex];
+        const weaponName = selectedOpt.value;
+        const defaultDie = selectedOpt.getAttribute('data-die');
+
+        if(weaponName !== "-- Arme personnalisée --") {
+            nameInput.value = weaponName;
+            if(defaultDie) {
+                dieSelect.value = defaultDie;
+            }
+        } else {
+            nameInput.value = "";
+        }
+        autoSaveData();
     }
 
     function addEquipmentRow(data = {}) {
@@ -681,6 +790,7 @@
 
     function gatherSheetData() {
         const weaponsData = Array.from(document.querySelectorAll('.weapon-row')).map(row => ({
+            weaponPreset: row.querySelector('.w-preset').value,
             name: row.querySelector('.w-name').value,
             atkMod: row.querySelector('.w-atk-mod').value,
             dmDie: row.querySelector('.w-dm-die').value,
@@ -791,7 +901,7 @@
             }
 
             document.getElementById('weaponsContainer').innerHTML = '';
-            (data.weapons && data.weapons.length > 0) ? data.weapons.forEach(w => addWeaponRow(w)) : addWeaponRow({name: 'Arme de contact', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
+            (data.weapons && data.weapons.length > 0) ? data.weapons.forEach(w => addWeaponRow(w)) : addWeaponRow({weaponPreset: 'Épée courte', name: 'Épée courte', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
 
             document.getElementById('equipmentContainer').innerHTML = '';
             (data.equipment && data.equipment.length > 0) ? data.equipment.forEach(e => addEquipmentRow(e)) : addEquipmentRow({name: 'Rations de voyage', qty: '1'});
@@ -817,7 +927,7 @@
             onPeupleChange();
             onFamilyChange();
             onProfileModeChange();
-            addWeaponRow({name: 'Arme de contact', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
+            addWeaponRow({weaponPreset: 'Épée courte', name: 'Épée courte', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
             addEquipmentRow({name: 'Rations de voyage', qty: '1'});
         }
     }
