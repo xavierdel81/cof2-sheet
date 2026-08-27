@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
     <!-- Lien vers le fichier CSS externe -->
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="style.css?v=8">
     <!-- Inclusion de html2canvas pour l'export en image propre -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* Surcharge visuelle pour grossir et encadrer le total des caracs */
+        .stat-box .stat-total {
+            font-size: 1.25rem;
+            font-weight: 800;
+            border: 2px solid #5a3d28;
+            background-color: #f4ebd0;
+            padding: 4px 8px;
+            margin-top: 4px;
+            border-radius: 4px;
+            text-align: center;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+        }
+    </style>
 </head>
 <body>
 
@@ -541,7 +555,11 @@
             let lowestStats = statsList.filter(s => (assignedStats[s] !== null ? assignedStats[s] : 0) === minVal);
 
             instruction.innerText = "Ajustements de l'Humain : +1 sur l'une de ses caractéristiques les plus faibles.";
-            let optionsHTML = lowestStats.map(s => `<option value="${s}" ${s === oldOpt1 ? 'selected' : ''}>${s} (${minVal >= 0 ? '+' + minVal : minVal})</option>`).join('');
+            let optionsHTML = lowestStats.map(s => {
+                let currentAssigned = assignedStats[s] !== null ? assignedStats[s] : 0;
+                let displayStr = (currentAssigned >= 0 ? '+' : '') + currentAssigned;
+                return `<option value="${s}" ${s === oldOpt1 ? 'selected' : ''}>${s} (${displayStr})</option>`;
+            }).join('');
             choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();">${optionsHTML}</select></div>`;
         } else if (peuple === 'Nain') {
             instruction.innerText = "Ajustements du Nain : +1 CON ou VOL, et -1 AGI.";
@@ -598,8 +616,8 @@
             let profilVal = assignedStats[stat] !== null && assignedStats[stat] !== undefined ? assignedStats[stat] : 0;
             let peupleBonus = peupleBonuses[stat] || 0;
             let total = profilVal + peupleBonus;
-            document.getElementById('mod_' + stat).innerText = `P: ${peupleBonus >= 0 ? "+" + peupleBonus : peupleBonus}`;
-            document.getElementById('tot_' + stat).innerText = `Tot: ${total >= 0 ? "+" + total : total}`;
+            document.getElementById('mod_' + stat).innerText = `Peuple: ${peupleBonus >= 0 ? "+" + peupleBonus : peupleBonus}`;
+            document.getElementById('tot_' + stat).innerText = `Total: ${total >= 0 ? "+" + total : total}`;
         });
 
         let agiTotal = (assignedStats['AGI'] !== null ? assignedStats['AGI'] : 0) + (peupleBonuses['AGI'] || 0);
