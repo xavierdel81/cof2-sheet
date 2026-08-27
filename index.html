@@ -4,22 +4,24 @@
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
     <!-- Lien vers le fichier CSS externe -->
-    <link rel="stylesheet" href="style.css?v=10">
+    <link rel="stylesheet" href="style.css?v=11">
     <!-- Inclusion de html2canvas pour l'export en image propre -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        /* Surcharge visuelle pour grossir et encadrer le total des caracs */
+        /* Style des totaux de carac aux couleurs des pastilles (fond rouge brique, texte blanc) */
         .stat-box .stat-total {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 800;
-            border: 2px solid #5a3d28;
-            background-color: #f4ebd0;
+            background-color: #8B2500; /* Rouge brique des pastilles */
+            color: #ffffff;
             padding: 4px 8px;
             margin-top: 4px;
             border-radius: 4px;
             text-align: center;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+            border: 1px solid #5a1800;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.25);
         }
+        
         /* Correction alignement et taille du label 1d20 fixe */
         .fixed-die-inline {
             font-size: 0.95rem;
@@ -29,6 +31,24 @@
             padding: 0 6px;
             color: #4a3525;
             white-space: nowrap;
+        }
+
+        /* Style du conteneur groupé "Valeurs d'attaque" */
+        .attack-group-container {
+            border: 2px solid #5a3d28;
+            background-color: rgba(244, 235, 208, 0.4);
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 12px;
+        }
+        .attack-group-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #4a3525;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #c8b99c;
+            padding-bottom: 3px;
         }
     </style>
 </head>
@@ -273,29 +293,33 @@
                     <div class="framed-stat-card"><label>🧪 Récup. (DR)</label><div id="displayDR" class="display-card">--</div></div>
                 </div>
 
-                <div class="grid-identity grid-identity-combat-4">
-                    <div class="framed-stat-card">
-                        <label class="flex-label"><span>⚔️ Atk. Contact</span><select id="contactStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR</option><option value="AGI">AGI</option></select></label>
-                        <div class="flex-atk-row">
-                            <span class="fixed-die-inline">1d20</span>
-                            <div id="displayAtkContact" class="display-card flex-grow-card">--</div>
-                            <input type="number" id="extraAtkContact" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
+                <!-- Bloc groupé "Valeurs d'attaque" -->
+                <div class="attack-group-container">
+                    <div class="attack-group-title">⚔️ Valeurs d'attaque</div>
+                    <div class="grid-identity grid-identity-combat-4" style="margin-bottom: 0;">
+                        <div class="framed-stat-card">
+                            <label class="flex-label"><span>⚔️ Contact</span><select id="contactStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR</option><option value="AGI">AGI</option></select></label>
+                            <div class="flex-atk-row">
+                                <span class="fixed-die-inline">1d20</span>
+                                <div id="displayAtkContact" class="display-card flex-grow-card">--</div>
+                                <input type="number" id="extraAtkContact" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
+                            </div>
                         </div>
-                    </div>
-                    <div class="framed-stat-card">
-                        <label class="flex-label"><span>🏹 Atk. Distance</span><select id="distanceStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="AGI">AGI</option><option value="PER">PER</option></select></label>
-                        <div class="flex-atk-row">
-                            <span class="fixed-die-inline">1d20</span>
-                            <div id="displayAtkDistance" class="display-card flex-grow-card">--</div>
-                            <input type="number" id="extraAtkDistance" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
+                        <div class="framed-stat-card">
+                            <label class="flex-label"><span>🏹 Distance</span><select id="distanceStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="AGI">AGI</option><option value="PER">PER</option></select></label>
+                            <div class="flex-atk-row">
+                                <span class="fixed-die-inline">1d20</span>
+                                <div id="displayAtkDistance" class="display-card flex-grow-card">--</div>
+                                <input type="number" id="extraAtkDistance" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
+                            </div>
                         </div>
-                    </div>
-                    <div class="framed-stat-card">
-                        <label>🔮 Atk. Magique</label>
-                        <div class="flex-atk-row">
-                            <span class="fixed-die-inline">1d20</span>
-                            <div id="displayAtkMagique" class="display-card flex-grow-card">--</div>
-                            <input type="number" id="extraAtkMagique" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
+                        <div class="framed-stat-card">
+                            <label>🔮 Magique</label>
+                            <div class="flex-atk-row">
+                                <span class="fixed-die-inline">1d20</span>
+                                <div id="displayAtkMagique" class="display-card flex-grow-card">--</div>
+                                <input type="number" id="extraAtkMagique" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -649,7 +673,6 @@
             return opts;
         };
 
-        // Liste des armes pour le select
         let weaponSelectOpts = officialWeapons.map(w => `<option value="${w.name}" data-die="${w.die}" ${w.name === data.weaponPreset ? 'selected' : ''}>${w.name}</option>`).join('');
 
         const row = document.createElement('div');
