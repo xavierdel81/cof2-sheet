@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
     <!-- Lien vers le fichier CSS externe -->
-    <link rel="stylesheet" href="style.css?v=12">
+    <link rel="stylesheet" href="style.css?v=13">
     <!-- Inclusion de html2canvas pour l'export en image propre -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -42,6 +42,13 @@
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.25) !important;
         }
         
+        /* Agrandissement et couleur jaune pour les libellés Contact, Distance, Magique (identique aux carac) */
+        .grid-identity-combat-4 .framed-stat-card > label,
+        .grid-identity-combat-4 .flex-label {
+            font-size: 1.15rem !important;
+            color: #ffd700 !important; /* Jaune des titres de caractéristiques */
+        }
+
         /* Correction alignement et taille du label 1d20 fixe */
         .fixed-die-inline {
             font-size: 0.95rem;
