@@ -332,29 +332,9 @@ textarea {
     z-index: 2;
 }
 
-/* Agrandissement de la police pour les blocs de caractéristiques (AGI, Vide, Peuple) */
 .stat-box label {
-    font-size: 1.15rem !important;
-}
-.stat-empty-text {
-    font-size: 0.95rem !important;
-}
-.stat-detail {
-    font-size: 0.9rem !important;
-}
-
-/* Style des totaux de carac aux couleurs des pastilles (fond rouge brique, texte blanc) */
-.stat-box .stat-total {
-    font-size: 1.15rem;
-    font-weight: 800;
-    background-color: #8B2500; /* Rouge brique des pastilles */
-    color: #ffffff;
-    padding: 4px 8px;
-    margin-top: 4px;
-    border-radius: 4px;
-    text-align: center;
-    border: 1px solid #5a1800;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.25);
+    font-size: calc(var(--global-font-size) * 0.9);
+    letter-spacing: 0.5px;
 }
 
 .stat-box.drag-over {
@@ -367,6 +347,24 @@ textarea {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.stat-empty-text {
+    color: #998;
+    font-size: 0.75rem;
+}
+
+.stat-total {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--text-main);
+    margin-top: 2px;
+    font-family: var(--global-font-family); 
+}
+
+.stat-detail {
+    font-size: 0.7rem;
+    color: #665;
 }
 
 .stat-assigned-badge {
@@ -695,23 +693,6 @@ button.main-btn:hover {
     font-family: var(--global-font-family); 
 }
 
-/* Style pastille rouge brique pour les valeurs d'attaque (Contact, Distance, Magique) */
-.grid-identity-combat-4 .display-card {
-    background-color: #8B2500 !important;
-    color: #ffffff !important;
-    font-weight: 800 !important;
-    border: 1px solid #5a1800 !important;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.25) !important;
-}
-
-/* Agrandissement et couleur jaune pour TOUS les libellés d'attaque (Contact, Distance, Magique) */
-.grid-identity-combat-4 .framed-stat-card > label,
-.grid-identity-combat-4 .flex-label,
-.grid-identity-combat-4 .framed-stat-card label {
-    font-size: 1.15rem !important;
-    color: #ffd700 !important; /* Jaune des titres de caractéristiques */
-}
-
 .flex-label {
     display: flex;
     justify-content: space-between;
@@ -719,6 +700,13 @@ button.main-btn:hover {
     margin-bottom: 2px;
     gap: 4px;
     position: relative;
+}
+
+/* Ciblage direct et prioritaire des libellés textuels d'attaque dans la grille 4 */
+.grid-identity-combat-4 .flex-label span,
+.grid-identity-combat-4 .framed-stat-card > label {
+    font-size: 1.15rem !important;
+    color: #ffd700 !important;
 }
 
 .flex-label span {
@@ -753,35 +741,6 @@ button.main-btn:hover {
 .input-atk-extra {
     width: 45px;
     text-align: center;
-}
-
-/* Correction alignement et taille du label 1d20 fixe */
-.fixed-die-inline {
-    font-size: 0.95rem;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    padding: 0 6px;
-    color: #4a3525;
-    white-space: nowrap;
-}
-
-/* Style du conteneur groupé "Valeurs d'attaque" */
-.attack-group-container {
-    border: 2px solid #5a3d28;
-    background-color: rgba(244, 235, 208, 0.4);
-    border-radius: 6px;
-    padding: 10px;
-    margin-bottom: 12px;
-}
-.attack-group-title {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #4a3525;
-    margin-bottom: 8px;
-    border-bottom: 1px solid #c8b99c;
-    padding-bottom: 3px;
 }
 
 .voies-grid {
@@ -870,8 +829,8 @@ button.main-btn:hover {
     border: 1px solid #b8a79a;
     border-radius: 3px;
     padding: 3px 6px;
-    font-size: var(--global-font-family);
     font-size: var(--global-font-size);
+    font-family: var(--global-font-family);
     box-shadow: none;
     width: 100%;
 }
@@ -898,3 +857,4 @@ button.main-btn:hover {
     background: rgba(255, 253, 249, 0.98);
     border-color: var(--border-primary);
 }
+```[cite: 3]
