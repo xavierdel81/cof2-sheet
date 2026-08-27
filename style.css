@@ -626,13 +626,13 @@ button.main-btn:hover {
 
 .avatar-box-large {
     position: relative;
-    background: rgba(234, 226, 208, 0.95); /* Fond opaque pour masquer le filigrane derrière */
+    background: rgba(234, 226, 208, 0.95);
     padding: 10px;
     box-sizing: border-box;
     width: 100%;
     max-width: 320px;
     height: 180px;
-    border: 1px solid #b8a79a; /* Bordure pleine et propre au lieu des pointillés */
+    border: 1px solid #b8a79a;
     border-radius: 6px;
     display: flex;
     align-items: center;
@@ -640,10 +640,9 @@ button.main-btn:hover {
     overflow: hidden;
     cursor: pointer;
     box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-    z-index: 5; /* S'assure qu'il passe au-dessus des calques de fond */
+    z-index: 5;
 }
 
-/* Neutralise spécifiquement tout filigrane qui tenterait de s'afficher dans ce bloc */
 .avatar-box-large .bg-watermark {
     display: none !important;
 }
@@ -702,11 +701,14 @@ button.main-btn:hover {
     position: relative;
 }
 
-/* Ciblage direct et prioritaire des libellés textuels d'attaque dans la grille 4 */
+/* Correction ciblée et prioritaire pour les libellés de la grille de combat 4 */
+.section-box.bg-combat .grid-identity-combat-4 .flex-label span,
+.section-box.bg-combat .grid-identity-combat-4 .framed-stat-card > label,
 .grid-identity-combat-4 .flex-label span,
 .grid-identity-combat-4 .framed-stat-card > label {
     font-size: 1.15rem !important;
     color: #ffd700 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 1) !important;
 }
 
 .flex-label span {
@@ -857,4 +859,3 @@ button.main-btn:hover {
     background: rgba(255, 253, 249, 0.98);
     border-color: var(--border-primary);
 }
-```[cite: 3]
