@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
-    <link rel="stylesheet" href="style.css?v=15">
+    <link rel="stylesheet" href="style.css?v=16">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
@@ -293,7 +293,7 @@
                 </div>
             </div>
 
-            <!-- ===== NOUVEAU BLOC : Compagnon animal / Familier ===== -->
+            <!-- ===== BLOC : Compagnon animal / Familier ===== -->
             <div class="section-box">
                 <div class="bg-watermark"></div>
                 <h2>
@@ -302,7 +302,6 @@
                 
                 <input type="text" id="compType" class="companion-type-input" value="CRÉATURE VIVANTE" oninput="autoSaveData()">
 
-                <!-- Caractéristiques du Compagnon -->
                 <div class="companion-stats-grid">
                     <div class="companion-stat-box"><label>AGI</label><input type="text" id="compAGI" value="+1" oninput="autoSaveData()"></div>
                     <div class="companion-stat-box"><label>CON</label><input type="text" id="compCON" value="+1*" oninput="autoSaveData()"></div>
@@ -313,7 +312,6 @@
                     <div class="companion-stat-box"><label>VOL</label><input type="text" id="compVOL" value="+2" oninput="autoSaveData()"></div>
                 </div>
 
-                <!-- Lignes Défense, PV, Initiative -->
                 <div class="companion-line-row">
                     <label>🛡️ Défense</label>
                     <input type="text" id="compDef" value="[12 + rang dans la voie]" oninput="autoSaveData()">
@@ -331,10 +329,9 @@
                     <input type="text" id="compAtkDm" value="[Atq. magique] DM 1d4+2" oninput="autoSaveData()">
                 </div>
 
-                <!-- Entrée demandée : Description / gestion du compagnon -->
                 <div class="field-group field-group-margin">
                     <label for="compDescription">Description / gestion du compagnon / familier</label>
-                    <textarea id="compDescription" placeholder="Notes, règles spéciales, ex: *Le loup obtient un dé bonus sur ses tests..." oninput="autoSaveData()"></textarea>
+                    <textarea id="compDescription" placeholder="Notes, règles spéciales..." oninput="autoSaveData()"></textarea>
                 </div>
             </div>
 
@@ -343,7 +340,6 @@
         <!-- ===== PAGE 2 : Armes, Sorts, Équipement & Voies ===== -->
         <div class="grimoire-page">
             
-            <!-- Bloc Armes & Équipement -->
             <div class="section-box">
                 <div class="bg-watermark"></div> 
                 
@@ -358,7 +354,6 @@
                 <button class="main-btn" type="button" onclick="addEquipmentRow();">+ Ajouter un objet</button>
             </div>
 
-            <!-- Bloc Voies de Capacités -->
             <div class="section-box">
                 <div class="bg-watermark"></div>
                 <h2>📜 Voies & Capacités</h2>
@@ -966,7 +961,7 @@
                         const rangRows = card.querySelectorAll('.voie-rang-row');
                         voie.rangs.forEach((rangData, rIndex) => {
                             if (rangRows[rIndex]) {
-                                rangRows[rIndex].querySelector('.rang-name-input').value = rangData.rangName || '';
+                                rangRows[rangRows.length > 0 ? rIndex : 0].querySelector('.rang-name-input').value = rangData.rangName || '';
                                 rangRows[rIndex].querySelector('.rang-desc-textarea').value = rangData.rangDesc || '';
                             }
                         });
@@ -1009,12 +1004,17 @@
             return;
         }
 
-        grimoire.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
-            input.setAttribute('value', input.value);
+        // Correctif anti-troncature : Ajuste temporairement la hauteur de chaque textarea à son contenu réel
+        const textareas = grimoire.querySelectorAll('textarea');
+        const originalHeights = [];
+        textareas.forEach(ta => {
+            originalHeights.push(ta.style.height);
+            ta.style.height = 'auto';
+            ta.style.height = (ta.scrollHeight + 4) + 'px';
         });
 
-        grimoire.querySelectorAll('textarea').forEach(textarea => {
-            textarea.innerHTML = textarea.value;
+        grimoire.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+            input.setAttribute('value', input.value);
         });
 
         html2canvas(grimoire, {
@@ -1026,6 +1026,11 @@
                 return element.classList && element.classList.contains('no-export');
             }
         }).then(canvas => {
+            // Restaure la hauteur originale des textarea
+            textareas.forEach((ta, idx) => {
+                ta.style.height = originalHeights[idx];
+            });
+
             const link = document.createElement('a');
             let charName = document.getElementById('charName').value.trim();
             link.download = (charName ? charName : 'personnage') + '_cof2.png';
@@ -1033,6 +1038,9 @@
             link.click();
         }).catch(err => {
             console.error("Erreur lors de l'export PNG :", err);
+            textareas.forEach((ta, idx) => {
+                ta.style.height = originalHeights[idx];
+            });
             alert("Une erreur est survenue lors de la génération de l'image.");
         });
     }
