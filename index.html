@@ -556,9 +556,7 @@
 
             instruction.innerText = "Ajustements de l'Humain : +1 sur l'une de ses caractéristiques les plus faibles.";
             let optionsHTML = lowestStats.map(s => {
-                let currentAssigned = assignedStats[s] !== null ? assignedStats[s] : 0;
-                let displayStr = (currentAssigned >= 0 ? '+' : '') + currentAssigned;
-                return `<option value="${s}" ${s === oldOpt1 ? 'selected' : ''}>${s} (${displayStr})</option>`;
+                return `<option value="${s}" ${s === oldOpt1 ? 'selected' : ''}>${s}</option>`;
             }).join('');
             choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();">${optionsHTML}</select></div>`;
         } else if (peuple === 'Nain') {
