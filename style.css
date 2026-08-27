@@ -333,8 +333,7 @@ textarea {
 }
 
 .stat-box label {
-    font-size: calc(var(--global-font-size) * 0.9);
-    letter-spacing: 0.5px;
+    font-size: 1.15rem !important;
 }
 
 .stat-box.drag-over {
@@ -351,19 +350,25 @@ textarea {
 
 .stat-empty-text {
     color: #998;
-    font-size: 0.75rem;
+    font-size: 0.95rem !important;
 }
 
 .stat-total {
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--text-main);
-    margin-top: 2px;
+    font-size: 1.15rem;
+    font-weight: 800;
+    background-color: #8B2500;
+    color: #ffffff;
+    padding: 4px 8px;
+    margin-top: 4px;
+    border-radius: 4px;
+    text-align: center;
+    border: 1px solid #5a1800;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.25);
     font-family: var(--global-font-family); 
 }
 
 .stat-detail {
-    font-size: 0.7rem;
+    font-size: 0.9rem !important;
     color: #665;
 }
 
@@ -613,9 +618,6 @@ button.main-btn:hover {
     font-size: 0.85rem;
 }
 
-/* =========================================
-   7. BLOC AVATAR LARGE DÉDIÉ ET ADAPTATIF
-   ========================================= */
 .avatar-large-container {
     display: flex;
     justify-content: center;
@@ -701,7 +703,15 @@ button.main-btn:hover {
     position: relative;
 }
 
-/* Correction ciblée et prioritaire pour les libellés de la grille de combat 4 */
+/* Corrections unifiées et prioritaires pour le bloc d'attaque */
+.grid-identity-combat-4 .display-card {
+    background-color: #8B2500 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    border: 1px solid #5a1800 !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.25) !important;
+}
+
 .section-box.bg-combat .grid-identity-combat-4 .flex-label span,
 .section-box.bg-combat .grid-identity-combat-4 .framed-stat-card > label,
 .grid-identity-combat-4 .flex-label span,
@@ -743,6 +753,34 @@ button.main-btn:hover {
 .input-atk-extra {
     width: 45px;
     text-align: center;
+}
+
+.fixed-die-inline {
+    font-size: 0.95rem;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 6px;
+    color: #4a3525;
+    white-space: nowrap;
+}
+
+.attack-group-container {
+    border: 2px solid #5a3d28;
+    background-color: rgba(244, 235, 208, 0.4);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 12px;
+}
+
+.attack-group-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #4a3525;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #c8b99c;
+    padding-bottom: 3px;
 }
 
 .voies-grid {
