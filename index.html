@@ -3,81 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
-    <!-- Lien vers le fichier CSS externe -->
-    <link rel="stylesheet" href="style.css?v=13">
+    <!-- Lien vers le fichier CSS externe mis à jour -->
+    <link rel="stylesheet" href="style.css?v=14">
     <!-- Inclusion de html2canvas pour l'export en image propre -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        /* Agrandissement de la police pour les blocs de caractéristiques (AGI, Vide, Peuple) */
-        .stat-box label {
-            font-size: 1.15rem !important;
-        }
-        .stat-empty-text {
-            font-size: 0.95rem !important;
-        }
-        .stat-detail {
-            font-size: 0.9rem !important;
-        }
-
-        /* Style des totaux de carac aux couleurs des pastilles (fond rouge brique, texte blanc) */
-        .stat-box .stat-total {
-            font-size: 1.15rem;
-            font-weight: 800;
-            background-color: #8B2500; /* Rouge brique des pastilles */
-            color: #ffffff;
-            padding: 4px 8px;
-            margin-top: 4px;
-            border-radius: 4px;
-            text-align: center;
-            border: 1px solid #5a1800;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.25);
-        }
-
-        /* Style pastille rouge brique pour les valeurs d'attaque (Contact, Distance, Magique) */
-        .grid-identity-combat-4 .display-card {
-            background-color: #8B2500 !important;
-            color: #ffffff !important;
-            font-weight: 800 !important;
-            border: 1px solid #5a1800 !important;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.25) !important;
-        }
-        
-        /* Agrandissement et couleur jaune pour les libellés Contact, Distance, Magique (identique aux carac) */
-        .grid-identity-combat-4 .framed-stat-card > label,
-        .grid-identity-combat-4 .flex-label {
-            font-size: 1.15rem !important;
-            color: #ffd700 !important; /* Jaune des titres de caractéristiques */
-        }
-
-        /* Correction alignement et taille du label 1d20 fixe */
-        .fixed-die-inline {
-            font-size: 0.95rem;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            padding: 0 6px;
-            color: #4a3525;
-            white-space: nowrap;
-        }
-
-        /* Style du conteneur groupé "Valeurs d'attaque" */
-        .attack-group-container {
-            border: 2px solid #5a3d28;
-            background-color: rgba(244, 235, 208, 0.4);
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 12px;
-        }
-        .attack-group-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #4a3525;
-            margin-bottom: 8px;
-            border-bottom: 1px solid #c8b99c;
-            padding-bottom: 3px;
-        }
-    </style>
 </head>
 <body>
 
@@ -459,10 +388,8 @@
         "Mystique": [{ name: "Druide", page: "p113" }, { name: "Moine", page: "p118" }, { name: "Prêtre", page: "p122" }]
     };
 
-    // Liste complète des armes officielles (Contact & Distance)
     const officialWeapons = [
         { name: "-- Arme personnalisée --", die: "1d6" },
-        // Contact
         { name: "Mains nues", die: "1d3" },
         { name: "Bâton", die: "1d4" },
         { name: "Bâton ferré", die: "1d6" },
@@ -485,7 +412,6 @@
         { name: "Rapière", die: "1d6" },
         { name: "Stylet", die: "1d3" },
         { name: "Vivelame", die: "1d10" },
-        // Distance
         { name: "Arbalète de poing", die: "1d6" },
         { name: "Arbalète légère", die: "2d4" },
         { name: "Arbalète lourde", die: "2d6" },
