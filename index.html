@@ -293,7 +293,7 @@
                 </div>
             </div>
 
-            <!-- ===== BLOC : Compagnon animal / Familier ===== -->
+            <!-- BLOC COMPAGNON ANIMAL / FAMILIER -->
             <div class="section-box">
                 <div class="bg-watermark"></div>
                 <h2>
@@ -961,7 +961,7 @@
                         const rangRows = card.querySelectorAll('.voie-rang-row');
                         voie.rangs.forEach((rangData, rIndex) => {
                             if (rangRows[rIndex]) {
-                                rangRows[rangRows.length > 0 ? rIndex : 0].querySelector('.rang-name-input').value = rangData.rangName || '';
+                                rangRows[rIndex].querySelector('.rang-name-input').value = rangData.rangName || '';
                                 rangRows[rIndex].querySelector('.rang-desc-textarea').value = rangData.rangDesc || '';
                             }
                         });
@@ -1004,17 +1004,12 @@
             return;
         }
 
-        // Correctif anti-troncature : Ajuste temporairement la hauteur de chaque textarea à son contenu réel
-        const textareas = grimoire.querySelectorAll('textarea');
-        const originalHeights = [];
-        textareas.forEach(ta => {
-            originalHeights.push(ta.style.height);
-            ta.style.height = 'auto';
-            ta.style.height = (ta.scrollHeight + 4) + 'px';
-        });
-
         grimoire.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
             input.setAttribute('value', input.value);
+        });
+
+        grimoire.querySelectorAll('textarea').forEach(textarea => {
+            textarea.innerHTML = textarea.value;
         });
 
         html2canvas(grimoire, {
@@ -1026,11 +1021,6 @@
                 return element.classList && element.classList.contains('no-export');
             }
         }).then(canvas => {
-            // Restaure la hauteur originale des textarea
-            textareas.forEach((ta, idx) => {
-                ta.style.height = originalHeights[idx];
-            });
-
             const link = document.createElement('a');
             let charName = document.getElementById('charName').value.trim();
             link.download = (charName ? charName : 'personnage') + '_cof2.png';
@@ -1038,9 +1028,6 @@
             link.click();
         }).catch(err => {
             console.error("Erreur lors de l'export PNG :", err);
-            textareas.forEach((ta, idx) => {
-                ta.style.height = originalHeights[idx];
-            });
             alert("Une erreur est survenue lors de la génération de l'image.");
         });
     }
