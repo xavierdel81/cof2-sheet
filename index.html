@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créateur de Fiche - Grimoire COF2</title>
+    <!-- Lien vers le fichier CSS externe -->
+    <link rel="stylesheet" href="style.css?v=6">
+    <!-- Inclusion de html2canvas pour l'export en image propre -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-banner"></div>
+
+    <div class="header-flex">
+        <h1 class="header-title">Feuille de Personnage — COF2</h1>
+        <div class="header-actions">
+            <button type="button" class="main-btn btn-export" onclick="exportToPNG()">📸 Télécharger en PNG</button>
+            <button type="button" id="btn-reset" class="main-btn btn-reset" onclick="resetCharacterSheet()">Nouvelle Fiche</button>
+        </div>
+    </div>
+
+    <!-- Panneau de contrôle de la police en live -->
+    <div class="font-control-panel">
+        <div class="font-control-group">
+            <label>Taille du texte :</label>
+            <button type="button" id="btnDecreaseFont" title="Réduire">-</button>
+            <span id="fontSizeDisplay" style="font-size: 0.8rem; font-weight: bold; min-width: 40px; text-align: center;">0.9rem</span>
+            <button type="button" id="btnIncreaseFont" title="Agrandir">+</button>
+        </div>
+        <div class="font-control-group">
+            <label for="globalFontSelect">Police globale :</label>
+            <select id="globalFontSelect">
+                <option value="'Lora', Georgia, serif">Lora (Classique / Lisible)</option>
+                <option value="'Cinzel', serif">Cinzel (Médiéval / Titres)</option>
+                <option value="Arial, sans-serif">Arial (Sans empattement / Très net)</option>
+                <option value="'IM Fell English SC', serif">IM Fell English (Manuscrit ancien)</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="grimoire-spread">
+
+        <!-- ===== PAGE 1 : Avatar, Identité, Caractéristiques, Combat & PV ===== -->
+        <div class="grimoire-page">
+            
+            <!-- Bloc Avatar Dédié (Corrigé) -->
+            <div class="section-box">
+                <h2>🖼️ Portrait du Personnage</h2>
+                <div class="avatar-large-container">
+                    <div class="avatar-box-large" id="avatarBox" onclick="document.getElementById('avatarInput').click()" title="Cliquez pour changer l'avatar">
+                        <img id="avatarPreview" src="" alt="" style="display:none;">
+                        <span id="avatarPlaceholder">Cliquez ici pour ajouter l'image du personnage</span>
+                    </div>
+                    <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="loadAvatar(event)">
+                </div>
+            </div>
+
+            <!-- Bloc Identité -->
+            <div class="section-box bg-perso bg-perso-png">
+                <div class="bg-watermark"></div> 
+                
+                <h2>📜 Identité, Peuple & Classes</h2>
+                <div class="grid-identity">
+                    <div class="field-group">
+                        <label for="charName">Nom du Personnage</label>
+                        <input type="text" id="charName" class="input-spacing" oninput="saveData()">
+                        
+                        <label for="charPeuple">Peuple</label>
+                        <select id="charPeuple" onchange="onPeupleChange(); saveData();">
+                            <option value="Demi-elfe">Demi-elfe</option>
+                            <option value="Demi-orc">Demi-orc</option>
+                            <option value="Elfe haut">Elfe haut</option>
+                            <option value="Elfe sylvain">Elfe sylvain</option>
+                            <option value="Gnome">Gnome</option>
+                            <option value="Halfelin">Halfelin</option>
+                            <option value="Humain">Humain</option>
+                            <option value="Nain">Nain</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="charProfile">Répartition</label>
+                        <select id="charProfile" onchange="onProfileModeChange(); saveData();">
+                            <option value="Polyvalent">Polyv. (+2..-1)</option>
+                            <option value="Expert">Expert (+3..-2)</option>
+                            <option value="Spécialiste">Spécial. (+4..-3)</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="charFamily">Famille de Profil</label>
+                        <select id="charFamily" class="input-spacing" onchange="onFamilyChange(); saveData();">
+                            <option value="Aventurier">Aventurier</option>
+                            <option value="Combattant">Combattant</option>
+                            <option value="Mage">Mage</option>
+                            <option value="Mystique">Mystique</option>
+                        </select>
+
+                        <label for="charSubProfile">Profil (Spécialisation)</label>
+                        <select id="charSubProfile" onchange="saveData()"></select>
+                    </div>
+                </div>
+
+                <div class="grid-identity grid-identity-duo">
+                    <div class="field-group">
+                        <label for="charIdeal">Idéal héroïque</label>
+                        <select id="charIdeal" onchange="saveData()">
+                            <option value="">-- Choisir un idéal --</option>
+                            <option value="Abnégation">Abnégation</option>
+                            <option value="Clémence">Clémence</option>
+                            <option value="Compassion">Compassion</option>
+                            <option value="Courage">Courage</option>
+                            <option value="Égalité">Égalité</option>
+                            <option value="Fraternité">Fraternité</option>
+                            <option value="Honneur">Honneur</option>
+                            <option value="Justice">Justice</option>
+                            <option value="Liberté">Liberté</option>
+                            <option value="Loyauté">Loyauté</option>
+                            <option value="Protection">Protection</option>
+                            <option value="Solidarité">Solidarité</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label for="charFlaw">Travers</label>
+                        <select id="charFlaw" onchange="saveData()">
+                            <option value="">-- Choisir un travers --</option>
+                            <option value="Alcoolique">Alcoolique</option>
+                            <option value="Couard">Couard</option>
+                            <option value="Cupide">Cupide</option>
+                            <option value="Colérique">Colérique</option>
+                            <option value="Distrait">Distrait</option>
+                            <option value="Fanfaron">Fanfaron</option>
+                            <option value="Gourmand">Gourmand</option>
+                            <option value="Impatient">Impatient</option>
+                            <option value="Orgueilleux">Orgueilleux</option>
+                            <option value="Paranoïaque">Paranoïaque</option>
+                            <option value="Paresseux">Paresseux</option>
+                            <option value="Violent">Violent</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-group field-group-margin">
+                    <label for="charDescription">Description du Personnage</label>
+                    <textarea id="charDescription" placeholder="Apparence, historique, traits..." oninput="saveData()"></textarea>
+                </div>
+            </div>
+
+            <!-- Bloc Caractéristiques -->
+            <div class="section-box bg-carac bg-carac-png">
+                <div class="bg-watermark"></div> 
+                
+                <h2>💪 Caractéristiques</h2>
+                
+                <div id="repartitionZone">
+                    <label class="pool-label">Points de répartition (Glissez ou cliquez) :</label>
+                    <div id="poolContainer" class="pool-container"></div>
+                </div>
+
+                <div class="grid-stats" id="statsGridContainer">
+                    <script>
+                        const statsCOF2 = ['AGI', 'CON', 'FOR', 'PER', 'CHA', 'INT', 'VOL'];
+                        statsCOF2.forEach(stat => {
+                            document.write(`
+                                <div class="stat-box" id="box_${stat}" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropToken(event, '${stat}')">
+                                    <label>${stat}</label>
+                                    <div id="slot_${stat}" class="stat-slot-inner">
+                                        <span class="stat-empty-text">Vide</span>
+                                    </div>
+                                    <div>
+                                        <div class="stat-detail" id="mod_${stat}">Peuple: +0</div>
+                                        <div class="stat-total" id="tot_${stat}">Total: +0</div>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                    </script>
+                </div>
+
+                <div id="peupleOptions" style="display:none;">
+                    <label id="peupleLabelInstruction" class="peuple-instruction"></label>
+                    <div id="peupleChoicesContainer" class="peuple-row"></div>
+                </div>
+            </div>
+
+            <!-- Bloc Combat & Ressources -->
+            <div class="section-box bg-combat bg-combat-png">
+                <div class="bg-watermark"></div> 
+
+                <h2>⚔️ Combat & Ressources</h2>
+
+                <div class="grid-identity grid-identity-combat-1">
+                    <div class="field-group">
+                        <label for="charLevel">⭐ Niveau</label>
+                        <input type="number" id="charLevel" value="1" min="1" max="20" oninput="calculateTotals(); saveData();">
+                    </div>
+                    <div class="field-group">
+                        <label for="extraConBonus">🛡️ Mod. CON Perm.</label>
+                        <select id="extraConBonus" class="stat-select" onchange="calculateTotals(); saveData();">
+                            <option value="2">+2</option><option value="1">+1</option><option value="0" selected>+0</option><option value="-1">-1</option><option value="-2">-2</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label for="spellCount">✨ Sorts (*)</label>
+                        <input type="number" id="spellCount" value="0" min="0" max="20" oninput="calculateTotals(); saveData();">
+                    </div>
+                    <div class="field-group">
+                        <label for="extraInitBonus">⚡ Init. Supp.</label>
+                        <input type="number" id="extraInitBonus" value="0" oninput="calculateTotals(); saveData();">
+                    </div>
+                </div>
+
+                <div class="grid-identity grid-identity-combat-2">
+                    <div class="field-group">
+                        <label for="armorBonus">🛡️ Armure (DEF)</label>
+                        <select id="armorBonus" onchange="calculateTotals(); saveData();">
+                            <option value="0">Aucune (+0)</option>
+                            <option value="1">Habits renforcés (+1)</option>
+                            <option value="2">Armure de cuir (+2)</option>
+                            <option value="3">Cotte de mailles (+3)</option>
+                            <option value="4">Harnois / Plaques (+4)</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label for="shieldBonus">🛡️ Bouclier (DEF)</label>
+                        <select id="shieldBonus" onchange="calculateTotals(); saveData();">
+                            <option value="0">Aucun (+0)</option>
+                            <option value="2">Bouclier standard (+2)</option>
+                            <option value="1">Petit bouclier (+1)</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label for="extraDefBonus">🔮 Bonus DEF Magie</label>
+                        <input type="number" id="extraDefBonus" value="0" oninput="calculateTotals(); saveData();">
+                    </div>
+                </div>
+
+                <div class="grid-identity grid-identity-combat-3">
+                    <div class="framed-stat-card"><label>🛡️ Défense</label><div id="displayDEF" class="display-card">--</div></div>
+                    <div class="framed-stat-card"><label>⚡ Initiative</label><div id="displayInit" class="display-card">--</div></div>
+                    <div class="framed-stat-card"><label>✨ Mana (PM)</label><div id="displayPM" class="display-card">--</div></div>
+                    <div class="framed-stat-card"><label>🍀 Chance (PC)</label><div id="displayPC" class="display-card">--</div></div>
+                    <div class="framed-stat-card"><label>🧪 Récup. (DR)</label><div id="displayDR" class="display-card">--</div></div>
+                </div>
+
+                <div class="grid-identity grid-identity-combat-4">
+                    <div class="framed-stat-card">
+                        <label class="flex-label"><span>⚔️ Atk. Contact</span><select id="contactStatChoice" class="sub-select-inline" onchange="calculateTotals(); saveData();"><option value="FOR">FOR</option><option value="AGI">AGI</option></select></label>
+                        <div class="flex-atk-row"><div id="displayAtkContact" class="display-card flex-grow-card">--</div><input type="number" id="extraAtkContact" value="0" class="input-atk-extra" oninput="calculateTotals(); saveData();"></div>
+                    </div>
+                    <div class="framed-stat-card">
+                        <label class="flex-label"><span>🏹 Atk. Distance</span><select id="distanceStatChoice" class="sub-select-inline" onchange="calculateTotals(); saveData();"><option value="AGI">AGI</option><option value="PER">PER</option></select></label>
+                        <div class="flex-atk-row"><div id="displayAtkDistance" class="display-card flex-grow-card">--</div><input type="number" id="extraAtkDistance" value="0" class="input-atk-extra" oninput="calculateTotals(); saveData();"></div>
+                    </div>
+                    <div class="framed-stat-card">
+                        <label>🔮 Atk. Magique</label>
+                        <div class="flex-atk-row"><div id="displayAtkMagique" class="display-card flex-grow-card">--</div><input type="number" id="extraAtkMagique" value="0" class="input-atk-extra" oninput="calculateTotals(); saveData();"></div>
+                    </div>
+                </div>
+
+                <div class="field-group field-group-margin">
+                    <label>❤️ Points de Vie (Actuels / Max)</label>
+                    <div class="pv-container">
+                        <button onclick="adjustCurrentPV(-1)">-</button>
+                        <span id="displayPV" class="pv-display-text">--</span>
+                        <button onclick="adjustCurrentPV(1)">+</button>
+                    </div>
+                </div>
+
+                <div class="info-box info-box-margin">
+                    <label class="info-box-label">Spécificités de la Famille :</label>
+                    <div id="familyBonusText" class="family-bonus-desc">-</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===== PAGE 2 : Armes, Sorts, Équipement & Voies ===== -->
+        <div class="grimoire-page">
+            
+            <!-- Bloc Armes & Équipement -->
+            <div class="section-box">
+                <div class="bg-watermark"></div> 
+                
+                <h2>🎒 Armes, Sorts & Équipement</h2>
+                
+                <h3 class="sub-section-title">⚔️ Armes & Capacités Offensives</h3>
+                <div id="weaponsContainer"></div>
+                <button class="main-btn btn-spacing-bottom" type="button" onclick="addWeaponRow();">+ Ajouter une Arme / Sort</button>
+
+                <h3 class="sub-section-title">🎒 Équipement & Inventaire</h3>
+                <div id="equipmentContainer"></div>
+                <button class="main-btn" type="button" onclick="addEquipmentRow();">+ Ajouter un objet</button>
+            </div>
+
+            <!-- Bloc Voies de Capacités -->
+            <div class="section-box">
+                <div class="bg-watermark"></div>
+                <h2>📜 Voies & Capacités</h2>
+                
+                <div class="voies-grid">
+                    <script>
+                        const voiesConfig = [
+                            { defaultName: "Voie du peuple", label: "VOIE 1 :" },
+                            { defaultName: "", label: "VOIE 2 :" },
+                            { defaultName: "", label: "VOIE 3 :" },
+                            { defaultName: "", label: "VOIE 4 :" },
+                            { defaultName: "", label: "VOIE 5 :" },
+                            { defaultName: "", label: "Prestige :" }
+                        ];
+
+                        voiesConfig.forEach((v, index) => {
+                            let rangsHTML = '';
+                            for (let r = 1; r <= 5; r++) {
+                                rangsHTML += `
+                                    <div class="voie-rang-row">
+                                        <div class="rang-top-line">
+                                            <span class="rang-title">Rang ${r} :</span>
+                                            <input type="text" class="rang-name-input" placeholder="Nom de la capacité" oninput="saveData()">
+                                        </div>
+                                        <textarea class="rang-desc-textarea" placeholder="Description de la capacité..." oninput="saveData()"></textarea>
+                                    </div>
+                                `;
+                            }
+                            document.write(`
+                                <div class="voie-card" id="voie_${index}">
+                                    <div class="voie-header">
+                                        <span class="voie-label-title">${v.label}</span>
+                                        <input type="text" class="voie-name-input" value="${v.defaultName}" placeholder="Nom de la voie" oninput="saveData()">
+                                    </div>
+                                    <div class="voie-rangs">
+                                        ${rangsHTML}
+                                    </div>
+                                </div>
+                            `);
+                        });
+                    </script>
+                </div>
+            </div>
+
+            <button class="main-btn btn-export-json" onclick="exportJSON()">💾 Exporter les données (JSON)</button>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const statsList = ['AGI', 'CON', 'FOR', 'PER', 'CHA', 'INT', 'VOL'];
+    let currentPV = null;
+    let avatarBase64 = "";
+
+    let assignedStats = { AGI: null, CON: null, FOR: null, PER: null, CHA: null, INT: null, VOL: null };
+    let availableTokens = [];
+
+    const profilePools = {
+        "Polyvalent": [2, 2, 1, 1, 0, 0, -1],
+        "Expert": [3, 2, 1, 1, 0, -1, -2],
+        "Spécialiste": [4, 2, 1, 0, -1, -2, -3]
+    };
+
+    const subProfilesData = {
+        "Aventurier": [{ name: "Arquebusier", page: "p62" }, { name: "Barde", page: "p66" }, { name: "Rôdeur", page: "p70" }, { name: "Voleur", page: "p74" }],
+        "Combattant": [{ name: "Barbare", page: "p79" }, { name: "Chevalier", page: "p83" }, { name: "Guerrier", page: "p87" }],
+        "Mage": [{ name: "Ensorceleur", page: "p92" }, { name: "Forgesort", page: "p97" }, { name: "Magicien", page: "p102" }, { name: "Sorcier", page: "p107" }],
+        "Mystique": [{ name: "Druide", page: "p113" }, { name: "Moine", page: "p118" }, { name: "Prêtre", page: "p122" }]
+    };
+
+    function loadAvatar(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                avatarBase64 = e.target.result;
+                const preview = document.getElementById('avatarPreview');
+                preview.src = avatarBase64;
+                preview.style.display = 'block';
+                document.getElementById('avatarPlaceholder').style.display = 'none';
+                saveData();
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function onProfileModeChange() {
+        let mode = document.getElementById('charProfile').value;
+        let basePool = profilePools[mode] || [2, 2, 1, 1, 0, 0, -1];
+        availableTokens = [...basePool];
+        statsList.forEach(s => assignedStats[s] = null);
+        renderPoolAndSlots();
+        calculateTotals();
+    }
+
+    function renderPoolAndSlots() {
+        let poolContainer = document.getElementById('poolContainer');
+        poolContainer.innerHTML = '';
+        
+        if (availableTokens.length === 0) {
+            poolContainer.innerHTML = '<span class="pool-empty-msg">Tous les points sont attribués. Cliquez sur une carac. pour en récupérer un.</span>';
+        } else {
+            availableTokens.forEach((val, index) => {
+                let token = document.createElement('div');
+                token.className = 'draggable-token' + (val < 0 ? ' negative' : '');
+                token.draggable = true;
+                token.innerText = (val >= 0 ? '+' : '') + val;
+                token.dataset.val = val;
+                token.dataset.index = index;
+                
+                token.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', JSON.stringify({val: val, index: index, source: 'pool'}));
+                });
+                poolContainer.appendChild(token);
+            });
+        }
+
+        statsList.forEach(stat => {
+            let slot = document.getElementById('slot_' + stat);
+            let val = assignedStats[stat];
+            if (val !== null && val !== undefined) {
+                let badge = document.createElement('div');
+                badge.className = 'stat-assigned-badge' + (val < 0 ? ' negative' : '');
+                badge.innerText = (val >= 0 ? '+' : '') + val;
+                badge.title = "Cliquer pour renvoyer dans la réserve";
+                badge.onclick = () => {
+                    availableTokens.push(val);
+                    assignedStats[stat] = null;
+                    renderPoolAndSlots();
+                    calculateTotals();
+                    saveData();
+                };
+                slot.innerHTML = '';
+                slot.appendChild(badge);
+            } else {
+                slot.innerHTML = '<span class="stat-empty-text">Glissez ici</span>';
+            }
+        });
+    }
+
+    function allowDrop(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+    function removeDropStyle(e) { e.currentTarget.classList.remove('drag-over'); }
+
+    function dropToken(e, stat) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        const rawData = e.dataTransfer.getData('text/plain');
+        if (!rawData) return;
+        const data = JSON.parse(rawData);
+        
+        if (assignedStats[stat] !== null && assignedStats[stat] !== undefined) {
+            availableTokens.push(assignedStats[stat]);
+        }
+        if (data.source === 'pool') {
+            availableTokens.splice(data.index, 1);
+        }
+        assignedStats[stat] = data.val;
+        renderPoolAndSlots();
+        calculateTotals();
+        saveData();
+    }
+
+    function getPeupleBonuses() {
+        let peuple = document.getElementById('charPeuple').value;
+        let bonuses = { AGI: 0, CON: 0, FOR: 0, PER: 0, CHA: 0, INT: 0, VOL: 0 };
+
+        if (peuple === 'Demi-elfe' || peuple === 'Demi-orc') {
+            let opt1 = document.getElementById('opt_bonus1')?.value;
+            let opt2 = document.getElementById('opt_malus1')?.value;
+            if (opt1) bonuses[opt1] += 1;
+            if (opt2) bonuses[opt2] -= 1;
+        } else if (['Elfe haut', 'Elfe sylvain', 'Gnome', 'Halfelin'].includes(peuple)) {
+            let opt1 = document.getElementById('opt_bonus1')?.value;
+            if (opt1) bonuses[opt1] += 1;
+            bonuses.FOR -= 1;
+        } else if (peuple === 'Humain') {
+            let opt1 = document.getElementById('opt_bonus1')?.value;
+            let opt2 = document.getElementById('opt_bonus2')?.value;
+            if (opt1) bonuses[opt1] += 1;
+            if (opt2) bonuses[opt2] += 1;
+        } else if (peuple === 'Nain') {
+            let opt1 = document.getElementById('opt_bonus1')?.value;
+            if (opt1) bonuses[opt1] += 1;
+            bonuses.AGI -= 1;
+        }
+        return bonuses;
+    }
+
+    function onFamilyChange() {
+        let family = document.getElementById('charFamily').value;
+        let subSelect = document.getElementById('charSubProfile');
+        let textElement = document.getElementById('familyBonusText');
+
+        subSelect.innerHTML = '';
+        if (subProfilesData[family]) {
+            subProfilesData[family].forEach(sub => {
+                let opt = document.createElement('option');
+                opt.value = sub.name;
+                opt.textContent = `${sub.name} (${sub.page})`;
+                subSelect.appendChild(opt);
+            });
+        }
+
+        if (family === 'Aventurier') textElement.innerText = "Gain de 4 PV/niv + 1 PC supp. Type de DR : d8";
+        else if (family === 'Combattant') textElement.innerText = "Gain de 5 PV/niv. Conçu pour le front. Type de DR : d10";
+        else if (family === 'Mage') textElement.innerText = "Gain de 3 PV/niv + Capacité rang 2 supp. Type de DR : d6";
+        else if (family === 'Mystique') textElement.innerText = "Gain de 4 PV/niv + 1 DR supp. Type de DR : d8";
+        calculateTotals();
+    }
+
+    function onPeupleChange() {
+        let peuple = document.getElementById('charPeuple').value;
+        let container = document.getElementById('peupleOptions');
+        let instruction = document.getElementById('peupleLabelInstruction');
+        let choicesContainer = document.getElementById('peupleChoicesContainer');
+
+        choicesContainer.innerHTML = '';
+        container.style.display = 'block';
+
+        if (peuple === 'Demi-elfe') {
+            instruction.innerText = "Ajustements du Demi-elfe : Un bonus (+1) et un malus (-1).";
+            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();"><option value="PER">PER</option><option value="CHA">CHA</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); saveData();"><option value="FOR">FOR</option><option value="CON">CON</option></select></div>`;
+        } else if (peuple === 'Demi-orc') {
+            instruction.innerText = "Ajustements du Demi-orc : Un bonus (+1) et un malus (-1).";
+            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();"><option value="FOR">FOR</option><option value="CON">CON</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); saveData();"><option value="CHA">CHA</option><option value="INT">INT</option></select></div>`;
+        } else if (['Elfe haut', 'Elfe sylvain', 'Gnome', 'Halfelin'].includes(peuple)) {
+            let options = peuple === 'Elfe haut' ? '<option value="INT">INT</option><option value="CHA">CHA</option>' : peuple === 'Elfe sylvain' ? '<option value="AGI">AGI</option><option value="PER">PER</option>' : peuple === 'Gnome' ? '<option value="INT">INT</option><option value="PER">PER</option>' : '<option value="AGI">AGI</option><option value="VOL">VOL</option>';
+            instruction.innerText = `Ajustements de l'${peuple} : +1 au choix, et -1 FOR.`;
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();">${options}</select></div><div class="malus-text-badge">Malus : -1 FOR</div>`;
+        } else if (peuple === 'Humain') {
+            instruction.innerText = "Ajustements de l'Humain : +1 sur deux caractéristiques.";
+            choicesContainer.innerHTML = `<div><label>1er (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();">${statsList.map(s => `<option value="${s}">${s}</option>`).join('')}</select></div><div><label>2ème (+1) :</label><select id="opt_bonus2" onchange="calculateTotals(); saveData();">${statsList.map(s => `<option value="${s}" ${s==='CON'?'selected':''}>${s}</option>`).join('')}</select></div>`;
+        } else if (peuple === 'Nain') {
+            instruction.innerText = "Ajustements du Nain : +1 CON ou VOL, et -1 AGI.";
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();"><option value="CON">CON</option><option value="VOL">VOL</option></select></div><div class="malus-text-badge">Malus : -1 AGI</div>`;
+        }
+        calculateTotals();
+        saveData();
+    }
+
+    function addWeaponRow(data = {}) {
+        const container = document.getElementById('weaponsContainer');
+        const rowId = 'weapon_' + Date.now() + Math.random().toString(36).substr(2, 5);
+        const diceOptions = ['1d4', '1d6', '1d8', '1d10', '1d12', '1d20', '2d6'];
+        let atkDieOpts = diceOptions.map(d => `<option value="${d}" ${d === (data.atkDie || '1d20') ? 'selected' : ''}>${d}</option>`).join('');
+        let dmDieOpts = diceOptions.map(d => `<option value="${d}" ${d === (data.dmDie || '1d6') ? 'selected' : ''}>${d}</option>`).join('');
+
+        let scaleOpts = (selectedVal) => {
+            let opts = '';
+            for(let i = -5; i <= 5; i++) {
+                let valStr = (i >= 0 ? '+' : '') + i;
+                opts += `<option value="${valStr}" ${valStr === String(selectedVal) ? 'selected' : ''}>${valStr}</option>`;
+            }
+            return opts;
+        };
+
+        const row = document.createElement('div');
+        row.className = 'weapon-row';
+        row.id = rowId;
+        row.innerHTML = `
+            <div class="field-group"><label>⚔️ Arme / Sort</label><input type="text" class="w-name" value="${data.name || ''}" placeholder="Nom" oninput="saveData()"></div>
+            <div class="field-group"><label>🎯 Atk</label><div class="sub-flex-row"><select class="w-atk-die" onchange="saveData()">${atkDieOpts}</select><select class="w-atk-mod" onchange="saveData()">${scaleOpts(data.atkMod !== undefined ? data.atkMod : '+0')}</select></div></div>
+            <div class="field-group"><label>💥 DM</label><div class="sub-flex-row"><select class="w-dm-die" onchange="saveData()">${dmDieOpts}</select><select class="w-dm-mod" onchange="saveData()">${scaleOpts(data.dmMod !== undefined ? data.dmMod : '+0')}</select><button type="button" class="btn-delete-row" onclick="document.getElementById('${rowId}').remove(); saveData();">×</button></div></div>
+        `;
+        container.appendChild(row);
+    }
+
+    function addEquipmentRow(data = {}) {
+        const container = document.getElementById('equipmentContainer');
+        const rowId = 'eq_' + Date.now() + Math.random().toString(36).substr(2, 5);
+        const row = document.createElement('div');
+        row.className = 'eq-row';
+        row.id = rowId;
+        row.innerHTML = `
+            <div class="field-group"><label>📦 Objet</label><input type="text" class="eq-name" value="${data.name || ''}" placeholder="Objet" oninput="saveData()"></div>
+            <div class="field-group"><label>🔢 Qté</label><input type="text" class="eq-qty" value="${data.qty || '1'}" oninput="saveData()"></div>
+            <div class="eq-delete-wrapper"><button type="button" class="btn-delete-row-eq" onclick="document.getElementById('${rowId}').remove(); saveData();">×</button></div>
+        `;
+        container.appendChild(row);
+    }
+
+    function calculateTotals() {
+        let peupleBonuses = getPeupleBonuses();
+        let level = parseInt(document.getElementById('charLevel').value) || 1;
+
+        statsList.forEach(stat => {
+            let profilVal = assignedStats[stat] !== null && assignedStats[stat] !== undefined ? assignedStats[stat] : 0;
+            let peupleBonus = peupleBonuses[stat] || 0;
+            let total = profilVal + peupleBonus;
+            document.getElementById('mod_' + stat).innerText = `P: ${peupleBonus >= 0 ? "+" + peupleBonus : peupleBonus}`;
+            document.getElementById('tot_' + stat).innerText = `Tot: ${total >= 0 ? "+" + total : total}`;
+        });
+
+        let agiTotal = (assignedStats['AGI'] !== null ? assignedStats['AGI'] : 0) + (peupleBonuses['AGI'] || 0);
+        let armorBonus = parseInt(document.getElementById('armorBonus').value) || 0;
+        let shieldBonus = parseInt(document.getElementById('shieldBonus').value) || 0;
+        let extraDef = parseInt(document.getElementById('extraDefBonus').value) || 0;
+        document.getElementById('displayDEF').innerText = 10 + agiTotal + armorBonus + shieldBonus + extraDef;
+
+        let perTotal = (assignedStats['PER'] !== null ? assignedStats['PER'] : 0) + (peupleBonuses['PER'] || 0);
+        let extraInit = parseInt(document.getElementById('extraInitBonus').value) || 0;
+        document.getElementById('displayInit').innerText = 10 + perTotal + extraInit;
+
+        let forTotal = (assignedStats['FOR'] !== null ? assignedStats['FOR'] : 0) + (peupleBonuses['FOR'] || 0);
+        let volTotal = (assignedStats['VOL'] !== null ? assignedStats['VOL'] : 0) + (peupleBonuses['VOL'] || 0);
+
+        let contactBaseVal = (document.getElementById('contactStatChoice').value === 'AGI') ? agiTotal : forTotal;
+        let distanceBaseVal = (document.getElementById('distanceStatChoice').value === 'PER') ? perTotal : agiTotal;
+
+        let atkContact = level + contactBaseVal + (parseInt(document.getElementById('extraAtkContact').value) || 0);
+        let atkDistance = level + distanceBaseVal + (parseInt(document.getElementById('extraAtkDistance').value) || 0);
+        let atkMagique = level + volTotal + (parseInt(document.getElementById('extraAtkMagique').value) || 0);
+
+        document.getElementById('displayAtkContact').innerText = (atkContact >= 0 ? "+" : "") + atkContact;
+        document.getElementById('displayAtkDistance').innerText = (atkDistance >= 0 ? "+" : "") + atkDistance;
+        document.getElementById('displayAtkMagique').innerText = (atkMagique >= 0 ? "+" : "") + atkMagique;
+
+        let spellCount = parseInt(document.getElementById('spellCount').value) || 0;
+        document.getElementById('displayPM').innerText = spellCount > 0 ? volTotal + spellCount : 0;
+
+        let chaTotal = (assignedStats['CHA'] !== null ? assignedStats['CHA'] : 0) + (peupleBonuses['CHA'] || 0);
+        let family = document.getElementById('charFamily').value;
+        document.getElementById('displayPC').innerText = 2 + chaTotal + (family === 'Aventurier' ? 1 : 0);
+
+        let conTotal = (assignedStats['CON'] !== null ? assignedStats['CON'] : 0) + (peupleBonuses['CON'] || 0) + (parseInt(document.getElementById('extraConBonus').value) || 0);
+        let basePV = family === 'Combattant' ? 5 : (family === 'Mage' ? 3 : 4);
+        let maxPV = (basePV * 2) + conTotal;
+        for (let i = 2; i <= level; i++) maxPV += Math.max(1, basePV + conTotal);
+
+        if (currentPV === null || currentPV > maxPV) currentPV = maxPV;
+        document.getElementById('displayPV').innerText = `${currentPV} / ${maxPV}`;
+
+        let baseDR = Math.max(0, 2 + conTotal + (family === 'Mystique' ? 1 : 0));
+        let dieType = family === 'Combattant' ? "d10" : (family === 'Mage' ? "d6" : "d8");
+        document.getElementById('displayDR').innerText = `${baseDR} ${dieType}`;
+    }
+
+    function adjustCurrentPV(amount) {
+        let level = parseInt(document.getElementById('charLevel').value) || 1;
+        let family = document.getElementById('charFamily').value;
+        let conTotal = (assignedStats['CON'] !== null ? assignedStats['CON'] : 0) + (getPeupleBonuses()['CON'] || 0) + (parseInt(document.getElementById('extraConBonus').value) || 0);
+        let basePV = family === 'Combattant' ? 5 : (family === 'Mage' ? 3 : 4);
+        let maxPV = (basePV * 2) + conTotal;
+        for (let i = 2; i <= level; i++) maxPV += Math.max(1, basePV + conTotal);
+
+        if (currentPV === null) currentPV = maxPV;
+        currentPV = Math.max(0, Math.min(maxPV, currentPV + amount));
+        document.getElementById('displayPV').innerText = `${currentPV} / ${maxPV}`;
+        saveData();
+    }
+
+    function saveData() {
+        const weaponsData = Array.from(document.querySelectorAll('.weapon-row')).map(row => ({
+            name: row.querySelector('.w-name').value,
+            atkDie: row.querySelector('.w-atk-die').value,
+            atkMod: row.querySelector('.w-atk-mod').value,
+            dmDie: row.querySelector('.w-dm-die').value,
+            dmMod: row.querySelector('.w-dm-mod').value
+        }));
+
+        const equipmentData = Array.from(document.querySelectorAll('.eq-row')).map(row => ({
+            name: row.querySelector('.eq-name').value,
+            qty: row.querySelector('.eq-qty').value
+        }));
+
+        const voiesData = Array.from(document.querySelectorAll('.voie-card')).map(card => {
+            const voieName = card.querySelector('.voie-name-input').value;
+            const rangs = Array.from(card.querySelectorAll('.voie-rang-row')).map(row => {
+                const rangName = row.querySelector('.rang-name-input').value;
+                const rangDesc = row.querySelector('.rang-desc-textarea').value;
+                return { rangName, rangDesc };
+            });
+            return { voieName, rangs };
+        });
+
+        const data = {
+            name: document.getElementById('charName').value,
+            ideal: document.getElementById('charIdeal').value,
+            flaw: document.getElementById('charFlaw').value,
+            description: document.getElementById('charDescription').value,
+            profile: document.getElementById('charProfile').value,
+            family: document.getElementById('charFamily').value,
+            subProfile: document.getElementById('charSubProfile').value,
+            peuple: document.getElementById('charPeuple').value,
+            level: document.getElementById('charLevel').value,
+            extraConBonus: document.getElementById('extraConBonus').value,
+            spellCount: document.getElementById('spellCount').value,
+            extraInitBonus: document.getElementById('extraInitBonus').value,
+            armorBonus: document.getElementById('armorBonus').value,
+            shieldBonus: document.getElementById('shieldBonus').value,
+            extraDefBonus: document.getElementById('extraDefBonus').value,
+            contactStatChoice: document.getElementById('contactStatChoice').value,
+            distanceStatChoice: document.getElementById('distanceStatChoice').value,
+            extraAtkContact: document.getElementById('extraAtkContact').value,
+            extraAtkDistance: document.getElementById('extraAtkDistance').value,
+            extraAtkMagique: document.getElementById('extraAtkMagique').value,
+            currentPV: currentPV, avatar: avatarBase64,
+            weapons: weaponsData, equipment: equipmentData, voies: voiesData,
+            assignedStats: assignedStats, availableTokens: availableTokens,
+            peupleChoices: { 
+                opt1: document.getElementById('opt_bonus1')?.value, 
+                opt2: document.getElementById('opt_bonus2')?.value,
+                optMalus1: document.getElementById('opt_malus1')?.value
+            }
+        };
+        localStorage.setItem('cof2_character', JSON.stringify(data));
+    }
+
+    function loadData() {
+        const saved = localStorage.getItem('cof2_character');
+        if (saved) {
+            const data = JSON.parse(saved);
+            document.getElementById('charName').value = data.name || '';
+            if(data.ideal) document.getElementById('charIdeal').value = data.ideal;
+            if(data.flaw) document.getElementById('charFlaw').value = data.flaw;
+            if(data.description) document.getElementById('charDescription').value = data.description;
+            document.getElementById('charProfile').value = data.profile || 'Polyvalent';
+            if(data.family) document.getElementById('charFamily').value = data.family;
+            onFamilyChange();
+            if(data.subProfile) document.getElementById('charSubProfile').value = data.subProfile;
+
+            document.getElementById('charPeuple').value = data.peuple || 'Demi-elfe';
+            document.getElementById('charLevel').value = data.level || 1;
+            if(data.extraConBonus) document.getElementById('extraConBonus').value = data.extraConBonus;
+            if(data.spellCount !== undefined) document.getElementById('spellCount').value = data.spellCount;
+            if(data.extraInitBonus !== undefined) document.getElementById('extraInitBonus').value = data.extraInitBonus;
+            if(data.armorBonus !== undefined) document.getElementById('armorBonus').value = data.armorBonus;
+            if(data.shieldBonus !== undefined) document.getElementById('shieldBonus').value = data.shieldBonus;
+            if(data.extraDefBonus !== undefined) document.getElementById('extraDefBonus').value = data.extraDefBonus;
+            if(data.contactStatChoice) document.getElementById('contactStatChoice').value = data.contactStatChoice;
+            if(data.distanceStatChoice) document.getElementById('distanceStatChoice').value = data.distanceStatChoice;
+            if(data.extraAtkContact !== undefined) document.getElementById('extraAtkContact').value = data.extraAtkContact;
+            if(data.extraAtkDistance !== undefined) document.getElementById('extraAtkDistance').value = data.extraAtkDistance;
+            if(data.extraAtkMagique !== undefined) document.getElementById('extraAtkMagique').value = data.extraAtkMagique;
+            currentPV = data.currentPV !== undefined ? data.currentPV : null;
+
+            if (data.avatar) {
+                avatarBase64 = data.avatar;
+                const preview = document.getElementById('avatarPreview');
+                preview.src = avatarBase64;
+                preview.style.display = 'block';
+                document.getElementById('avatarPlaceholder').style.display = 'none';
+            }
+
+            onPeupleChange();
+            if (data.assignedStats) assignedStats = data.assignedStats;
+            if (data.availableTokens) availableTokens = data.availableTokens;
+            else onProfileModeChange();
+
+            renderPoolAndSlots();
+
+            if (data.peupleChoices) {
+                if(document.getElementById('opt_bonus1')) document.getElementById('opt_bonus1').value = data.peupleChoices.opt1 || '';
+                if(document.getElementById('opt_bonus2')) document.getElementById('opt_bonus2').value = data.peupleChoices.opt2 || '';
+                if(document.getElementById('opt_malus1')) document.getElementById('opt_malus1').value = data.peupleChoices.optMalus1 || data.peupleChoices.opt2 || '';
+            }
+
+            document.getElementById('weaponsContainer').innerHTML = '';
+            (data.weapons && data.weapons.length > 0) ? data.weapons.forEach(w => addWeaponRow(w)) : addWeaponRow({name: 'Arme de contact', atkDie: '1d20', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
+
+            document.getElementById('equipmentContainer').innerHTML = '';
+            (data.equipment && data.equipment.length > 0) ? data.equipment.forEach(e => addEquipmentRow(e)) : addEquipmentRow({name: 'Rations de voyage', qty: '1'});
+
+            if (data.voies && data.voies.length > 0) {
+                data.voies.forEach((voie, index) => {
+                    const card = document.getElementById('voie_' + index);
+                    if (card) {
+                        card.querySelector('.voie-name-input').value = voie.voieName || '';
+                        const rangRows = card.querySelectorAll('.voie-rang-row');
+                        voie.rangs.forEach((rangData, rIndex) => {
+                            if (rangRows[rIndex]) {
+                                rangRows[rIndex].querySelector('.rang-name-input').value = rangData.rangName || '';
+                                rangRows[rIndex].querySelector('.rang-desc-textarea').value = rangData.rangDesc || '';
+                            }
+                        });
+                    }
+                });
+            }
+
+            calculateTotals();
+        } else {
+            onPeupleChange();
+            onFamilyChange();
+            onProfileModeChange();
+            addWeaponRow({name: 'Arme de contact', atkDie: '1d20', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
+            addEquipmentRow({name: 'Rations de voyage', qty: '1'});
+        }
+    }
+
+    function resetCharacterSheet() {
+        if (confirm("Voulez-vous vraiment effacer cette fiche et recommencer à zéro ?")) {
+            localStorage.removeItem('cof2_character');
+            location.reload();
+        }
+    }
+
+    function exportJSON() {
+        const data = JSON.parse(localStorage.getItem('cof2_character') || '{}');
+        data.currentPV = currentPV;
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type : 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = (data.name || 'personnage') + '_cof2.json';
+        a.click();
+    }
+
+    function exportToPNG() {
+        const grimoire = document.querySelector('.grimoire-spread');
+        if (!grimoire) {
+            alert("Erreur : Impossible de trouver la zone du grimoire à capturer.");
+            return;
+        }
+
+        grimoire.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+            input.setAttribute('value', input.value);
+        });
+
+        grimoire.querySelectorAll('textarea').forEach(textarea => {
+            textarea.innerHTML = textarea.value;
+        });
+
+        html2canvas(grimoire, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: null,
+            ignoreElements: (element) => {
+                return element.classList && element.classList.contains('no-export');
+            }
+        }).then(canvas => {
+            const link = document.createElement('a');
+            let charName = document.getElementById('charName').value.trim();
+            link.download = (charName ? charName : 'personnage') + '_cof2.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(err => {
+            console.error("Erreur lors de l'export PNG :", err);
+            alert("Une erreur est survenue lors de la génération de l'image.");
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadData();
+        
+        const rootElement = document.documentElement;
+        let currentSize = 0.9;
+        const sizeDisplay = document.getElementById('fontSizeDisplay');
+        
+        const updateFontSize = (newSize) => {
+            if (newSize >= 0.7 && newSize <= 1.4) {
+                currentSize = Math.round(newSize * 10) / 10;
+                rootElement.style.setProperty('--global-font-size', currentSize + 'rem');
+                if(sizeDisplay) sizeDisplay.textContent = currentSize + 'rem';
+            }
+        };
+
+        const btnInc = document.getElementById('btnIncreaseFont');
+        const btnDec = document.getElementById('btnDecreaseFont');
+        if(btnInc) btnInc.addEventListener('click', () => updateFontSize(currentSize + 0.1));
+        if(btnDec) btnDec.addEventListener('click', () => updateFontSize(currentSize - 0.1));
+
+        const fontSelect = document.getElementById('globalFontSelect');
+        if(fontSelect) {
+            fontSelect.addEventListener('change', (e) => {
+                rootElement.style.setProperty('--global-font-family', e.target.value);
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
