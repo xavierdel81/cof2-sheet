@@ -84,8 +84,8 @@
                         <label for="charProfile">Répartition</label>
                         <select id="charProfile" onchange="onProfileModeChange(); saveData();">
                             <option value="Polyvalent">Polyv. (+2..-1)</option>
-                            <option value="Expert">Expert (+3..-2)</option>
-                            <option value="Spécialiste">Spécial. (+4..-3)</option>
+                            <option value="Expert">Expert (+3..-1)</option>
+                            <option value="Spécialiste">Spécial. (+4..-1)</option>
                         </select>
                     </div>
 
@@ -356,9 +356,9 @@
     let availableTokens = [];
 
     const profilePools = {
-        "Polyvalent": [2, 2, 1, 1, 0, 0, -1],
-        "Expert": [3, 2, 1, 1, 0, -1, -2],
-        "Spécialiste": [4, 2, 1, 0, -1, -2, -3]
+        "Polyvalent": [2, 2, 2, 1, 1, 0, -1],
+        "Expert": [3, 2, 1, 1, 0, 0, -1],
+        "Spécialiste": [4, 2, 1, 0, 0, -1, -1]
     };
 
     const subProfilesData = {
@@ -386,7 +386,7 @@
 
     function onProfileModeChange() {
         let mode = document.getElementById('charProfile').value;
-        let basePool = profilePools[mode] || [2, 2, 1, 1, 0, 0, -1];
+        let basePool = profilePools[mode] || [2, 2, 2, 1, 1, 0, -1];
         availableTokens = [...basePool];
         statsList.forEach(s => assignedStats[s] = null);
         renderPoolAndSlots();
