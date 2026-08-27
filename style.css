@@ -897,3 +897,91 @@ button.main-btn:hover {
     background: rgba(255, 253, 249, 0.98);
     border-color: var(--border-primary);
 }
+
+
+/* --- Styles pour le bloc Compagnon Animal / Familier --- */
+.companion-header-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px dashed #b39b7d;
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #ffd700;
+    width: 100%;
+    padding: 2px 4px;
+}
+
+.companion-header-input:focus {
+    background: rgba(255, 253, 249, 0.2);
+    outline: none;
+    border-bottom: 1px solid #ffd700;
+}
+
+.companion-type-input {
+    background: var(--border-primary);
+    color: #f7f3e8;
+    border: 1px solid #b39b7d;
+    border-radius: 3px;
+    padding: 3px 6px;
+    font-size: 0.75rem;
+    font-family: var(--global-font-family);
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.companion-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+.companion-stat-box {
+    background: rgba(255, 253, 249, 0.85);
+    border: 1px solid #b8a79a;
+    border-radius: 4px;
+    padding: 4px;
+    text-align: center;
+}
+
+.companion-stat-box label {
+    font-size: 0.65rem !important;
+    display: block;
+    margin-bottom: 2px;
+    color: var(--border-primary);
+}
+
+.companion-stat-box input {
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    padding: 2px;
+    height: 24px;
+}
+
+.companion-line-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(244, 239, 230, 0.85);
+    border: 1px solid #d4c5b9;
+    padding: 6px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.companion-line-row label {
+    font-size: 0.75rem !important;
+    min-width: 90px;
+    margin-bottom: 0;
+    color: #5a3d28;
+}
+
+.companion-line-row input {
+    flex-grow: 1;
+    padding: 3px 6px;
+    font-size: 0.85rem;
+}
