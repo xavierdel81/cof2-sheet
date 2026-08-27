@@ -45,7 +45,7 @@
         <!-- ===== PAGE 1 : Avatar, Identité, Caractéristiques, Combat & PV ===== -->
         <div class="grimoire-page">
             
-            <!-- Bloc Avatar Dédié (Corrigé) -->
+            <!-- Bloc Avatar Dédié -->
             <div class="section-box">
                 <h2>🖼️ Portrait du Personnage</h2>
                 <div class="avatar-large-container">
@@ -436,6 +436,9 @@
                 slot.innerHTML = '<span class="stat-empty-text">Glissez ici</span>';
             }
         });
+        
+        // Rafraîchir les options spécifiques du peuple (comme l'humain qui dépend des stats actuelles)
+        updatePeupleOptionsDynamic();
     }
 
     function allowDrop(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
@@ -475,9 +478,7 @@
             bonuses.FOR -= 1;
         } else if (peuple === 'Humain') {
             let opt1 = document.getElementById('opt_bonus1')?.value;
-            let opt2 = document.getElementById('opt_bonus2')?.value;
-            if (opt1) bonuses[opt1] += 1;
-            if (opt2) bonuses[opt2] += 1;
+            if (opt1) bonuses[opt1] += 1; // +1 sur la carac la plus faible choisie (ex: FOR ou CHA)
         } else if (peuple === 'Nain') {
             let opt1 = document.getElementById('opt_bonus1')?.value;
             if (opt1) bonuses[opt1] += 1;
@@ -509,33 +510,47 @@
     }
 
     function onPeupleChange() {
-        let peuple = document.getElementById('charPeuple').value;
         let container = document.getElementById('peupleOptions');
+        container.style.display = 'block';
+        updatePeupleOptionsDynamic();
+        calculateTotals();
+        saveData();
+    }
+
+    function updatePeupleOptionsDynamic() {
+        let peuple = document.getElementById('charPeuple').value;
         let instruction = document.getElementById('peupleLabelInstruction');
         let choicesContainer = document.getElementById('peupleChoicesContainer');
 
+        if (!choicesContainer) return;
+        
+        // Sauvegarde de l'ancienne sélection si possible pour éviter de l'écraser bêtement
+        let oldOpt1 = document.getElementById('opt_bonus1')?.value;
+
         choicesContainer.innerHTML = '';
-        container.style.display = 'block';
 
         if (peuple === 'Demi-elfe') {
             instruction.innerText = "Ajustements du Demi-elfe : Un bonus (+1) et un malus (-1).";
-            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();"><option value="PER">PER</option><option value="CHA">CHA</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); saveData();"><option value="FOR">FOR</option><option value="CON">CON</option></select></div>`;
+            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();"><option value="PER" ${oldOpt1==='PER'?'selected':''}>PER</option><option value="CHA" ${oldOpt1==='CHA'?'selected':''}>CHA</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); saveData();"><option value="FOR">FOR</option><option value="CON">CON</option></select></div>`;
         } else if (peuple === 'Demi-orc') {
             instruction.innerText = "Ajustements du Demi-orc : Un bonus (+1) et un malus (-1).";
-            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();"><option value="FOR">FOR</option><option value="CON">CON</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); saveData();"><option value="CHA">CHA</option><option value="INT">INT</option></select></div>`;
+            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();"><option value="FOR" ${oldOpt1==='FOR'?'selected':''}>FOR</option><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); saveData();"><option value="CHA">CHA</option><option value="INT">INT</option></select></div>`;
         } else if (['Elfe haut', 'Elfe sylvain', 'Gnome', 'Halfelin'].includes(peuple)) {
             let options = peuple === 'Elfe haut' ? '<option value="INT">INT</option><option value="CHA">CHA</option>' : peuple === 'Elfe sylvain' ? '<option value="AGI">AGI</option><option value="PER">PER</option>' : peuple === 'Gnome' ? '<option value="INT">INT</option><option value="PER">PER</option>' : '<option value="AGI">AGI</option><option value="VOL">VOL</option>';
             instruction.innerText = `Ajustements de l'${peuple} : +1 au choix, et -1 FOR.`;
             choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();">${options}</select></div><div class="malus-text-badge">Malus : -1 FOR</div>`;
         } else if (peuple === 'Humain') {
-            instruction.innerText = "Ajustements de l'Humain : +1 sur deux caractéristiques.";
-            choicesContainer.innerHTML = `<div><label>1er (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();">${statsList.map(s => `<option value="${s}">${s}</option>`).join('')}</select></div><div><label>2ème (+1) :</label><select id="opt_bonus2" onchange="calculateTotals(); saveData();">${statsList.map(s => `<option value="${s}" ${s==='CON'?'selected':''}>${s}</option>`).join('')}</select></div>`;
+            // Recherche des caractéristiques les plus faibles selon les valeurs actuellement assignées (attribuées via le profil)
+            let minVal = Math.min(...statsList.map(s => assignedStats[s] !== null ? assignedStats[s] : 0));
+            let lowestStats = statsList.filter(s => (assignedStats[s] !== null ? assignedStats[s] : 0) === minVal);
+
+            instruction.innerText = "Ajustements de l'Humain : +1 sur l'une de ses caractéristiques les plus faibles.";
+            let optionsHTML = lowestStats.map(s => `<option value="${s}" ${s === oldOpt1 ? 'selected' : ''}>${s} (${minVal >= 0 ? '+' + minVal : minVal})</option>`).join('');
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();">${optionsHTML}</select></div>`;
         } else if (peuple === 'Nain') {
             instruction.innerText = "Ajustements du Nain : +1 CON ou VOL, et -1 AGI.";
-            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();"><option value="CON">CON</option><option value="VOL">VOL</option></select></div><div class="malus-text-badge">Malus : -1 AGI</div>`;
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();"><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON</option><option value="VOL" ${oldOpt1==='VOL'?'selected':''}>VOL</option></select></div><div class="malus-text-badge">Malus : -1 AGI</div>`;
         }
-        calculateTotals();
-        saveData();
     }
 
     function addWeaponRow(data = {}) {
@@ -742,7 +757,6 @@
                 document.getElementById('avatarPlaceholder').style.display = 'none';
             }
 
-            onPeupleChange();
             if (data.assignedStats) assignedStats = data.assignedStats;
             if (data.availableTokens) availableTokens = data.availableTokens;
             else onProfileModeChange();
