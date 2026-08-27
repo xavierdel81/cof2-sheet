@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
     <!-- Lien vers le fichier CSS externe -->
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=9">
     <!-- Inclusion de html2canvas pour l'export en image propre -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -31,6 +31,7 @@
         <h1 class="header-title">Feuille de Personnage — COF2</h1>
         <div class="header-actions">
             <button type="button" class="main-btn btn-export" onclick="exportToPNG()">📸 Télécharger en PNG</button>
+            <button type="button" id="btn-save-manual" class="main-btn" style="background-color: #3b5323; color: white;" onclick="manualSaveData()">💾 Enregistrer</button>
             <button type="button" id="btn-reset" class="main-btn btn-reset" onclick="resetCharacterSheet()">Nouvelle Fiche</button>
         </div>
     </div>
@@ -79,10 +80,10 @@
                 <div class="grid-identity">
                     <div class="field-group">
                         <label for="charName">Nom du Personnage</label>
-                        <input type="text" id="charName" class="input-spacing" oninput="saveData()">
+                        <input type="text" id="charName" class="input-spacing" oninput="autoSaveData()">
                         
                         <label for="charPeuple">Peuple</label>
-                        <select id="charPeuple" onchange="onPeupleChange(); saveData();">
+                        <select id="charPeuple" onchange="onPeupleChange(); autoSaveData();">
                             <option value="Demi-elfe">Demi-elfe</option>
                             <option value="Demi-orc">Demi-orc</option>
                             <option value="Elfe haut">Elfe haut</option>
@@ -96,7 +97,7 @@
 
                     <div class="field-group">
                         <label for="charProfile">Répartition</label>
-                        <select id="charProfile" onchange="onProfileModeChange(); saveData();">
+                        <select id="charProfile" onchange="onProfileModeChange(); autoSaveData();">
                             <option value="Polyvalent">Polyv. (+2..-1)</option>
                             <option value="Expert">Expert (+3..-1)</option>
                             <option value="Spécialiste">Spécial. (+4..-1)</option>
@@ -105,7 +106,7 @@
 
                     <div class="field-group">
                         <label for="charFamily">Famille de Profil</label>
-                        <select id="charFamily" class="input-spacing" onchange="onFamilyChange(); saveData();">
+                        <select id="charFamily" class="input-spacing" onchange="onFamilyChange(); autoSaveData();">
                             <option value="Aventurier">Aventurier</option>
                             <option value="Combattant">Combattant</option>
                             <option value="Mage">Mage</option>
@@ -113,14 +114,14 @@
                         </select>
 
                         <label for="charSubProfile">Profil (Spécialisation)</label>
-                        <select id="charSubProfile" onchange="saveData()"></select>
+                        <select id="charSubProfile" onchange="autoSaveData()"></select>
                     </div>
                 </div>
 
                 <div class="grid-identity grid-identity-duo">
                     <div class="field-group">
                         <label for="charIdeal">Idéal héroïque</label>
-                        <select id="charIdeal" onchange="saveData()">
+                        <select id="charIdeal" onchange="autoSaveData()">
                             <option value="">-- Choisir un idéal --</option>
                             <option value="Abnégation">Abnégation</option>
                             <option value="Clémence">Clémence</option>
@@ -138,7 +139,7 @@
                     </div>
                     <div class="field-group">
                         <label for="charFlaw">Travers</label>
-                        <select id="charFlaw" onchange="saveData()">
+                        <select id="charFlaw" onchange="autoSaveData()">
                             <option value="">-- Choisir un travers --</option>
                             <option value="Alcoolique">Alcoolique</option>
                             <option value="Couard">Couard</option>
@@ -158,7 +159,7 @@
 
                 <div class="field-group field-group-margin">
                     <label for="charDescription">Description du Personnage</label>
-                    <textarea id="charDescription" placeholder="Apparence, historique, traits..." oninput="saveData()"></textarea>
+                    <textarea id="charDescription" placeholder="Apparence, historique, traits..." oninput="autoSaveData()"></textarea>
                 </div>
             </div>
 
@@ -208,38 +209,41 @@
                 <div class="grid-identity grid-identity-combat-1">
                     <div class="field-group">
                         <label for="charLevel">⭐ Niveau</label>
-                        <input type="number" id="charLevel" value="1" min="1" max="20" oninput="calculateTotals(); saveData();">
+                        <input type="number" id="charLevel" value="1" min="1" max="20" oninput="calculateTotals(); autoSaveData();">
                     </div>
                     <div class="field-group">
                         <label for="extraConBonus">🛡️ Mod. CON Perm.</label>
-                        <select id="extraConBonus" class="stat-select" onchange="calculateTotals(); saveData();">
+                        <select id="extraConBonus" class="stat-select" onchange="calculateTotals(); autoSaveData();">
                             <option value="2">+2</option><option value="1">+1</option><option value="0" selected>+0</option><option value="-1">-1</option><option value="-2">-2</option>
                         </select>
                     </div>
                     <div class="field-group">
                         <label for="spellCount">✨ Sorts (*)</label>
-                        <input type="number" id="spellCount" value="0" min="0" max="20" oninput="calculateTotals(); saveData();">
+                        <input type="number" id="spellCount" value="0" min="0" max="20" oninput="calculateTotals(); autoSaveData();">
                     </div>
                     <div class="field-group">
                         <label for="extraInitBonus">⚡ Init. Supp.</label>
-                        <input type="number" id="extraInitBonus" value="0" oninput="calculateTotals(); saveData();">
+                        <input type="number" id="extraInitBonus" value="0" oninput="calculateTotals(); autoSaveData();">
                     </div>
                 </div>
 
                 <div class="grid-identity grid-identity-combat-2">
                     <div class="field-group">
                         <label for="armorBonus">🛡️ Armure (DEF)</label>
-                        <select id="armorBonus" onchange="calculateTotals(); saveData();">
+                        <select id="armorBonus" onchange="calculateTotals(); autoSaveData();">
                             <option value="0">Aucune (+0)</option>
                             <option value="1">Habits renforcés (+1)</option>
                             <option value="2">Armure de cuir (+2)</option>
                             <option value="3">Cotte de mailles (+3)</option>
                             <option value="4">Harnois / Plaques (+4)</option>
+                            <option value="5">Armure lourde +1 (+5)</option>
+                            <option value="6">Armure lourde +2 (+6)</option>
+                            <option value="7">Armure lourde +3 (+7)</option>
                         </select>
                     </div>
                     <div class="field-group">
                         <label for="shieldBonus">🛡️ Bouclier (DEF)</label>
-                        <select id="shieldBonus" onchange="calculateTotals(); saveData();">
+                        <select id="shieldBonus" onchange="calculateTotals(); autoSaveData();">
                             <option value="0">Aucun (+0)</option>
                             <option value="2">Bouclier standard (+2)</option>
                             <option value="1">Petit bouclier (+1)</option>
@@ -247,7 +251,7 @@
                     </div>
                     <div class="field-group">
                         <label for="extraDefBonus">🔮 Bonus DEF Magie</label>
-                        <input type="number" id="extraDefBonus" value="0" oninput="calculateTotals(); saveData();">
+                        <input type="number" id="extraDefBonus" value="0" oninput="calculateTotals(); autoSaveData();">
                     </div>
                 </div>
 
@@ -261,16 +265,16 @@
 
                 <div class="grid-identity grid-identity-combat-4">
                     <div class="framed-stat-card">
-                        <label class="flex-label"><span>⚔️ Atk. Contact</span><select id="contactStatChoice" class="sub-select-inline" onchange="calculateTotals(); saveData();"><option value="FOR">FOR</option><option value="AGI">AGI</option></select></label>
-                        <div class="flex-atk-row"><div id="displayAtkContact" class="display-card flex-grow-card">--</div><input type="number" id="extraAtkContact" value="0" class="input-atk-extra" oninput="calculateTotals(); saveData();"></div>
+                        <label class="flex-label"><span>⚔️ Atk. Contact</span><select id="contactStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR</option><option value="AGI">AGI</option></select></label>
+                        <div class="flex-atk-row"><div id="displayAtkContact" class="display-card flex-grow-card">--</div><input type="number" id="extraAtkContact" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();"></div>
                     </div>
                     <div class="framed-stat-card">
-                        <label class="flex-label"><span>🏹 Atk. Distance</span><select id="distanceStatChoice" class="sub-select-inline" onchange="calculateTotals(); saveData();"><option value="AGI">AGI</option><option value="PER">PER</option></select></label>
-                        <div class="flex-atk-row"><div id="displayAtkDistance" class="display-card flex-grow-card">--</div><input type="number" id="extraAtkDistance" value="0" class="input-atk-extra" oninput="calculateTotals(); saveData();"></div>
+                        <label class="flex-label"><span>🏹 Atk. Distance</span><select id="distanceStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="AGI">AGI</option><option value="PER">PER</option></select></label>
+                        <div class="flex-atk-row"><div id="displayAtkDistance" class="display-card flex-grow-card">--</div><input type="number" id="extraAtkDistance" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();"></div>
                     </div>
                     <div class="framed-stat-card">
-                        <label>🔮 Atk. Magique</label>
-                        <div class="flex-atk-row"><div id="displayAtkMagique" class="display-card flex-grow-card">--</div><input type="number" id="extraAtkMagique" value="0" class="input-atk-extra" oninput="calculateTotals(); saveData();"></div>
+                        <label>🔮 Atk. Magique (1d20)</label>
+                        <div class="flex-atk-row"><div id="displayAtkMagique" class="display-card flex-grow-card">--</div><input type="number" id="extraAtkMagique" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();"></div>
                     </div>
                 </div>
 
@@ -300,7 +304,7 @@
                 
                 <h2>🎒 Armes, Sorts & Équipement</h2>
                 
-                <h3 class="sub-section-title">⚔️ Armes & Capacités Offensives</h3>
+                <h3 class="sub-section-title">⚔️ Armes & Capacités Offensives (Jet fixe : 1d20)</h3>
                 <div id="weaponsContainer"></div>
                 <button class="main-btn btn-spacing-bottom" type="button" onclick="addWeaponRow();">+ Ajouter une Arme / Sort</button>
 
@@ -332,9 +336,9 @@
                                     <div class="voie-rang-row">
                                         <div class="rang-top-line">
                                             <span class="rang-title">Rang ${r} :</span>
-                                            <input type="text" class="rang-name-input" placeholder="Nom de la capacité" oninput="saveData()">
+                                            <input type="text" class="rang-name-input" placeholder="Nom de la capacité" oninput="autoSaveData()">
                                         </div>
-                                        <textarea class="rang-desc-textarea" placeholder="Description de la capacité..." oninput="saveData()"></textarea>
+                                        <textarea class="rang-desc-textarea" placeholder="Description de la capacité..." oninput="autoSaveData()"></textarea>
                                     </div>
                                 `;
                             }
@@ -342,7 +346,7 @@
                                 <div class="voie-card" id="voie_${index}">
                                     <div class="voie-header">
                                         <span class="voie-label-title">${v.label}</span>
-                                        <input type="text" class="voie-name-input" value="${v.defaultName}" placeholder="Nom de la voie" oninput="saveData()">
+                                        <input type="text" class="voie-name-input" value="${v.defaultName}" placeholder="Nom de la voie" oninput="autoSaveData()">
                                     </div>
                                     <div class="voie-rangs">
                                         ${rangsHTML}
@@ -392,7 +396,7 @@
                 preview.src = avatarBase64;
                 preview.style.display = 'block';
                 document.getElementById('avatarPlaceholder').style.display = 'none';
-                saveData();
+                autoSaveData();
             }
             reader.readAsDataURL(file);
         }
@@ -442,7 +446,7 @@
                     assignedStats[stat] = null;
                     renderPoolAndSlots();
                     calculateTotals();
-                    saveData();
+                    autoSaveData();
                 };
                 slot.innerHTML = '';
                 slot.appendChild(badge);
@@ -473,7 +477,7 @@
         assignedStats[stat] = data.val;
         renderPoolAndSlots();
         calculateTotals();
-        saveData();
+        autoSaveData();
     }
 
     function getPeupleBonuses() {
@@ -527,7 +531,7 @@
         container.style.display = 'block';
         updatePeupleOptionsDynamic();
         calculateTotals();
-        saveData();
+        autoSaveData();
     }
 
     function updatePeupleOptionsDynamic() {
@@ -542,26 +546,26 @@
 
         if (peuple === 'Demi-elfe') {
             instruction.innerText = "Ajustements du Demi-elfe : Un bonus (+1) et un malus (-1).";
-            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();"><option value="PER" ${oldOpt1==='PER'?'selected':''}>PER</option><option value="CHA" ${oldOpt1==='CHA'?'selected':''}>CHA</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); saveData();"><option value="FOR">FOR</option><option value="CON">CON</option></select></div>`;
+            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="PER" ${oldOpt1==='PER'?'selected':''}>PER</option><option value="CHA" ${oldOpt1==='CHA'?'selected':''}>CHA</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR</option><option value="CON">CON</option></select></div>`;
         } else if (peuple === 'Demi-orc') {
             instruction.innerText = "Ajustements du Demi-orc : Un bonus (+1) et un malus (-1).";
-            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();"><option value="FOR" ${oldOpt1==='FOR'?'selected':''}>FOR</option><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); saveData();"><option value="CHA">CHA</option><option value="INT">INT</option></select></div>`;
+            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="FOR" ${oldOpt1==='FOR'?'selected':''}>FOR</option><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); autoSaveData();"><option value="CHA">CHA</option><option value="INT">INT</option></select></div>`;
         } else if (['Elfe haut', 'Elfe sylvain', 'Gnome', 'Halfelin'].includes(peuple)) {
             let options = peuple === 'Elfe haut' ? '<option value="INT">INT</option><option value="CHA">CHA</option>' : peuple === 'Elfe sylvain' ? '<option value="AGI">AGI</option><option value="PER">PER</option>' : peuple === 'Gnome' ? '<option value="INT">INT</option><option value="PER">PER</option>' : '<option value="AGI">AGI</option><option value="VOL">VOL</option>';
             instruction.innerText = `Ajustements de l'${peuple} : +1 au choix, et -1 FOR.`;
-            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();">${options}</select></div><div class="malus-text-badge">Malus : -1 FOR</div>`;
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();">${options}</select></div><div class="malus-text-badge">Malus : -1 FOR</div>`;
         } else if (peuple === 'Humain') {
             let minVal = Math.min(...statsList.map(s => assignedStats[s] !== null ? assignedStats[s] : 0));
             let lowestStats = statsList.filter(s => (assignedStats[s] !== null ? assignedStats[s] : 0) === minVal);
 
-            instruction.innerText = "Ajustements de l'Humain : +1 sur l'une de ses caractéristiques les plus faibles.";
+            instruction.innerText = "Ajustements de l'Humain : +1 sur l'une de ses caractéristiques.";
             let optionsHTML = lowestStats.map(s => {
                 return `<option value="${s}" ${s === oldOpt1 ? 'selected' : ''}>${s}</option>`;
             }).join('');
-            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();">${optionsHTML}</select></div>`;
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();">${optionsHTML}</select></div>`;
         } else if (peuple === 'Nain') {
             instruction.innerText = "Ajustements du Nain : +1 CON ou VOL, et -1 AGI.";
-            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); saveData();"><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON</option><option value="VOL" ${oldOpt1==='VOL'?'selected':''}>VOL</option></select></div><div class="malus-text-badge">Malus : -1 AGI</div>`;
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON</option><option value="VOL" ${oldOpt1==='VOL'?'selected':''}>VOL</option></select></div><div class="malus-text-badge">Malus : -1 AGI</div>`;
         }
     }
 
@@ -569,7 +573,6 @@
         const container = document.getElementById('weaponsContainer');
         const rowId = 'weapon_' + Date.now() + Math.random().toString(36).substr(2, 5);
         const diceOptions = ['1d4', '1d6', '1d8', '1d10', '1d12', '1d20', '2d6'];
-        let atkDieOpts = diceOptions.map(d => `<option value="${d}" ${d === (data.atkDie || '1d20') ? 'selected' : ''}>${d}</option>`).join('');
         let dmDieOpts = diceOptions.map(d => `<option value="${d}" ${d === (data.dmDie || '1d6') ? 'selected' : ''}>${d}</option>`).join('');
 
         let scaleOpts = (selectedVal) => {
@@ -585,9 +588,9 @@
         row.className = 'weapon-row';
         row.id = rowId;
         row.innerHTML = `
-            <div class="field-group"><label>⚔️ Arme / Sort</label><input type="text" class="w-name" value="${data.name || ''}" placeholder="Nom" oninput="saveData()"></div>
-            <div class="field-group"><label>🎯 Atk</label><div class="sub-flex-row"><select class="w-atk-die" onchange="saveData()">${atkDieOpts}</select><select class="w-atk-mod" onchange="saveData()">${scaleOpts(data.atkMod !== undefined ? data.atkMod : '+0')}</select></div></div>
-            <div class="field-group"><label>💥 DM</label><div class="sub-flex-row"><select class="w-dm-die" onchange="saveData()">${dmDieOpts}</select><select class="w-dm-mod" onchange="saveData()">${scaleOpts(data.dmMod !== undefined ? data.dmMod : '+0')}</select><button type="button" class="btn-delete-row" onclick="document.getElementById('${rowId}').remove(); saveData();">×</button></div></div>
+            <div class="field-group"><label>⚔️ Arme / Sort</label><input type="text" class="w-name" value="${data.name || ''}" placeholder="Nom" oninput="autoSaveData()"></div>
+            <div class="field-group"><label>🎯 Atk (1d20)</label><div class="sub-flex-row"><span class="fixed-die-badge">1d20</span><select class="w-atk-mod" onchange="autoSaveData()">${scaleOpts(data.atkMod !== undefined ? data.atkMod : '+0')}</select></div></div>
+            <div class="field-group"><label>💥 DM</label><div class="sub-flex-row"><select class="w-dm-die" onchange="autoSaveData()">${dmDieOpts}</select><select class="w-dm-mod" onchange="autoSaveData()">${scaleOpts(data.dmMod !== undefined ? data.dmMod : '+0')}</select><button type="button" class="btn-delete-row" onclick="document.getElementById('${rowId}').remove(); autoSaveData();">×</button></div></div>
         `;
         container.appendChild(row);
     }
@@ -599,9 +602,9 @@
         row.className = 'eq-row';
         row.id = rowId;
         row.innerHTML = `
-            <div class="field-group"><label>📦 Objet</label><input type="text" class="eq-name" value="${data.name || ''}" placeholder="Objet" oninput="saveData()"></div>
-            <div class="field-group"><label>🔢 Qté</label><input type="text" class="eq-qty" value="${data.qty || '1'}" oninput="saveData()"></div>
-            <div class="eq-delete-wrapper"><button type="button" class="btn-delete-row-eq" onclick="document.getElementById('${rowId}').remove(); saveData();">×</button></div>
+            <div class="field-group"><label>📦 Objet</label><input type="text" class="eq-name" value="${data.name || ''}" placeholder="Objet" oninput="autoSaveData()"></div>
+            <div class="field-group"><label>🔢 Qté</label><input type="text" class="eq-qty" value="${data.qty || '1'}" oninput="autoSaveData()"></div>
+            <div class="eq-delete-wrapper"><button type="button" class="btn-delete-row-eq" onclick="document.getElementById('${rowId}').remove(); autoSaveData();">×</button></div>
         `;
         container.appendChild(row);
     }
@@ -673,13 +676,12 @@
         if (currentPV === null) currentPV = maxPV;
         currentPV = Math.max(0, Math.min(maxPV, currentPV + amount));
         document.getElementById('displayPV').innerText = `${currentPV} / ${maxPV}`;
-        saveData();
+        autoSaveData();
     }
 
-    function saveData() {
+    function gatherSheetData() {
         const weaponsData = Array.from(document.querySelectorAll('.weapon-row')).map(row => ({
             name: row.querySelector('.w-name').value,
-            atkDie: row.querySelector('.w-atk-die').value,
             atkMod: row.querySelector('.w-atk-mod').value,
             dmDie: row.querySelector('.w-dm-die').value,
             dmMod: row.querySelector('.w-dm-mod').value
@@ -700,7 +702,7 @@
             return { voieName, rangs };
         });
 
-        const data = {
+        return {
             name: document.getElementById('charName').value,
             ideal: document.getElementById('charIdeal').value,
             flaw: document.getElementById('charFlaw').value,
@@ -729,7 +731,16 @@
                 optMalus1: document.getElementById('opt_malus1')?.value
             }
         };
+    }
+
+    function autoSaveData() {
+        const data = gatherSheetData();
         localStorage.setItem('cof2_character', JSON.stringify(data));
+    }
+
+    function manualSaveData() {
+        autoSaveData();
+        alert("Fiche enregistrée avec succès !");
     }
 
     function loadData() {
@@ -780,7 +791,7 @@
             }
 
             document.getElementById('weaponsContainer').innerHTML = '';
-            (data.weapons && data.weapons.length > 0) ? data.weapons.forEach(w => addWeaponRow(w)) : addWeaponRow({name: 'Arme de contact', atkDie: '1d20', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
+            (data.weapons && data.weapons.length > 0) ? data.weapons.forEach(w => addWeaponRow(w)) : addWeaponRow({name: 'Arme de contact', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
 
             document.getElementById('equipmentContainer').innerHTML = '';
             (data.equipment && data.equipment.length > 0) ? data.equipment.forEach(e => addEquipmentRow(e)) : addEquipmentRow({name: 'Rations de voyage', qty: '1'});
@@ -806,7 +817,7 @@
             onPeupleChange();
             onFamilyChange();
             onProfileModeChange();
-            addWeaponRow({name: 'Arme de contact', atkDie: '1d20', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
+            addWeaponRow({name: 'Arme de contact', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
             addEquipmentRow({name: 'Rations de voyage', qty: '1'});
         }
     }
@@ -819,7 +830,7 @@
     }
 
     function exportJSON() {
-        const data = JSON.parse(localStorage.getItem('cof2_character') || '{}');
+        const data = gatherSheetData();
         data.currentPV = currentPV;
         const blob = new Blob([JSON.stringify(data, null, 2)], {type : 'application/json'});
         const url = URL.createObjectURL(blob);
