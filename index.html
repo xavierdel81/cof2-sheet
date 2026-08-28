@@ -12,29 +12,29 @@
     <div class="header-banner"></div>
 
     <div class="header-flex">
-        <h1 class="header-title">Feuille de Personnage — COF2[cite: 10]</h1>
+        <h1 class="header-title">Feuille de Personnage — COF2</h1>
         <div class="header-actions">
-            <button type="button" class="main-btn btn-export" onclick="exportToPNG()">📸 Télécharger en PNG[cite: 10]</button>
-            <button type="button" id="btn-save-manual" class="main-btn" style="background-color: #3b5323; color: white;" onclick="manualSaveData()">💾 Enregistrer[cite: 10]</button>
-            <button type="button" id="btn-reset" class="main-btn btn-reset" onclick="resetCharacterSheet()">Nouvelle Fiche[cite: 10]</button>
+            <button type="button" class="main-btn btn-export" onclick="exportToPNG()">📸 Télécharger en PNG</button>
+            <button type="button" id="btn-save-manual" class="main-btn" style="background-color: #3b5323; color: white;" onclick="manualSaveData()">💾 Enregistrer</button>
+            <button type="button" id="btn-reset" class="main-btn btn-reset" onclick="resetCharacterSheet()">Nouvelle Fiche</button>
         </div>
     </div>
 
     <!-- Panneau de contrôle de la police -->
     <div class="font-control-panel">
         <div class="font-control-group">
-            <label>Taille du texte :[cite: 10]</label>
-            <button type="button" id="btnDecreaseFont" title="Réduire">-[cite: 10]</button>
-            <span id="fontSizeDisplay" style="font-size: 0.8rem; font-weight: bold; min-width: 40px; text-align: center;">0.9rem[cite: 10]</span>
-            <button type="button" id="btnIncreaseFont" title="Agrandir">+[cite: 10]</button>
+            <label>Taille du texte :</label>
+            <button type="button" id="btnDecreaseFont" title="Réduire">-</button>
+            <span id="fontSizeDisplay" style="font-size: 0.8rem; font-weight: bold; min-width: 40px; text-align: center;">0.9rem</span>
+            <button type="button" id="btnIncreaseFont" title="Agrandir">+</button>
         </div>
         <div class="font-control-group">
-            <label for="globalFontSelect">Police globale :[cite: 10]</label>
+            <label for="globalFontSelect">Police globale :</label>
             <select id="globalFontSelect">
-                <option value="'Lora', Georgia, serif">Lora (Classique / Lisible)[cite: 10]</option>
-                <option value="'Cinzel', serif">Cinzel (Médiéval / Titres)[cite: 10]</option>
-                <option value="Arial, sans-serif">Arial (Sans empattement / Très net)[cite: 10]</option>
-                <option value="'IM Fell English SC', serif">IM Fell English (Manuscrit ancien)[cite: 10]</option>
+                <option value="'Lora', Georgia, serif">Lora (Classique / Lisible)</option>
+                <option value="'Cinzel', serif">Cinzel (Médiéval / Titres)</option>
+                <option value="Arial, sans-serif">Arial (Sans empattement / Très net)</option>
+                <option value="'IM Fell English SC', serif">IM Fell English (Manuscrit ancien)</option>
             </select>
         </div>
     </div>
@@ -46,11 +46,11 @@
             
             <!-- Bloc Avatar Dédié -->
             <div class="section-box">
-                <h2>🖼️ Portrait du Personnage[cite: 10]</h2>
+                <h2>🖼️ Portrait du Personnage</h2>
                 <div class="avatar-large-container">
                     <div class="avatar-box-large" id="avatarBox" onclick="document.getElementById('avatarInput').click()" title="Cliquez pour changer l'avatar">
                         <img id="avatarPreview" src="" alt="" style="display:none;">
-                        <span id="avatarPlaceholder">Cliquez ici pour ajouter l'image du personnage[cite: 10]</span>
+                        <span id="avatarPlaceholder">Cliquez ici pour ajouter l'image du personnage</span>
                     </div>
                     <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="loadAvatar(event)">
                 </div>
@@ -60,89 +60,89 @@
             <div class="section-box bg-perso bg-perso-png">
                 <div class="bg-watermark"></div> 
                 
-                <h2>📜 Identité, Peuple & Classes[cite: 10]</h2>
+                <h2>📜 Identité, Peuple & Classes</h2>
                 <div class="grid-identity">
                     <div class="field-group">
-                        <label for="charName">Nom du Personnage[cite: 10]</label>
+                        <label for="charName">Nom du Personnage</label>
                         <input type="text" id="charName" class="input-spacing" oninput="autoSaveData()">
                         
-                        <label for="charPeuple">Peuple[cite: 10]</label>
+                        <label for="charPeuple">Peuple</label>
                         <select id="charPeuple" onchange="onPeupleChange(); autoSaveData();">
-                            <option value="Demi-elfe">Demi-elfe[cite: 10]</option>
-                            <option value="Demi-orc">Demi-orc[cite: 10]</option>
-                            <option value="Elfe haut">Elfe haut[cite: 10]</option>
-                            <option value="Elfe sylvain">Elfe sylvain[cite: 10]</option>
-                            <option value="Gnome">Gnome[cite: 10]</option>
-                            <option value="Halfelin">Halfelin[cite: 10]</option>
-                            <option value="Humain">Humain[cite: 10]</option>
-                            <option value="Nain">Nain[cite: 10]</option>
+                            <option value="Demi-elfe">Demi-elfe</option>
+                            <option value="Demi-orc">Demi-orc</option>
+                            <option value="Elfe haut">Elfe haut</option>
+                            <option value="Elfe sylvain">Elfe sylvain</option>
+                            <option value="Gnome">Gnome</option>
+                            <option value="Halfelin">Halfelin</option>
+                            <option value="Humain">Humain</option>
+                            <option value="Nain">Nain</option>
                         </select>
                     </div>
 
                     <div class="field-group">
-                        <label for="charProfile">Répartition[cite: 10]</label>
+                        <label for="charProfile">Répartition</label>
                         <select id="charProfile" onchange="onProfileModeChange(); autoSaveData();">
-                            <option value="Polyvalent">Polyv. (+2..-1)[cite: 10]</option>
-                            <option value="Expert">Expert (+3..-1)[cite: 10]</option>
-                            <option value="Spécialiste">Spécial. (+4..-1)[cite: 10]</option>
+                            <option value="Polyvalent">Polyv. (+2..-1)</option>
+                            <option value="Expert">Expert (+3..-1)</option>
+                            <option value="Spécialiste">Spécial. (+4..-1)</option>
                         </select>
                     </div>
 
                     <div class="field-group">
-                        <label for="charFamily">Famille de Profil[cite: 10]</label>
+                        <label for="charFamily">Famille de Profil</label>
                         <select id="charFamily" class="input-spacing" onchange="onFamilyChange(); autoSaveData();">
-                            <option value="Aventurier">Aventurier[cite: 10]</option>
-                            <option value="Combattant">Combattant[cite: 10]</option>
-                            <option value="Mage">Mage[cite: 10]</option>
-                            <option value="Mystique">Mystique[cite: 10]</option>
+                            <option value="Aventurier">Aventurier</option>
+                            <option value="Combattant">Combattant</option>
+                            <option value="Mage">Mage</option>
+                            <option value="Mystique">Mystique</option>
                         </select>
 
-                        <label for="charSubProfile">Profil (Spécialisation)[cite: 10]</label>
+                        <label for="charSubProfile">Profil (Spécialisation)</label>
                         <select id="charSubProfile" onchange="autoSaveData()"></select>
                     </div>
                 </div>
 
                 <div class="grid-identity grid-identity-duo">
                     <div class="field-group">
-                        <label for="charIdeal">Idéal héroïque[cite: 10]</label>
+                        <label for="charIdeal">Idéal héroïque</label>
                         <select id="charIdeal" onchange="autoSaveData()">
-                            <option value="">-- Choisir un idéal --[cite: 10]</option>
-                            <option value="Abnégation">Abnégation[cite: 10]</option>
-                            <option value="Clémence">Clémence[cite: 10]</option>
-                            <option value="Compassion">Compassion[cite: 10]</option>
-                            <option value="Courage">Courage[cite: 10]</option>
-                            <option value="Égalité">Égalité[cite: 10]</option>
-                            <option value="Fraternité">Fraternité[cite: 10]</option>
-                            <option value="Honneur">Honneur[cite: 10]</option>
-                            <option value="Justice">Justice[cite: 10]</option>
-                            <option value="Liberté">Liberté[cite: 10]</option>
-                            <option value="Loyauté">Loyauté[cite: 10]</option>
-                            <option value="Protection">Protection[cite: 10]</option>
-                            <option value="Solidarité">Solidarité[cite: 10]</option>
+                            <option value="">-- Choisir un idéal --</option>
+                            <option value="Abnégation">Abnégation</option>
+                            <option value="Clémence">Clémence</option>
+                            <option value="Compassion">Compassion</option>
+                            <option value="Courage">Courage</option>
+                            <option value="Égalité">Égalité</option>
+                            <option value="Fraternité">Fraternité</option>
+                            <option value="Honneur">Honneur</option>
+                            <option value="Justice">Justice</option>
+                            <option value="Liberté">Liberté</option>
+                            <option value="Loyauté">Loyauté</option>
+                            <option value="Protection">Protection</option>
+                            <option value="Solidarité">Solidarité</option>
                         </select>
                     </div>
                     <div class="field-group">
-                        <label for="charFlaw">Travers[cite: 10]</label>
+                        <label for="charFlaw">Travers</label>
                         <select id="charFlaw" onchange="autoSaveData()">
-                            <option value="">-- Choisir un travers --[cite: 10]</option>
-                            <option value="Alcoolique">Alcoolique[cite: 10]</option>
-                            <option value="Couard">Couard[cite: 10]</option>
-                            <option value="Cupide">Cupide[cite: 10]</option>
-                            <option value="Colérique">Colérique[cite: 10]</option>
-                            <option value="Distrait">Distrait[cite: 10]</option>
-                            <option value="Fanfaron">Fanfaron[cite: 10]</option>
-                            <option value="Gourmand">Gourmand[cite: 10]</option>
-                            <option value="Impatient">Impatient[cite: 10]</option>
-                            <option value="Orgueilleux">Orgueilleux[cite: 10]</option>
-                            <option value="Paranoïaque">Paranoïaque[cite: 10]</option>
-                            <option value="Paresseux">Paresseux[cite: 10]</option>
-                            <option value="Violent">Violent[cite: 10]</option>
+                            <option value="">-- Choisir un travers --</option>
+                            <option value="Alcoolique">Alcoolique</option>
+                            <option value="Couard">Couard</option>
+                            <option value="Cupide">Cupide</option>
+                            <option value="Colérique">Colérique</option>
+                            <option value="Distrait">Distrait</option>
+                            <option value="Fanfaron">Fanfaron</option>
+                            <option value="Gourmand">Gourmand</option>
+                            <option value="Impatient">Impatient</option>
+                            <option value="Orgueilleux">Orgueilleux</option>
+                            <option value="Paranoïaque">Paranoïaque</option>
+                            <option value="Paresseux">Paresseux</option>
+                            <option value="Violent">Violent</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="field-group field-group-margin">
-                    <label for="charDescription">Description du Personnage[cite: 10]</label>
+                    <label for="charDescription">Description du Personnage</label>
                     <textarea id="charDescription" placeholder="Apparence, historique, traits..." oninput="autoSaveData()"></textarea>
                 </div>
             </div>
@@ -151,10 +151,10 @@
             <div class="section-box bg-carac bg-carac-png">
                 <div class="bg-watermark"></div> 
                 
-                <h2>💪 Caractéristiques[cite: 10]</h2>
+                <h2>💪 Caractéristiques</h2>
                 
                 <div id="repartitionZone">
-                    <label class="pool-label">Points de répartition (Glissez ou cliquez) :[cite: 10]</label>
+                    <label class="pool-label">Points de répartition (Glissez ou cliquez) :</label>
                     <div id="poolContainer" class="pool-container"></div>
                 </div>
 
@@ -188,89 +188,89 @@
             <div class="section-box bg-combat bg-combat-png">
                 <div class="bg-watermark"></div> 
 
-                <h2>⚔️ Combat & Ressources[cite: 10]</h2>
+                <h2>⚔️ Combat & Ressources</h2>
 
                 <div class="grid-identity grid-identity-combat-1">
                     <div class="field-group">
-                        <label for="charLevel">⭐ Niveau[cite: 10]</label>
+                        <label for="charLevel">⭐ Niveau</label>
                         <input type="number" id="charLevel" value="1" min="1" max="20" oninput="calculateTotals(); autoSaveData();">
                     </div>
                     <div class="field-group">
-                        <label for="extraConBonus">🛡️ Mod. CON Perm.[cite: 10]</label>
+                        <label for="extraConBonus">🛡️ Mod. CON Perm.</label>
                         <select id="extraConBonus" class="stat-select" onchange="calculateTotals(); autoSaveData();">
-                            <option value="2">+2[cite: 10]</option><option value="1">+1[cite: 10]</option><option value="0" selected>+0[cite: 10]</option><option value="-1">-1[cite: 10]</option><option value="-2">-2[cite: 10]</option>
+                            <option value="2">+2</option><option value="1">+1</option><option value="0" selected>+0</option><option value="-1">-1</option><option value="-2">-2</option>
                         </select>
                     </div>
                     <div class="field-group">
-                        <label for="spellCount">✨ Sorts (*)[cite: 10]</label>
+                        <label for="spellCount">✨ Sorts (*)</label>
                         <input type="number" id="spellCount" value="0" min="0" max="20" oninput="calculateTotals(); autoSaveData();">
                     </div>
                     <div class="field-group">
-                        <label for="extraInitBonus">⚡ Init. Supp.[cite: 10]</label>
+                        <label for="extraInitBonus">⚡ Init. Supp.</label>
                         <input type="number" id="extraInitBonus" value="0" oninput="calculateTotals(); autoSaveData();">
                     </div>
                 </div>
 
                 <div class="grid-identity grid-identity-combat-2">
                     <div class="field-group">
-                        <label for="armorBonus">🛡️ Armure (DEF)[cite: 10]</label>
+                        <label for="armorBonus">🛡️ Armure (DEF)</label>
                         <select id="armorBonus" onchange="calculateTotals(); autoSaveData();">
-                            <option value="0">Aucune (+0)[cite: 10]</option>
-                            <option value="1">Tissus matelassés, fourrures (+1)[cite: 10]</option>
-                            <option value="2">Cuir simple (+2)[cite: 10]</option>
-                            <option value="3">Cuir renforcé, broigne (+3)[cite: 10]</option>
-                            <option value="4">Chemise de mailles (+4)[cite: 10]</option>
-                            <option value="5">Cotte de mailles (+5)[cite: 10]</option>
-                            <option value="6">Armure de plaques (+6)[cite: 10]</option>
-                            <option value="7">Plaque complète (+7)[cite: 10]</option>
+                            <option value="0">Aucune (+0)</option>
+                            <option value="1">Tissus matelassés, fourrures (+1)</option>
+                            <option value="2">Cuir simple (+2)</option>
+                            <option value="3">Cuir renforcé, broigne (+3)</option>
+                            <option value="4">Chemise de mailles (+4)</option>
+                            <option value="5">Cotte de mailles (+5)</option>
+                            <option value="6">Armure de plaques (+6)</option>
+                            <option value="7">Plaque complète (+7)</option>
                         </select>
                     </div>
                     <div class="field-group">
-                        <label for="shieldBonus">🛡️ Bouclier (DEF)[cite: 10]</label>
+                        <label for="shieldBonus">🛡️ Bouclier (DEF)</label>
                         <select id="shieldBonus" onchange="calculateTotals(); autoSaveData();">
-                            <option value="0">Aucun (+0)[cite: 10]</option>
-                            <option value="1">Petit bouclier (+1)[cite: 10]</option>
-                            <option value="2">Grand bouclier (+2)[cite: 10]</option>
+                            <option value="0">Aucun (+0)</option>
+                            <option value="1">Petit bouclier (+1)</option>
+                            <option value="2">Grand bouclier (+2)</option>
                         </select>
                     </div>
                     <div class="field-group">
-                        <label for="extraDefBonus">🔮 Bonus DEF Magie[cite: 10]</label>
+                        <label for="extraDefBonus">🔮 Bonus DEF Magie</label>
                         <input type="number" id="extraDefBonus" value="0" oninput="calculateTotals(); autoSaveData();">
                     </div>
                 </div>
 
                 <div class="grid-identity grid-identity-combat-3">
-                    <div class="framed-stat-card"><label>🛡️ Défense[cite: 10]</label><div id="displayDEF" class="display-card">--</div></div>
-                    <div class="framed-stat-card"><label>⚡ Initiative[cite: 10]</label><div id="displayInit" class="display-card">--</div></div>
-                    <div class="framed-stat-card"><label>✨ Mana (PM)[cite: 10]</label><div id="displayPM" class="display-card">--</div></div>
-                    <div class="framed-stat-card"><label>🍀 Chance (PC)[cite: 10]</label><div id="displayPC" class="display-card">--</div></div>
-                    <div class="framed-stat-card"><label>🧪 Récup. (DR)[cite: 10]</label><div id="displayDR" class="display-card">--</div></div>
+                    <div class="framed-stat-card"><label>🛡️ Défense</label><div id="displayDEF" class="display-card">--</div></div>
+                    <div class="framed-stat-card"><label>⚡ Initiative</label><div id="displayInit" class="display-card">--</div></div>
+                    <div class="framed-stat-card"><label>✨ Mana (PM)</label><div id="displayPM" class="display-card">--</div></div>
+                    <div class="framed-stat-card"><label>🍀 Chance (PC)</label><div id="displayPC" class="display-card">--</div></div>
+                    <div class="framed-stat-card"><label>🧪 Récup. (DR)</label><div id="displayDR" class="display-card">--</div></div>
                 </div>
 
                 <!-- Bloc groupé "Valeurs d'attaque" -->
                 <div class="attack-group-container">
-                    <div class="attack-group-title">⚔️ Valeurs d'attaque[cite: 10]</div>
+                    <div class="attack-group-title">⚔️ Valeurs d'attaque</div>
                     <div class="grid-identity grid-identity-combat-4" style="margin-bottom: 0;">
                         <div class="framed-stat-card">
-                            <label class="flex-label"><span>⚔️ Contact[cite: 10]</span><select id="contactStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR[cite: 10]</option><option value="AGI">AGI[cite: 10]</option></select></label>
+                            <label class="flex-label"><span>⚔️ Contact</span><select id="contactStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR</option><option value="AGI">AGI</option></select></label>
                             <div class="flex-atk-row">
-                                <span class="fixed-die-inline">1d20[cite: 10]</span>
+                                <span class="fixed-die-inline">1d20</span>
                                 <div id="displayAtkContact" class="display-card flex-grow-card">--</div>
                                 <input type="number" id="extraAtkContact" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
                             </div>
                         </div>
                         <div class="framed-stat-card">
-                            <label class="flex-label"><span>🏹 Distance[cite: 10]</span><select id="distanceStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="AGI">AGI[cite: 10]</option><option value="PER">PER[cite: 10]</option></select></label>
+                            <label class="flex-label"><span>🏹 Distance</span><select id="distanceStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="AGI">AGI</option><option value="PER">PER</option></select></label>
                             <div class="flex-atk-row">
-                                <span class="fixed-die-inline">1d20[cite: 10]</span>
+                                <span class="fixed-die-inline">1d20</span>
                                 <div id="displayAtkDistance" class="display-card flex-grow-card">--</div>
                                 <input type="number" id="extraAtkDistance" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
                             </div>
                         </div>
                         <div class="framed-stat-card">
-                            <label>🔮 Magique[cite: 10]</label>
+                            <label>🔮 Magique</label>
                             <div class="flex-atk-row">
-                                <span class="fixed-die-inline">1d20[cite: 10]</span>
+                                <span class="fixed-die-inline">1d20</span>
                                 <div id="displayAtkMagique" class="display-card flex-grow-card">--</div>
                                 <input type="number" id="extraAtkMagique" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
                             </div>
@@ -279,58 +279,58 @@
                 </div>
 
                 <div class="field-group field-group-margin">
-                    <label>❤️ Points de Vie (Actuels / Max)[cite: 10]</label>
+                    <label>❤️ Points de Vie (Actuels / Max)</label>
                     <div class="pv-container">
-                        <button onclick="adjustCurrentPV(-1)">-[cite: 10]</button>
+                        <button onclick="adjustCurrentPV(-1)">-</button>
                         <span id="displayPV" class="pv-display-text">--</span>
-                        <button onclick="adjustCurrentPV(1)">+[cite: 10]</button>
+                        <button onclick="adjustCurrentPV(1)">+</button>
                     </div>
                 </div>
 
                 <div class="info-box info-box-margin">
-                    <label class="info-box-label">Spécificités de la Famille :[cite: 10]</label>
+                    <label class="info-box-label">Spécificités de la Famille :</label>
                     <div id="familyBonusText" class="family-bonus-desc">-</div>
                 </div>
             </div>
 
-            <!-- BLOC COMPAGNON ANIMAL / FAMILIER -->
+            <!-- ===== BLOC : Compagnon animal / Familier ===== -->
             <div class="section-box">
                 <div class="bg-watermark"></div>
                 <h2>
-                    🐾 <input type="text" id="compName" class="companion-header-input" value="LOUP" oninput="autoSaveData()">[cite: 10]
+                    🐾 <input type="text" id="compName" class="companion-header-input" value="LOUP" oninput="autoSaveData()">
                 </h2>
                 
-                <input type="text" id="compType" class="companion-type-input" value="CRÉATURE VIVANTE" oninput="autoSaveData()">[cite: 10]
+                <input type="text" id="compType" class="companion-type-input" value="CRÉATURE VIVANTE" oninput="autoSaveData()">
 
                 <div class="companion-stats-grid">
-                    <div class="companion-stat-box"><label>AGI[cite: 10]</label><input type="text" id="compAGI" value="+1" oninput="autoSaveData()"></div>
-                    <div class="companion-stat-box"><label>CON[cite: 10]</label><input type="text" id="compCON" value="+1*" oninput="autoSaveData()"></div>
-                    <div class="companion-stat-box"><label>FOR[cite: 10]</label><input type="text" id="compFOR" value="+2" oninput="autoSaveData()"></div>
-                    <div class="companion-stat-box"><label>PER[cite: 10]</label><input type="text" id="compPER" value="+2*" oninput="autoSaveData()"></div>
-                    <div class="companion-stat-box"><label>CHA[cite: 10]</label><input type="text" id="compCHA" value="-2" oninput="autoSaveData()"></div>
-                    <div class="companion-stat-box"><label>INT[cite: 10]</label><input type="text" id="compINT" value="-3" oninput="autoSaveData()"></div>
-                    <div class="companion-stat-box"><label>VOL[cite: 10]</label><input type="text" id="compVOL" value="+2" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>AGI</label><input type="text" id="compAGI" value="+1" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>CON</label><input type="text" id="compCON" value="+1*" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>FOR</label><input type="text" id="compFOR" value="+2" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>PER</label><input type="text" id="compPER" value="+2*" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>CHA</label><input type="text" id="compCHA" value="-2" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>INT</label><input type="text" id="compINT" value="-3" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>VOL</label><input type="text" id="compVOL" value="+2" oninput="autoSaveData()"></div>
                 </div>
 
                 <div class="companion-line-row">
-                    <label>🛡️ Défense[cite: 10]</label>
-                    <input type="text" id="compDef" value="[12 + rang dans la voie]" oninput="autoSaveData()">[cite: 10]
+                    <label>🛡️ Défense</label>
+                    <input type="text" id="compDef" value="[12 + rang dans la voie]" oninput="autoSaveData()">
                 </div>
                 <div class="companion-line-row">
-                    <label>❤️ Points de Vigueurs[cite: 10]</label>
-                    <input type="text" id="compPv" value="[niv. du rôdeur × 4]" oninput="autoSaveData()">[cite: 10]
+                    <label>❤️ Points de Vigueurs</label>
+                    <input type="text" id="compPv" value="[niv. du rôdeur × 4]" oninput="autoSaveData()">
                 </div>
                 <div class="companion-line-row">
-                    <label>⚡ Initiative[cite: 10]</label>
-                    <input type="text" id="compInit" value="[Init. du rôdeur]" oninput="autoSaveData()">[cite: 10]
+                    <label>⚡ Initiative</label>
+                    <input type="text" id="compInit" value="[Init. du rôdeur]" oninput="autoSaveData()">
                 </div>
                 <div class="companion-line-row">
-                    <label>⚔️ Attaque & DM[cite: 10]</label>
-                    <input type="text" id="compAtkDm" value="[Atq. magique] DM 1d4+2" oninput="autoSaveData()">[cite: 10]
+                    <label>⚔️ Attaque & DM</label>
+                    <input type="text" id="compAtkDm" value="[Atq. magique] DM 1d4+2" oninput="autoSaveData()">
                 </div>
 
                 <div class="field-group field-group-margin">
-                    <label for="compDescription">Description / gestion du compagnon / familier[cite: 10]</label>
+                    <label for="compDescription">Description / gestion du compagnon / familier</label>
                     <textarea id="compDescription" placeholder="Notes, règles spéciales..." oninput="autoSaveData()"></textarea>
                 </div>
             </div>
@@ -343,20 +343,20 @@
             <div class="section-box">
                 <div class="bg-watermark"></div> 
                 
-                <h2>🎒 Armes, Sorts & Équipement[cite: 10]</h2>
+                <h2>🎒 Armes, Sorts & Équipement</h2>
                 
-                <h3 class="sub-section-title">⚔️ Armes & Capacités Offensives (Jet fixe : 1d20)[cite: 10]</h3>
+                <h3 class="sub-section-title">⚔️ Armes & Capacités Offensives (Jet fixe : 1d20)</h3>
                 <div id="weaponsContainer"></div>
-                <button class="main-btn btn-spacing-bottom" type="button" onclick="addWeaponRow();">+ Ajouter une Arme / Sort[cite: 10]</button>
+                <button class="main-btn btn-spacing-bottom" type="button" onclick="addWeaponRow();">+ Ajouter une Arme / Sort</button>
 
-                <h3 class="sub-section-title">🎒 Équipement & Inventaire[cite: 10]</h3>
+                <h3 class="sub-section-title">🎒 Équipement & Inventaire</h3>
                 <div id="equipmentContainer"></div>
-                <button class="main-btn" type="button" onclick="addEquipmentRow();">+ Ajouter un objet[cite: 10]</button>
+                <button class="main-btn" type="button" onclick="addEquipmentRow();">+ Ajouter un objet</button>
             </div>
 
             <div class="section-box">
                 <div class="bg-watermark"></div>
-                <h2>📜 Voies & Capacités[cite: 10]</h2>
+                <h2>📜 Voies & Capacités</h2>
                 
                 <div class="voies-grid">
                     <script>
@@ -398,7 +398,7 @@
                 </div>
             </div>
 
-            <button class="main-btn btn-export-json" onclick="exportJSON()">💾 Exporter les données (JSON)[cite: 10]</button>
+            <button class="main-btn btn-export-json" onclick="exportJSON()">💾 Exporter les données (JSON)</button>
 
         </div>
 
@@ -495,7 +495,7 @@
         poolContainer.innerHTML = '';
         
         if (availableTokens.length === 0) {
-            poolContainer.innerHTML = '<span class="pool-empty-msg">Tous les points sont attribués. Cliquez sur une carac. pour en récupérer un.[cite: 10]</span>';
+            poolContainer.innerHTML = '<span class="pool-empty-msg">Tous les points sont attribués. Cliquez sur une carac. pour en récupérer un.</span>';
         } else {
             availableTokens.forEach((val, index) => {
                 let token = document.createElement('div');
@@ -519,7 +519,7 @@
                 let badge = document.createElement('div');
                 badge.className = 'stat-assigned-badge' + (val < 0 ? ' negative' : '');
                 badge.innerText = (val >= 0 ? '+' : '') + val;
-                badge.title = "Cliquer pour renvoyer dans la réserve[cite: 10]";
+                badge.title = "Cliquer pour renvoyer dans la réserve";
                 badge.onclick = () => {
                     availableTokens.push(val);
                     assignedStats[stat] = null;
@@ -530,7 +530,7 @@
                 slot.innerHTML = '';
                 slot.appendChild(badge);
             } else {
-                slot.innerHTML = '<span class="stat-empty-text">Glissez ici[cite: 10]</span>';
+                slot.innerHTML = '<span class="stat-empty-text">Glissez ici</span>';
             }
         });
         
@@ -598,10 +598,10 @@
             });
         }
 
-        if (family === 'Aventurier') textElement.innerText = "Gain de 4 PV/niv + 1 PC supp. Type de DR : d8[cite: 10]";
-        else if (family === 'Combattant') textElement.innerText = "Gain de 5 PV/niv. Conçu pour le front. Type de DR : d10[cite: 10]";
-        else if (family === 'Mage') textElement.innerText = "Gain de 3 PV/niv + Capacité rang 2 supp. Type de DR : d6[cite: 10]";
-        else if (family === 'Mystique') textElement.innerText = "Gain de 4 PV/niv + 1 DR supp. Type de DR : d8[cite: 10]";
+        if (family === 'Aventurier') textElement.innerText = "Gain de 4 PV/niv + 1 PC supp. Type de DR : d8";
+        else if (family === 'Combattant') textElement.innerText = "Gain de 5 PV/niv. Conçu pour le front. Type de DR : d10";
+        else if (family === 'Mage') textElement.innerText = "Gain de 3 PV/niv + Capacité rang 2 supp. Type de DR : d6";
+        else if (family === 'Mystique') textElement.innerText = "Gain de 4 PV/niv + 1 DR supp. Type de DR : d8";
         calculateTotals();
     }
 
@@ -624,27 +624,27 @@
         choicesContainer.innerHTML = '';
 
         if (peuple === 'Demi-elfe') {
-            instruction.innerText = "Ajustements du Demi-elfe : Un bonus (+1) et un malus (-1).[cite: 10]";
-            choicesContainer.innerHTML = `<div><label>Bonus :[cite: 10]</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="PER" ${oldOpt1==='PER'?'selected':''}>PER[cite: 10]</option><option value="CHA" ${oldOpt1==='CHA'?'selected':''}>CHA[cite: 10]</option></select></div><div><label>Malus :[cite: 10]</label><select id="opt_malus1" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR[cite: 10]</option><option value="CON">CON[cite: 10]</option></select></div>`;
+            instruction.innerText = "Ajustements du Demi-elfe : Un bonus (+1) et un malus (-1).";
+            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="PER" ${oldOpt1==='PER'?'selected':''}>PER</option><option value="CHA" ${oldOpt1==='CHA'?'selected':''}>CHA</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR</option><option value="CON">CON</option></select></div>`;
         } else if (peuple === 'Demi-orc') {
-            instruction.innerText = "Ajustements du Demi-orc : Un bonus (+1) et un malus (-1).[cite: 10]";
-            choicesContainer.innerHTML = `<div><label>Bonus :[cite: 10]</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="FOR" ${oldOpt1==='FOR'?'selected':''}>FOR[cite: 10]</option><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON[cite: 10]</option></select></div><div><label>Malus :[cite: 10]</label><select id="opt_malus1" onchange="calculateTotals(); autoSaveData();"><option value="CHA">CHA[cite: 10]</option><option value="INT">INT[cite: 10]</option></select></div>`;
+            instruction.innerText = "Ajustements du Demi-orc : Un bonus (+1) et un malus (-1).";
+            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="FOR" ${oldOpt1==='FOR'?'selected':''}>FOR</option><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); autoSaveData();"><option value="CHA">CHA</option><option value="INT">INT</option></select></div>`;
         } else if (['Elfe haut', 'Elfe sylvain', 'Gnome', 'Halfelin'].includes(peuple)) {
             let options = peuple === 'Elfe haut' ? '<option value="INT">INT</option><option value="CHA">CHA</option>' : peuple === 'Elfe sylvain' ? '<option value="AGI">AGI</option><option value="PER">PER</option>' : peuple === 'Gnome' ? '<option value="INT">INT</option><option value="PER">PER</option>' : '<option value="AGI">AGI</option><option value="VOL">VOL</option>';
-            instruction.innerText = `Ajustements de l'${peuple} : +1 au choix, et -1 FOR.[cite: 10]`;
-            choicesContainer.innerHTML = `<div><label>Bonus (+1) :[cite: 10]</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();">${options}</select></div><div class="malus-text-badge">Malus : -1 FOR[cite: 10]</div>`;
+            instruction.innerText = `Ajustements de l'${peuple} : +1 au choix, et -1 FOR.`;
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();">${options}</select></div><div class="malus-text-badge">Malus : -1 FOR</div>`;
         } else if (peuple === 'Humain') {
             let minVal = Math.min(...statsList.map(s => assignedStats[s] !== null ? assignedStats[s] : 0));
             let lowestStats = statsList.filter(s => (assignedStats[s] !== null ? assignedStats[s] : 0) === minVal);
 
-            instruction.innerText = "Ajustements de l'Humain : +1 sur l'une de ses caractéristiques.[cite: 10]";
+            instruction.innerText = "Ajustements de l'Humain : +1 sur l'une de ses caractéristiques.";
             let optionsHTML = lowestStats.map(s => {
                 return `<option value="${s}" ${s === oldOpt1 ? 'selected' : ''}>${s}</option>`;
             }).join('');
-            choicesContainer.innerHTML = `<div><label>Bonus (+1) :[cite: 10]</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();">${optionsHTML}</select></div>`;
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();">${optionsHTML}</select></div>`;
         } else if (peuple === 'Nain') {
-            instruction.innerText = "Ajustements du Nain : +1 CON ou VOL, et -1 AGI.[cite: 10]";
-            choicesContainer.innerHTML = `<div><label>Bonus (+1) :[cite: 10]</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON[cite: 10]</option><option value="VOL" ${oldOpt1==='VOL'?'selected':''}>VOL[cite: 10]</option></select></div><div class="malus-text-badge">Malus : -1 AGI[cite: 10]</div>`;
+            instruction.innerText = "Ajustements du Nain : +1 CON ou VOL, et -1 AGI.";
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON</option><option value="VOL" ${oldOpt1==='VOL'?'selected':''}>VOL</option></select></div><div class="malus-text-badge">Malus : -1 AGI</div>`;
         }
     }
 
@@ -671,21 +671,21 @@
         row.id = rowId;
         row.innerHTML = `
             <div class="field-group">
-                <label>⚔️ Arme / Sort[cite: 10]</label>
+                <label>⚔️ Arme / Sort</label>
                 <div class="sub-flex-row" style="gap: 4px;">
                     <select class="w-preset" onchange="onWeaponPresetChange('${rowId}')">${weaponSelectOpts}</select>
                     <input type="text" class="w-name" value="${data.name || ''}" placeholder="Nom perso." oninput="autoSaveData()">
                 </div>
             </div>
             <div class="field-group">
-                <label>🎯 Atk (1d20)[cite: 10]</label>
+                <label>🎯 Atk (1d20)</label>
                 <div class="sub-flex-row">
-                    <span class="fixed-die-inline">1d20[cite: 10]</span>
+                    <span class="fixed-die-inline">1d20</span>
                     <select class="w-atk-mod" onchange="autoSaveData()">${scaleOpts(data.atkMod !== undefined ? data.atkMod : '+0')}</select>
                 </div>
             </div>
             <div class="field-group">
-                <label>💥 DM[cite: 10]</label>
+                <label>💥 DM</label>
                 <div class="sub-flex-row">
                     <select class="w-dm-die" onchange="autoSaveData()">${dmDieOpts}</select>
                     <select class="w-dm-mod" onchange="autoSaveData()">${scaleOpts(data.dmMod !== undefined ? data.dmMod : '+0')}</select>
@@ -725,8 +725,8 @@
         row.className = 'eq-row';
         row.id = rowId;
         row.innerHTML = `
-            <div class="field-group"><label>📦 Objet[cite: 10]</label><input type="text" class="eq-name" value="${data.name || ''}" placeholder="Objet" oninput="autoSaveData()"></div>
-            <div class="field-group"><label>🔢 Qté[cite: 10]</label><input type="text" class="eq-qty" value="${data.qty || '1'}" oninput="autoSaveData()"></div>
+            <div class="field-group"><label>📦 Objet</label><input type="text" class="eq-name" value="${data.name || ''}" placeholder="Objet" oninput="autoSaveData()"></div>
+            <div class="field-group"><label>🔢 Qté</label><input type="text" class="eq-qty" value="${data.qty || '1'}" oninput="autoSaveData()"></div>
             <div class="eq-delete-wrapper"><button type="button" class="btn-delete-row-eq" onclick="document.getElementById('${rowId}').remove(); autoSaveData();">×</button></div>
         `;
         container.appendChild(row);
@@ -880,7 +880,7 @@
 
     function manualSaveData() {
         autoSaveData();
-        alert("Fiche enregistrée avec succès ![cite: 10]");
+        alert("Fiche enregistrée avec succès !");
     }
 
     function loadData() {
@@ -961,7 +961,7 @@
                         const rangRows = card.querySelectorAll('.voie-rang-row');
                         voie.rangs.forEach((rangData, rIndex) => {
                             if (rangRows[rIndex]) {
-                                rangRows[rIndex].querySelector('.rang-name-input').value = rangData.rangName || '';
+                                rangRows[rangRows.length > 0 ? rIndex : 0].querySelector('.rang-name-input').value = rangData.rangName || '';
                                 rangRows[rIndex].querySelector('.rang-desc-textarea').value = rangData.rangDesc || '';
                             }
                         });
@@ -980,7 +980,7 @@
     }
 
     function resetCharacterSheet() {
-        if (confirm("Voulez-vous vraiment effacer cette fiche et recommencer à zéro ?[cite: 10]")) {
+        if (confirm("Voulez-vous vraiment effacer cette fiche et recommencer à zéro ?")) {
             localStorage.removeItem('cof2_character');
             location.reload();
         }
@@ -1000,16 +1000,21 @@
     function exportToPNG() {
         const grimoire = document.querySelector('.grimoire-spread');
         if (!grimoire) {
-            alert("Erreur : Impossible de trouver la zone du grimoire à capturer.[cite: 10]");
+            alert("Erreur : Impossible de trouver la zone du grimoire à capturer.");
             return;
         }
 
-        grimoire.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
-            input.setAttribute('value', input.value);
+        // Correctif anti-troncature : Ajuste temporairement la hauteur de chaque textarea à son contenu réel
+        const textareas = grimoire.querySelectorAll('textarea');
+        const originalHeights = [];
+        textareas.forEach(ta => {
+            originalHeights.push(ta.style.height);
+            ta.style.height = 'auto';
+            ta.style.height = (ta.scrollHeight + 4) + 'px';
         });
 
-        grimoire.querySelectorAll('textarea').forEach(textarea => {
-            textarea.innerHTML = textarea.value;
+        grimoire.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+            input.setAttribute('value', input.value);
         });
 
         html2canvas(grimoire, {
@@ -1021,14 +1026,22 @@
                 return element.classList && element.classList.contains('no-export');
             }
         }).then(canvas => {
+            // Restaure la hauteur originale des textarea
+            textareas.forEach((ta, idx) => {
+                ta.style.height = originalHeights[idx];
+            });
+
             const link = document.createElement('a');
             let charName = document.getElementById('charName').value.trim();
             link.download = (charName ? charName : 'personnage') + '_cof2.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         }).catch(err => {
-            console.error("Erreur lors de l'export PNG :[cite: 10]", err);
-            alert("Une erreur est survenue lors de la génération de l'image.[cite: 10]");
+            console.error("Erreur lors de l'export PNG :", err);
+            textareas.forEach((ta, idx) => {
+                ta.style.height = originalHeights[idx];
+            });
+            alert("Une erreur est survenue lors de la génération de l'image.");
         });
     }
 
