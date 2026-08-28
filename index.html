@@ -1004,31 +1004,38 @@ function exportToPNG() {
         return;
     }
 
-    // Correctif anti-troncature et multi-lignes pour les textareas
+    // 1. Transforme temporairement chaque textarea en div pour que html2canvas capture les retours à la ligne
     const textareas = grimoire.querySelectorAll('textarea');
-    const originalStyles = [];
-    
-    textareas.forEach(ta => {
-        // Sauvegarde des styles originaux
-        originalStyles.push({
-            height: ta.style.height,
-            width: ta.style.width,
-            whiteSpace: ta.style.whiteSpace,
-            wordBreak: ta.style.wordBreak,
-            overflow: ta.style.overflow
-        });
+    const replacements = [];
 
-        // Force le conteneur du textarea à respecter les retours à la ligne pour le canvas
-        ta.style.height = 'auto';
-        ta.style.height = (ta.scrollHeight + 10) + 'px';
-        ta.style.whiteSpace = 'pre-wrap';
-        ta.style.wordBreak = 'break-word';
+    textareas.forEach(ta => {
+        const div = document.createElement('div');
+        div.className = ta.className;
+        div.style.cssText = window.getComputedStyle(ta).cssText;
+        
+        // Copie des styles spécifiques indispensables pour le rendu
+        div.style.display = 'block';
+        div.style.whiteSpace = 'pre-wrap';
+        div.style.wordBreak = 'break-word';
+        div.style.overflow = 'hidden';
+        div.style.height = 'auto';
+        div.style.minHeight = ta.style.height || `${ta.scrollHeight}px`;
+        
+        // Remplace les sauts de ligne par des balises <br> pour l'affichage HTML
+        div.innerHTML = ta.value.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>');
+
+        ta.parentNode.insertBefore(div, ta);
+        ta.style.display = 'none';
+
+        replacements.push({ textarea: ta, placeholder: div });
     });
 
+    // Synchronisation des inputs classiques
     grimoire.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
         input.setAttribute('value', input.value);
     });
 
+    // 2. Lancement de la capture canvas
     html2canvas(grimoire, {
         scale: 2,
         useCORS: true,
@@ -1038,13 +1045,11 @@ function exportToPNG() {
             return element.classList && element.classList.contains('no-export');
         }
     }).then(canvas => {
-        // Restaure les styles originaux des textarea
-        textareas.forEach((ta, idx) => {
-            ta.style.height = originalStyles[idx].height;
-            ta.style.width = originalStyles[idx].width;
-            ta.style.whiteSpace = originalStyles[idx].whiteSpace;
-            ta.style.wordBreak = originalStyles[idx].wordBreak;
-            ta.style.overflow = originalStyles[idx].overflow;
+        // 3. Restauration des textarea d'origine
+        replacements.forEach(item => {
+            item.placeholder.parentNode.insertBefore(item.textarea, item.placeholder);
+            item.placeholder.remove();
+            item.textarea.style.display = '';
         });
 
         const link = document.createElement('a');
@@ -1054,12 +1059,11 @@ function exportToPNG() {
         link.click();
     }).catch(err => {
         console.error("Erreur lors de l'export PNG :", err);
-        textareas.forEach((ta, idx) => {
-            ta.style.height = originalStyles[idx].height;
-            ta.style.width = originalStyles[idx].width;
-            ta.style.whiteSpace = originalStyles[idx].whiteSpace;
-            ta.style.wordBreak = originalStyles[idx].wordBreak;
-            ta.style.overflow = originalStyles[idx].overflow;
+        // Restauration en cas d'erreur
+        replacements.forEach(item => {
+            item.placeholder.parentNode.insertBefore(item.textarea, item.placeholder);
+            item.placeholder.remove();
+            item.textarea.style.display = '';
         });
         alert("Une erreur est survenue lors de la génération de l'image.");
     });
