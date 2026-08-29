@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
-    <link rel="stylesheet" href="style.css?v=16">
+    <link rel="stylesheet" href="style.css?v=17">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
@@ -240,11 +240,11 @@
                 </div>
 
                 <div class="grid-identity grid-identity-combat-3">
-                    <div class="framed-stat-card"><label>🛡️ Défense</label><div id="displayDEF" class="display-card">--</div></div>
-                    <div class="framed-stat-card"><label>⚡ Initiative</label><div id="displayInit" class="display-card">--</div></div>
-                    <div class="framed-stat-card"><label>✨ Mana (PM)</label><div id="displayPM" class="display-card">--</div></div>
-                    <div class="framed-stat-card"><label>🍀 Chance (PC)</label><div id="displayPC" class="display-card">--</div></div>
-                    <div class="framed-stat-card"><label>🧪 Récup. (DR)</label><div id="displayDR" class="display-card">--</div></div>
+                    <div class="framed-stat-card"><label>🛡️ Défense</label><div id="displayDEF" class="display-card" contenteditable="true" oninput="markManualEdit('DEF'); autoSaveData();">--</div></div>
+                    <div class="framed-stat-card"><label>⚡ Initiative</label><div id="displayInit" class="display-card" contenteditable="true" oninput="markManualEdit('Init'); autoSaveData();">--</div></div>
+                    <div class="framed-stat-card"><label>✨ Mana (PM)</label><div id="displayPM" class="display-card" contenteditable="true" oninput="markManualEdit('PM'); autoSaveData();">--</div></div>
+                    <div class="framed-stat-card"><label>🍀 Chance (PC)</label><div id="displayPC" class="display-card" contenteditable="true" oninput="markManualEdit('PC'); autoSaveData();">--</div></div>
+                    <div class="framed-stat-card"><label>🧪 Récup. (DR)</label><div id="displayDR" class="display-card" contenteditable="true" oninput="markManualEdit('DR'); autoSaveData();">--</div></div>
                 </div>
 
                 <!-- Bloc groupé "Valeurs d'attaque" -->
@@ -255,7 +255,7 @@
                             <label class="flex-label"><span>⚔️ Contact</span><select id="contactStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR</option><option value="AGI">AGI</option></select></label>
                             <div class="flex-atk-row">
                                 <span class="fixed-die-inline">1d20</span>
-                                <div id="displayAtkContact" class="display-card flex-grow-card">--</div>
+                                <div id="displayAtkContact" class="display-card flex-grow-card" contenteditable="true" oninput="markManualEdit('AtkContact'); autoSaveData();">--</div>
                                 <input type="number" id="extraAtkContact" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
                             </div>
                         </div>
@@ -263,7 +263,7 @@
                             <label class="flex-label"><span>🏹 Distance</span><select id="distanceStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="AGI">AGI</option><option value="PER">PER</option></select></label>
                             <div class="flex-atk-row">
                                 <span class="fixed-die-inline">1d20</span>
-                                <div id="displayAtkDistance" class="display-card flex-grow-card">--</div>
+                                <div id="displayAtkDistance" class="display-card flex-grow-card" contenteditable="true" oninput="markManualEdit('AtkDistance'); autoSaveData();">--</div>
                                 <input type="number" id="extraAtkDistance" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
                             </div>
                         </div>
@@ -271,7 +271,7 @@
                             <label>🔮 Magique</label>
                             <div class="flex-atk-row">
                                 <span class="fixed-die-inline">1d20</span>
-                                <div id="displayAtkMagique" class="display-card flex-grow-card">--</div>
+                                <div id="displayAtkMagique" class="display-card flex-grow-card" contenteditable="true" oninput="markManualEdit('AtkMagique'); autoSaveData();">--</div>
                                 <input type="number" id="extraAtkMagique" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
                             </div>
                         </div>
@@ -282,7 +282,7 @@
                     <label>❤️ Points de Vie (Actuels / Max)</label>
                     <div class="pv-container">
                         <button onclick="adjustCurrentPV(-1)">-</button>
-                        <span id="displayPV" class="pv-display-text">--</span>
+                        <span id="displayPV" class="pv-display-text" contenteditable="true" oninput="autoSaveData()">--</span>
                         <button onclick="adjustCurrentPV(1)">+</button>
                     </div>
                 </div>
@@ -410,6 +410,12 @@
     let currentPV = null;
     let avatarBase64 = "";
 
+    // Suivi des surcharges manuelles
+    let manualOverrides = {
+        DEF: false, Init: false, PM: false, PC: false, DR: false,
+        AtkContact: false, AtkDistance: false, AtkMagique: false
+    };
+
     let assignedStats = { AGI: null, CON: null, FOR: null, PER: null, CHA: null, INT: null, VOL: null };
     let availableTokens = [];
 
@@ -464,6 +470,30 @@
         { name: "Pétoire", die: "1d10" },
         { name: "Mousquet", die: "2d6" }
     ];
+
+    function markManualEdit(fieldKey) {
+        const el = document.getElementById(getCardElementId(fieldKey));
+        if (el && el.innerText.trim() === "") {
+            manualOverrides[fieldKey] = false;
+            calculateTotals();
+        } else {
+            manualOverrides[fieldKey] = true;
+        }
+    }
+
+    function getCardElementId(fieldKey) {
+        switch(fieldKey) {
+            case 'DEF': return 'displayDEF';
+            case 'Init': return 'displayInit';
+            case 'PM': return 'displayPM';
+            case 'PC': return 'displayPC';
+            case 'DR': return 'displayDR';
+            case 'AtkContact': return 'displayAtkContact';
+            case 'AtkDistance': return 'displayAtkDistance';
+            case 'AtkMagique': return 'displayAtkMagique';
+            default: return '';
+        }
+    }
 
     function loadAvatar(event) {
         const file = event.target.files[0];
@@ -748,11 +778,15 @@
         let armorBonus = parseInt(document.getElementById('armorBonus').value) || 0;
         let shieldBonus = parseInt(document.getElementById('shieldBonus').value) || 0;
         let extraDef = parseInt(document.getElementById('extraDefBonus').value) || 0;
-        document.getElementById('displayDEF').innerText = 10 + agiTotal + armorBonus + shieldBonus + extraDef;
+        if (!manualOverrides.DEF) {
+            document.getElementById('displayDEF').innerText = 10 + agiTotal + armorBonus + shieldBonus + extraDef;
+        }
 
         let perTotal = (assignedStats['PER'] !== null ? assignedStats['PER'] : 0) + (peupleBonuses['PER'] || 0);
         let extraInit = parseInt(document.getElementById('extraInitBonus').value) || 0;
-        document.getElementById('displayInit').innerText = 10 + perTotal + extraInit;
+        if (!manualOverrides.Init) {
+            document.getElementById('displayInit').innerText = 10 + perTotal + extraInit;
+        }
 
         let forTotal = (assignedStats['FOR'] !== null ? assignedStats['FOR'] : 0) + (peupleBonuses['FOR'] || 0);
         let volTotal = (assignedStats['VOL'] !== null ? assignedStats['VOL'] : 0) + (peupleBonuses['VOL'] || 0);
@@ -764,16 +798,26 @@
         let atkDistance = level + distanceBaseVal + (parseInt(document.getElementById('extraAtkDistance').value) || 0);
         let atkMagique = level + volTotal + (parseInt(document.getElementById('extraAtkMagique').value) || 0);
 
-        document.getElementById('displayAtkContact').innerText = (atkContact >= 0 ? "+" : "") + atkContact;
-        document.getElementById('displayAtkDistance').innerText = (atkDistance >= 0 ? "+" : "") + atkDistance;
-        document.getElementById('displayAtkMagique').innerText = (atkMagique >= 0 ? "+" : "") + atkMagique;
+        if (!manualOverrides.AtkContact) document.getElementById('displayAtkContact').innerText = (atkContact >= 0 ? "+" : "") + atkContact;
+        if (!manualOverrides.AtkDistance) document.getElementById('displayAtkDistance').innerText = (atkDistance >= 0 ? "+" : "") + atkDistance;
+        if (!manualOverrides.AtkMagique) document.getElementById('displayAtkMagique').innerText = (atkMagique >= 0 ? "+" : "") + atkMagique;
 
+        // Formule Mana (PM) : VOL + nb de sorts/capacités magiques notés avec *
         let spellCount = parseInt(document.getElementById('spellCount').value) || 0;
-        document.getElementById('displayPM').innerText = spellCount > 0 ? volTotal + spellCount : 0;
+        if (!manualOverrides.PM) {
+            document.getElementById('displayPM').innerText = volTotal + spellCount;
+        }
 
+        // Formule Chance (PC) : 2 + CHA (+1 si famille Aventurier et +1 si peuple Humain)
         let chaTotal = (assignedStats['CHA'] !== null ? assignedStats['CHA'] : 0) + (peupleBonuses['CHA'] || 0);
         let family = document.getElementById('charFamily').value;
-        document.getElementById('displayPC').innerText = 2 + chaTotal + (family === 'Aventurier' ? 1 : 0);
+        let peupleVal = document.getElementById('charPeuple').value;
+        let pcCalc = 2 + chaTotal;
+        if (family === 'Aventurier') pcCalc += 1;
+        if (peupleVal === 'Humain') pcCalc += 1;
+        if (!manualOverrides.PC) {
+            document.getElementById('displayPC').innerText = pcCalc;
+        }
 
         let conTotal = (assignedStats['CON'] !== null ? assignedStats['CON'] : 0) + (peupleBonuses['CON'] || 0) + (parseInt(document.getElementById('extraConBonus').value) || 0);
         let basePV = family === 'Combattant' ? 5 : (family === 'Mage' ? 3 : 4);
@@ -785,7 +829,9 @@
 
         let baseDR = Math.max(0, 2 + conTotal + (family === 'Mystique' ? 1 : 0));
         let dieType = family === 'Combattant' ? "d10" : (family === 'Mage' ? "d6" : "d8");
-        document.getElementById('displayDR').innerText = `${baseDR} ${dieType}`;
+        if (!manualOverrides.DR) {
+            document.getElementById('displayDR').innerText = `${baseDR} ${dieType}`;
+        }
     }
 
     function adjustCurrentPV(amount) {
@@ -850,6 +896,17 @@
             currentPV: currentPV, avatar: avatarBase64,
             weapons: weaponsData, equipment: equipmentData, voies: voiesData,
             assignedStats: assignedStats, availableTokens: availableTokens,
+            manualOverrides: manualOverrides,
+            manualValues: {
+                DEF: document.getElementById('displayDEF').innerText,
+                Init: document.getElementById('displayInit').innerText,
+                PM: document.getElementById('displayPM').innerText,
+                PC: document.getElementById('displayPC').innerText,
+                DR: document.getElementById('displayDR').innerText,
+                AtkContact: document.getElementById('displayAtkContact').innerText,
+                AtkDistance: document.getElementById('displayAtkDistance').innerText,
+                AtkMagique: document.getElementById('displayAtkMagique').innerText
+            },
             peupleChoices: { 
                 opt1: document.getElementById('opt_bonus1')?.value, 
                 optMalus1: document.getElementById('opt_malus1')?.value
@@ -911,6 +968,8 @@
             if(data.extraAtkMagique !== undefined) document.getElementById('extraAtkMagique').value = data.extraAtkMagique;
             currentPV = data.currentPV !== undefined ? data.currentPV : null;
 
+            if (data.manualOverrides) manualOverrides = data.manualOverrides;
+
             if (data.avatar) {
                 avatarBase64 = data.avatar;
                 const preview = document.getElementById('avatarPreview');
@@ -928,6 +987,17 @@
             if (data.peupleChoices) {
                 if(document.getElementById('opt_bonus1')) document.getElementById('opt_bonus1').value = data.peupleChoices.opt1 || '';
                 if(document.getElementById('opt_malus1')) document.getElementById('opt_malus1').value = data.peupleChoices.optMalus1 || '';
+            }
+
+            if (data.manualValues) {
+                if (manualOverrides.DEF && data.manualValues.DEF) document.getElementById('displayDEF').innerText = data.manualValues.DEF;
+                if (manualOverrides.Init && data.manualValues.Init) document.getElementById('displayInit').innerText = data.manualValues.Init;
+                if (manualOverrides.PM && data.manualValues.PM) document.getElementById('displayPM').innerText = data.manualValues.PM;
+                if (manualOverrides.PC && data.manualValues.PC) document.getElementById('displayPC').innerText = data.manualValues.PC;
+                if (manualOverrides.DR && data.manualValues.DR) document.getElementById('displayDR').innerText = data.manualValues.DR;
+                if (manualOverrides.AtkContact && data.manualValues.AtkContact) document.getElementById('displayAtkContact').innerText = data.manualValues.AtkContact;
+                if (manualOverrides.AtkDistance && data.manualValues.AtkDistance) document.getElementById('displayAtkDistance').innerText = data.manualValues.AtkDistance;
+                if (manualOverrides.AtkMagique && data.manualValues.AtkMagique) document.getElementById('displayAtkMagique').innerText = data.manualValues.AtkMagique;
             }
 
             if (data.companion) {
@@ -997,77 +1067,67 @@
         a.click();
     }
 
-function exportToPNG() {
-    const grimoire = document.querySelector('.grimoire-spread');
-    if (!grimoire) {
-        alert("Erreur : Impossible de trouver la zone du grimoire à capturer.");
-        return;
-    }
-
-    // 1. Transforme temporairement chaque textarea en div pour que html2canvas capture les retours à la ligne
-    const textareas = grimoire.querySelectorAll('textarea');
-    const replacements = [];
-
-    textareas.forEach(ta => {
-        const div = document.createElement('div');
-        div.className = ta.className;
-        div.style.cssText = window.getComputedStyle(ta).cssText;
-        
-        // Copie des styles spécifiques indispensables pour le rendu
-        div.style.display = 'block';
-        div.style.whiteSpace = 'pre-wrap';
-        div.style.wordBreak = 'break-word';
-        div.style.overflow = 'hidden';
-        div.style.height = 'auto';
-        div.style.minHeight = ta.style.height || `${ta.scrollHeight}px`;
-        
-        // Remplace les sauts de ligne par des balises <br> pour l'affichage HTML
-        div.innerHTML = ta.value.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>');
-
-        ta.parentNode.insertBefore(div, ta);
-        ta.style.display = 'none';
-
-        replacements.push({ textarea: ta, placeholder: div });
-    });
-
-    // Synchronisation des inputs classiques
-    grimoire.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
-        input.setAttribute('value', input.value);
-    });
-
-    // 2. Lancement de la capture canvas
-    html2canvas(grimoire, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: null,
-        ignoreElements: (element) => {
-            return element.classList && element.classList.contains('no-export');
+    function exportToPNG() {
+        const grimoire = document.querySelector('.grimoire-spread');
+        if (!grimoire) {
+            alert("Erreur : Impossible de trouver la zone du grimoire à capturer.");
+            return;
         }
-    }).then(canvas => {
-        // 3. Restauration des textarea d'origine
-        replacements.forEach(item => {
-            item.placeholder.parentNode.insertBefore(item.textarea, item.placeholder);
-            item.placeholder.remove();
-            item.textarea.style.display = '';
+
+        const textareas = grimoire.querySelectorAll('textarea');
+        const replacements = [];
+
+        textareas.forEach(ta => {
+            const div = document.createElement('div');
+            div.className = ta.className;
+            div.style.cssText = window.getComputedStyle(ta).cssText;
+            div.style.display = 'block';
+            div.style.whiteSpace = 'pre-wrap';
+            div.style.wordBreak = 'break-word';
+            div.style.overflow = 'hidden';
+            div.style.height = 'auto';
+            div.style.minHeight = ta.style.height || `${ta.scrollHeight}px`;
+            div.innerHTML = ta.value.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>');
+
+            ta.parentNode.insertBefore(div, ta);
+            ta.style.display = 'none';
+            replacements.push({ textarea: ta, placeholder: div });
         });
 
-        const link = document.createElement('a');
-        let charName = document.getElementById('charName').value.trim();
-        link.download = (charName ? charName : 'personnage') + '_cof2.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-    }).catch(err => {
-        console.error("Erreur lors de l'export PNG :", err);
-        // Restauration en cas d'erreur
-        replacements.forEach(item => {
-            item.placeholder.parentNode.insertBefore(item.textarea, item.placeholder);
-            item.placeholder.remove();
-            item.textarea.style.display = '';
+        grimoire.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+            input.setAttribute('value', input.value);
         });
-        alert("Une erreur est survenue lors de la génération de l'image.");
-    });
-}
+
+        html2canvas(grimoire, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: null,
+            ignoreElements: (element) => {
+                return element.classList && element.classList.contains('no-export');
+            }
+        }).then(canvas => {
+            replacements.forEach(item => {
+                item.placeholder.parentNode.insertBefore(item.textarea, item.placeholder);
+                item.placeholder.remove();
+                item.textarea.style.display = '';
+            });
+
+            const link = document.createElement('a');
+            let charName = document.getElementById('charName').value.trim();
+            link.download = (charName ? charName : 'personnage') + '_cof2.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(err => {
+            console.error("Erreur lors de l'export PNG :", err);
+            replacements.forEach(item => {
+                item.placeholder.parentNode.insertBefore(item.textarea, item.placeholder);
+                item.placeholder.remove();
+                item.textarea.style.display = '';
+            });
+            alert("Une erreur est survenue lors de la génération de l'image.");
+        });
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
         loadData();
