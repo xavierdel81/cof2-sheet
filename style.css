@@ -552,7 +552,7 @@ button.main-btn:hover {
     margin-bottom: 5px;
 }
 
-.weapon-row, .eq-row {
+.weapon-row, .skill-row, .eq-row {
     display: grid;
     grid-template-columns: 2fr 1.5fr 1.5fr;
     gap: 8px;
@@ -564,6 +564,10 @@ button.main-btn:hover {
     align-items: center;
     position: relative;
     z-index: 2;
+}
+
+.skill-row {
+    grid-template-columns: 2fr 1.5fr 1.5fr;
 }
 
 .eq-row { 
@@ -698,6 +702,13 @@ button.main-btn:hover {
     border-radius: 4px; 
     text-align: center; 
     font-family: var(--global-font-family); 
+}
+
+.s-total-display {
+    background-color: #8B2500 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    border: 1px solid #5a1800 !important;
 }
 
 .flex-label {
@@ -1018,4 +1029,3 @@ textarea,
 .rang-desc-textarea {
     font-weight: bold;
 }
-```[cite: 1, 2]
