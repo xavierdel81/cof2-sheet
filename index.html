@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
-    <link rel="stylesheet" href="style.css?v=18">
+    <link rel="stylesheet" href="style.css?v=17">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
@@ -349,10 +349,6 @@
                 <div id="weaponsContainer"></div>
                 <button class="main-btn btn-spacing-bottom" type="button" onclick="addWeaponRow();">+ Ajouter une Arme / Sort</button>
 
-                <h3 class="sub-section-title">🎯 Compétences & Savoir-faire (Jet : 1d20 + Carac + Bonus)</h3>
-                <div id="skillsContainer"></div>
-                <button class="main-btn btn-spacing-bottom" type="button" onclick="addSkillRow();">+ Ajouter une Compétence</button>
-
                 <h3 class="sub-section-title">🎒 Équipement & Inventaire</h3>
                 <div id="equipmentContainer"></div>
                 <button class="main-btn" type="button" onclick="addEquipmentRow();">+ Ajouter un objet</button>
@@ -414,7 +410,6 @@
     let currentPV = null;
     let avatarBase64 = "";
 
-    // Suivi des surcharges manuelles
     let manualOverrides = {
         DEF: false, Init: false, PM: false, PC: false, DR: false,
         AtkContact: false, AtkDistance: false, AtkMagique: false
@@ -473,31 +468,6 @@
         { name: "Lance-pierre", die: "1d3" },
         { name: "Pétoire", die: "1d10" },
         { name: "Mousquet", die: "2d6" }
-    ];
-
-    const officialSkills = [
-        { name: "-- Compétence personnalisée --", stat: "AGI" },
-        { name: "Acrobaties", stat: "AGI" },
-        { name: "Art de la magie", stat: "INT" },
-        { name: "Artisanat", stat: "INT" },
-        { name: "Athlétisme", stat: "FOR" },
-        { name: "Bluff", stat: "CHA" },
-        { name: "Connaissance", stat: "INT" },
-        { name: "Discrétion", stat: "AGI" },
-        { name: "Dressage", stat: "CHA" },
-        { name: "Escamotage", stat: "AGI" },
-        { name: "Jeu", stat: "INT" },
-        { name: "Langue", stat: "INT" },
-        { name: "Médecine", stat: "INT" },
-        { name: "Navigation", stat: "PER" },
-        { name: "Perception", stat: "PER" },
-        { name: "Persuasion", stat: "CHA" },
-        { name: "Prestidigitation", stat: "AGI" },
-        { name: "Profession", stat: "INT" },
-        { name: "Renseignements", stat: "CHA" },
-        { name: "Ride", stat: "AGI" },
-        { name: "Survie", stat: "PER" },
-        { name: "Vigilance", stat: "PER" }
     ];
 
     function markManualEdit(fieldKey) {
@@ -777,104 +747,6 @@
         autoSaveData();
     }
 
-    function addSkillRow(data = {}) {
-        const container = document.getElementById('skillsContainer');
-        const rowId = 'skill_' + Date.now() + Math.random().toString(36).substr(2, 5);
-
-        let scaleOpts = (selectedVal) => {
-            let opts = '';
-            for(let i = -5; i <= 5; i++) {
-                let valStr = (i >= 0 ? '+' : '') + i;
-                opts += `<option value="${valStr}" ${valStr === String(selectedVal) ? 'selected' : ''}>${valStr}</option>`;
-            }
-            return opts;
-        };
-
-        let skillSelectOpts = officialSkills.map(s => `<option value="${s.name}" data-stat="${s.stat}" ${s.name === data.skillPreset ? 'selected' : ''}>${s.name} (${s.stat})</option>`).join('');
-
-        const row = document.createElement('div');
-        row.className = 'skill-row';
-        row.id = rowId;
-        row.innerHTML = `
-            <div class="field-group">
-                <label>🎯 Compétence</label>
-                <div class="sub-flex-row" style="gap: 4px;">
-                    <select class="s-preset" onchange="onSkillPresetChange('${rowId}'); updateSkillTotal('${rowId}');">${skillSelectOpts}</select>
-                    <input type="text" class="s-name" value="${data.name || ''}" placeholder="Nom perso." oninput="autoSaveData()">
-                </div>
-            </div>
-            <div class="field-group">
-                <label>📊 Carac. & Bonus</label>
-                <div class="sub-flex-row">
-                    <select class="s-stat" onchange="updateSkillTotal('${rowId}'); autoSaveData();">
-                        <option value="AGI" ${data.stat === 'AGI' ? 'selected' : ''}>AGI</option>
-                        <option value="CON" ${data.stat === 'CON' ? 'selected' : ''}>CON</option>
-                        <option value="FOR" ${data.stat === 'FOR' ? 'selected' : ''}>FOR</option>
-                        <option value="PER" ${data.stat === 'PER' ? 'selected' : ''}>PER</option>
-                        <option value="CHA" ${data.stat === 'CHA' ? 'selected' : ''}>CHA</option>
-                        <option value="INT" ${data.stat === 'INT' ? 'selected' : ''}>INT</option>
-                        <option value="VOL" ${data.stat === 'VOL' ? 'selected' : ''}>VOL</option>
-                    </select>
-                    <select class="s-extra" onchange="updateSkillTotal('${rowId}'); autoSaveData();" title="Bonus supplémentaire manuel">
-                        ${scaleOpts(data.extra !== undefined ? data.extra : '+0')}
-                    </select>
-                </div>
-            </div>
-            <div class="field-group">
-                <label>✨ Total (1d20+...)</label>
-                <div class="sub-flex-row">
-                    <span class="fixed-die-inline">1d20</span>
-                    <div class="display-card flex-grow-card s-total-display">+0</div>
-                    <button type="button" class="btn-delete-row" onclick="document.getElementById('${rowId}').remove(); autoSaveData();">×</button>
-                </div>
-            </div>
-        `;
-        container.appendChild(row);
-        updateSkillTotal(rowId);
-    }
-
-    function onSkillPresetChange(rowId) {
-        const row = document.getElementById(rowId);
-        if(!row) return;
-        const presetSelect = row.querySelector('.s-preset');
-        const nameInput = row.querySelector('.s-name');
-        const statSelect = row.querySelector('.s-stat');
-        
-        const selectedOpt = presetSelect.options[presetSelect.selectedIndex];
-        const skillName = selectedOpt.value;
-        const defaultStat = selectedOpt.getAttribute('data-stat');
-
-        if(skillName !== "-- Compétence personnalisée --") {
-            nameInput.value = skillName;
-            if(defaultStat) {
-                statSelect.value = defaultStat;
-            }
-        } else {
-            nameInput.value = "";
-        }
-        autoSaveData();
-    }
-
-    function updateSkillTotal(rowId) {
-        const row = document.getElementById(rowId);
-        if(!row) return;
-        const statName = row.querySelector('.s-stat').value;
-        const extraVal = parseInt(row.querySelector('.s-extra').value) || 0;
-        
-        let peupleBonuses = getPeupleBonuses();
-        let statTotal = (assignedStats[statName] !== null ? assignedStats[statName] : 0) + (peupleBonuses[statName] || 0);
-        let total = statTotal + extraVal;
-
-        row.querySelector('.s-total-display').innerText = (total >= 0 ? "+" : "") + total;
-        autoSaveData();
-    }
-
-    function refreshAllSkills() {
-        document.querySelectorAll('.skill-row').forEach(row => {
-            updateSkillTotal(row.id);
-        });
-    }
-
     function addEquipmentRow(data = {}) {
         const container = document.getElementById('equipmentContainer');
         const rowId = 'eq_' + Date.now() + Math.random().toString(36).substr(2, 5);
@@ -900,8 +772,6 @@
             document.getElementById('mod_' + stat).innerText = `Peuple: ${peupleBonus >= 0 ? "+" + peupleBonus : peupleBonus}`;
             document.getElementById('tot_' + stat).innerText = `Total: ${total >= 0 ? "+" + total : total}`;
         });
-
-        refreshAllSkills();
 
         let agiTotal = (assignedStats['AGI'] !== null ? assignedStats['AGI'] : 0) + (peupleBonuses['AGI'] || 0);
         let armorBonus = parseInt(document.getElementById('armorBonus').value) || 0;
@@ -931,13 +801,11 @@
         if (!manualOverrides.AtkDistance) document.getElementById('displayAtkDistance').innerText = (atkDistance >= 0 ? "+" : "") + atkDistance;
         if (!manualOverrides.AtkMagique) document.getElementById('displayAtkMagique').innerText = (atkMagique >= 0 ? "+" : "") + atkMagique;
 
-        // Formule Mana (PM) : VOL + nb de sorts/capacités magiques notés avec *
         let spellCount = parseInt(document.getElementById('spellCount').value) || 0;
         if (!manualOverrides.PM) {
             document.getElementById('displayPM').innerText = volTotal + spellCount;
         }
 
-        // Formule Chance (PC) : 2 + CHA (+1 si famille Aventurier et +1 si peuple Humain)
         let chaTotal = (assignedStats['CHA'] !== null ? assignedStats['CHA'] : 0) + (peupleBonuses['CHA'] || 0);
         let family = document.getElementById('charFamily').value;
         let peupleVal = document.getElementById('charPeuple').value;
@@ -986,13 +854,6 @@
             dmMod: row.querySelector('.w-dm-mod').value
         }));
 
-        const skillsData = Array.from(document.querySelectorAll('.skill-row')).map(row => ({
-            skillPreset: row.querySelector('.s-preset').value,
-            name: row.querySelector('.s-name').value,
-            stat: row.querySelector('.s-stat').value,
-            extra: row.querySelector('.s-extra').value
-        }));
-
         const equipmentData = Array.from(document.querySelectorAll('.eq-row')).map(row => ({
             name: row.querySelector('.eq-name').value,
             qty: row.querySelector('.eq-qty').value
@@ -1030,7 +891,7 @@
             extraAtkDistance: document.getElementById('extraAtkDistance').value,
             extraAtkMagique: document.getElementById('extraAtkMagique').value,
             currentPV: currentPV, avatar: avatarBase64,
-            weapons: weaponsData, skills: skillsData, equipment: equipmentData, voies: voiesData,
+            weapons: weaponsData, equipment: equipmentData, voies: voiesData,
             assignedStats: assignedStats, availableTokens: availableTokens,
             manualOverrides: manualOverrides,
             manualValues: {
@@ -1156,9 +1017,6 @@
             document.getElementById('weaponsContainer').innerHTML = '';
             (data.weapons && data.weapons.length > 0) ? data.weapons.forEach(w => addWeaponRow(w)) : addWeaponRow({weaponPreset: 'Épée courte', name: 'Épée courte', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
 
-            document.getElementById('skillsContainer').innerHTML = '';
-            (data.skills && data.skills.length > 0) ? data.skills.forEach(s => addSkillRow(s)) : addSkillRow({skillPreset: 'Survie', name: 'Survie', stat: 'PER', extra: '+0'});
-
             document.getElementById('equipmentContainer').innerHTML = '';
             (data.equipment && data.equipment.length > 0) ? data.equipment.forEach(e => addEquipmentRow(e)) : addEquipmentRow({name: 'Rations de voyage', qty: '1'});
 
@@ -1184,7 +1042,6 @@
             onFamilyChange();
             onProfileModeChange();
             addWeaponRow({weaponPreset: 'Épée courte', name: 'Épée courte', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
-            addSkillRow({skillPreset: 'Survie', name: 'Survie', stat: 'PER', extra: '+0'});
             addEquipmentRow({name: 'Rations de voyage', qty: '1'});
         }
     }
