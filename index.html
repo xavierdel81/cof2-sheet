@@ -2,230 +2,1859 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feuille de Personnage - Chroniques Oubliées Fantasy 2</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Bibliothèques pour l'exportation PDF / Image si besoin -->
+    <title>Créateur de Fiche - Grimoire COF2</title>
+    <style>
+        :root {
+            --global-font-size: 0.9rem;
+            --global-font-family: 'Lora', Georgia, serif;
+            --primary-bg: #f4ecd8;
+            --container-bg: #fdfbf7;
+            --border-color: #c5b358;
+            --text-color: #2c221e;
+            --header-bg: #3b5323;
+        }
+
+        body {
+            font-family: var(--global-font-family);
+            font-size: var(--global-font-size);
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header-banner {
+            height: 60px;
+            background: var(--header-bg);
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .header-title {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .main-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: #5c4033;
+            color: white;
+            transition: background 0.2s;
+        }
+
+        .main-btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-export { background-color: #2e5a88; }
+        .btn-reset { background-color: #8b0000; }
+        .btn-export-json { background-color: #4a4a4a; margin-top: 15px; width: 100%; }
+
+        .font-control-panel {
+            display: flex;
+            gap: 20px;
+            background: #eee4cc;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .font-control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grimoire-spread {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .grimoire-spread {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .grimoire-page {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-box {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .section-box h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sub-section-title {
+            font-size: 1rem;
+            margin: 15px 0 10px 0;
+            color: #4a3b32;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 3px;
+        }
+
+        .avatar-large-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .avatar-box-large {
+            width: 150px;
+            height: 150px;
+            border: 2px dashed var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            background: #faf6ee;
+            text-align: center;
+            padding: 5px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .avatar-box-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .grid-identity {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .grid-identity-duo {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .field-group label {
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: #4a3b32;
+        }
+
+        input[type="text"], input[type="number"], select, textarea {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: inherit;
+            background: #fff;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .field-group-margin {
+            margin-top: 10px;
+        }
+
+        /* Caractéristiques */
+        .pool-label {
+            font-weight: bold;
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .pool-container {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            min-height: 35px;
+            background: #f7f3e8;
+            padding: 6px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            border: 1px dashed #dcd0b2;
+            align-items: center;
+        }
+
+        .draggable-token {
+            background: #5c4033;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: grab;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .draggable-token.negative {
+            background: #8b0000;
+        }
+
+        .pool-empty-msg {
+            font-size: 0.8rem;
+            color: #777;
+            font-style: italic;
+        }
+
+        .grid-stats {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            .grid-stats {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .stat-box {
+            background: #fdfbf7;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 80px;
+        }
+
+        .stat-box label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #3b5323;
+        }
+
+        .stat-slot-inner {
+            min-height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #ccc;
+            border-radius: 3px;
+            margin: 4px 0;
+            background: #fff;
+        }
+
+        .stat-slot-inner.drag-over {
+            background: #eef4e6;
+            border-color: #3b5323;
+        }
+
+        .stat-empty-text {
+            font-size: 0.7rem;
+            color: #999;
+        }
+
+        .stat-assigned-badge {
+            background: #3b5323;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .stat-assigned-badge.negative {
+            background: #8b0000;
+        }
+
+        .stat-detail, .stat-total {
+            font-size: 0.75rem;
+            color: #555;
+        }
+
+        .stat-total {
+            font-weight: bold;
+            color: #000;
+        }
+
+        .peuple-instruction {
+            font-size: 0.8rem;
+            font-style: italic;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .peuple-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .malus-text-badge {
+            background: #8b0000;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* Combat & Ressources */
+        .grid-identity-combat-1, .grid-identity-combat-2 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .grid-identity-combat-3 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .grid-identity-combat-4 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-identity-combat-1, .grid-identity-combat-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .grid-identity-combat-3, .grid-identity-combat-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .framed-stat-card {
+            background: #f7f3e8;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .framed-stat-card label {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #3b5323;
+            margin-bottom: 4px;
+        }
+
+        .display-card {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 6px;
+            font-weight: bold;
+            font-size: 1rem;
+            min-height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .attack-group-container {
+            background: #eee4cc;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .attack-group-title {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: #4a3b32;
+        }
+
+        .flex-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+
+        .sub-select-inline {
+            padding: 2px;
+            font-size: 0.75rem;
+            border-radius: 3px;
+        }
+
+        .flex-atk-row {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .fixed-die-inline {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #666;
+            background: #fff;
+            padding: 4px 6px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .flex-grow-card {
+            flex-grow: 1;
+        }
+
+        .input-atk-extra {
+            width: 45px;
+            text-align: center;
+            padding: 4px;
+        }
+
+        .pv-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pv-container button {
+            padding: 6px 12px;
+            font-weight: bold;
+            background: #5c4033;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .pv-display-text {
+            flex-grow: 1;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 6px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .info-box {
+            background: #f7f3e8;
+            border-left: 4px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .info-box-margin {
+            margin-top: 10px;
+        }
+
+        .info-box-label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #666;
+            display: block;
+        }
+
+        .family-bonus-desc {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #3b5323;
+        }
+
+        /* Compagnon */
+        .companion-header-input {
+            border: none;
+            background: transparent;
+            font-size: 1.1rem;
+            font-weight: bold;
+            font-family: inherit;
+            color: inherit;
+            width: 60%;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .companion-type-input {
+            width: 100%;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .companion-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .companion-stat-box {
+            background: #f7f3e8;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 4px;
+        }
+
+        .companion-stat-box label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: block;
+            color: #3b5323;
+        }
+
+        .companion-stat-box input {
+            width: 100%;
+            text-align: center;
+            padding: 2px;
+            font-size: 0.8rem;
+            border: none;
+            background: transparent;
+            font-weight: bold;
+        }
+
+        .companion-line-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f7f3e8;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+
+        .companion-line-row label {
+            font-weight: bold;
+            color: #3b5323;
+        }
+
+        .companion-line-row input {
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            text-align: right;
+            font-weight: bold;
+            width: 60%;
+        }
+
+        /* Armes & Équipement lignes */
+        .weapon-row, .eq-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.2fr;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 8px;
+            background: #f7f3e8;
+            padding: 6px;
+            border-radius: 4px;
+        }
+
+        .eq-row {
+            grid-template-columns: 3fr 1fr 40px;
+        }
+
+        .sub-flex-row {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .btn-delete-row, .btn-delete-row-eq {
+            background: #8b0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .eq-delete-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Voies */
+        .voies-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .voie-card {
+            background: #f7f3e8;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .voie-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .voie-label-title {
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: #3b5323;
+            min-width: 80px;
+        }
+
+        .voie-name-input {
+            flex-grow: 1;
+            font-weight: bold;
+        }
+
+        .voie-rangs {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .voie-rang-row {
+            background: #fff;
+            border: 1px solid #dcd0b2;
+            padding: 6px;
+            border-radius: 3px;
+        }
+
+        .rang-top-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .rang-title {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #555;
+            min-width: 50px;
+        }
+
+        .rang-name-input {
+            flex-grow: 1;
+            padding: 3px;
+            font-size: 0.8rem;
+        }
+
+        .rang-desc-textarea {
+            width: 100%;
+            min-height: 40px;
+            font-size: 0.8rem;
+            padding: 4px;
+        }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
-    <header class="app-header no-print">
-        <h1>Feuille de Personnage - COF2</h1>
-        <div class="actions">
-            <button id="btn-save" class="btn">Sauvegarder</button>
-            <button id="btn-export" class="btn">Exporter en Image</button>
-            <button id="btn-reset" class="btn btn-danger">Réinitialiser</button>
+<div class="container">
+    <div class="header-banner"></div>
+
+    <div class="header-flex">
+        <h1 class="header-title">Feuille de Personnage — COF2</h1>
+        <div class="header-actions">
+            <button type="button" class="main-btn btn-export" onclick="exportToPNG()">📸 Télécharger en PNG</button>
+            <button type="button" id="btn-save-manual" class="main-btn" style="background-color: #3b5323; color: white;" onclick="manualSaveData()">💾 Enregistrer</button>
+            <button type="button" id="btn-reset" class="main-btn btn-reset" onclick="resetCharacterSheet()">Nouvelle Fiche</button>
         </div>
-    </header>
+    </div>
 
-    <main class="sheet-container">
-        <!-- PAGE 1 : IDENTITÉ, CARACTÉRISTIQUES, VOIES ET COMBAT -->
-        <div class="grimoire-spread page-1">
-            <div class="grimoire-page">
-                <!-- En-tête / Identité -->
-                <section class="section-box header-box">
-                    <h2>Identité du Personnage</h2>
-                    <div class="grid-2">
-                        <div class="field">
-                            <label for="nom">Nom du Personnage</label>
-                            <input type="text" id="nom" placeholder="Ex: Thorgal">
-                        </div>
-                        <div class="field">
-                            <label for="joueur">Nom du Joueur</label>
-                            <input type="text" id="joueur" placeholder="Ex: Xavier">
-                        </div>
-                        <div class="field">
-                            <label for="profil">Profil</label>
-                            <select id="profil">
-                                <option value="">-- Sélectionnez un Profil --</option>
-                                <option value="Guerrier">Guerrier</option>
-                                <option value="Voleur">Voleur</option>
-                                <option value="Mage">Mage</option>
-                                <option value="Pretre">Prêtre</option>
-                                <option value="Barde">Barde</option>
-                                <option value="Rôdeur">Rôdeur</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label for="voie_prestige">Voie de Prestige / Spécialisation</label>
-                            <input type="text" id="voie_prestige" placeholder="Ex: Assassin">
-                        </div>
-                        <div class="field">
-                            <label for="peuple">Peuple</label>
-                            <select id="peuple">
-                                <option value="">-- Sélectionnez un Peuple --</option>
-                                <option value="Humain">Humain</option>
-                                <option value="Elfe">Elfe</option>
-                                <option value="Nain">Nain</option>
-                                <option value="Halfelin">Halfelin</option>
-                                <option value="Demi-Orque">Demi-Orque</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label for="niveau">Niveau</label>
-                            <input type="number" id="niveau" value="1" min="1" max="20">
-                        </div>
-                    </div>
-                    <!-- Choix dynamiques de peuple -->
-                    <div id="peuple-options-container" class="hidden dynamic-section">
-                        <h3>Options de Peuple</h3>
-                        <div class="grid-2">
-                            <div class="field" id="opt_bonus1_wrapper">
-                                <label for="opt_bonus1" id="label_bonus1">Bonus Caractéristique</label>
-                                <select id="opt_bonus1">
-                                    <option value="FOR">Force</option>
-                                    <option value="DEX">Dextérité</option>
-                                    <option value="CON">Constitution</option>
-                                    <option value="INT">Intelligence</option>
-                                    <option value="SAG">Sagesse</option>
-                                    <option value="CHA">Charisme</option>
-                                </select>
-                            </div>
-                            <div class="field" id="opt_malus1_wrapper">
-                                <label for="opt_malus1" id="label_malus1">Malus Caractéristique</label>
-                                <select id="opt_malus1">
-                                    <option value="FOR">Force</option>
-                                    <option value="DEX">Dextérité</option>
-                                    <option value="CON">Constitution</option>
-                                    <option value="INT">Intelligence</option>
-                                    <option value="SAG">Sagesse</option>
-                                    <option value="CHA">Charisme</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+    <!-- Panneau de contrôle de la police -->
+    <div class="font-control-panel">
+        <div class="font-control-group">
+            <label>Taille du texte :</label>
+            <button type="button" id="btnDecreaseFont" title="Réduire">-</button>
+            <span id="fontSizeDisplay" style="font-size: 0.8rem; font-weight: bold; min-width: 40px; text-align: center;">0.9rem</span>
+            <button type="button" id="btnIncreaseFont" title="Agrandir">+</button>
+        </div>
+        <div class="font-control-group">
+            <label for="globalFontSelect">Police globale :</label>
+            <select id="globalFontSelect">
+                <option value="'Lora', Georgia, serif">Lora (Classique / Lisible)</option>
+                <option value="'Cinzel', serif">Cinzel (Médiéval / Titres)</option>
+                <option value="Arial, sans-serif">Arial (Sans empattement / Très net)</option>
+                <option value="'IM Fell English SC', serif">IM Fell English (Manuscrit ancien)</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="grimoire-spread">
 
-                <!-- Caractéristiques -->
-                <section class="section-box stats-box">
-                    <h2>Caractéristiques</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <label for="carac_FOR">FORCE</label>
-                            <input type="number" id="carac_FOR" value="10" class="stat-score">
-                            <span class="mod-display" id="mod_FOR">+0</span>
-                        </div>
-                        <div class="stat-card">
-                            <label for="carac_DEX">DEXTÉRITÉ</label>
-                            <input type="number" id="carac_DEX" value="10" class="stat-score">
-                            <span class="mod-display" id="mod_DEX">+0</span>
-                        </div>
-                        <div class="stat-card">
-                            <label for="carac_CON">CONSTITUTION</label>
-                            <input type="number" id="carac_CON" value="10" class="stat-score">
-                            <span class="mod-display" id="mod_CON">+0</span>
-                        </div>
-                        <div class="stat-card">
-                            <label for="carac_INT">INTELLIGENCE</label>
-                            <input type="number" id="carac_INT" value="10" class="stat-score">
-                            <span class="mod-display" id="mod_INT">+0</span>
-                        </div>
-                        <div class="stat-card">
-                            <label for="carac_SAG">SAGESSE</label>
-                            <input type="number" id="carac_SAG" value="10" class="stat-score">
-                            <span class="mod-display" id="mod_SAG">+0</span>
-                        </div>
-                        <div class="stat-card">
-                            <label for="carac_CHA">CHARISME</label>
-                            <input type="number" id="carac_CHA" value="10" class="stat-score">
-                            <span class="mod-display" id="mod_CHA">+0</span>
-                        </div>
+        <!-- ===== PAGE 1 : Avatar, Identité, Caractéristiques, Combat, PV & Compagnon ===== -->
+        <div class="grimoire-page">
+            
+            <!-- Bloc Avatar Dédié -->
+            <div class="section-box">
+                <h2>🖼️ Portrait du Personnage</h2>
+                <div class="avatar-large-container">
+                    <div class="avatar-box-large" id="avatarBox" onclick="document.getElementById('avatarInput').click()" title="Cliquez pour changer l'avatar">
+                        <img id="avatarPreview" src="" alt="" style="display:none;">
+                        <span id="avatarPlaceholder">Cliquez ici pour ajouter l'image du personnage</span>
                     </div>
-                </section>
-
-                <!-- Voies et Capacités -->
-                <section class="section-box voies-box">
-                    <h2>Voies et Capacités</h2>
-                    <div id="voies-container">
-                        <!-- Généré via JS ou listes de champs -->
-                        <div class="voie-row">
-                            <input type="text" placeholder="Nom de la Voie" class="voie-nom">
-                            <div class="rangs-checkboxes">
-                                <label><input type="checkbox" name="v1_r1"> R1</label>
-                                <label><input type="checkbox" name="v1_r2"> R2</label>
-                                <label><input type="checkbox" name="v1_r3"> R3</label>
-                                <label><input type="checkbox" name="v1_r4"> R4</label>
-                                <label><input type="checkbox" name="v1_r5"> R5</label>
-                            </div>
-                        </div>
-                        <div class="voie-row">
-                            <input type="text" placeholder="Nom de la Voie" class="voie-nom">
-                            <div class="rangs-checkboxes">
-                                <label><input type="checkbox" name="v2_r1"> R1</label>
-                                <label><input type="checkbox" name="v2_r2"> R2</label>
-                                <label><input type="checkbox" name="v2_r3"> R3</label>
-                                <label><input type="checkbox" name="v2_r4"> R4</label>
-                                <label><input type="checkbox" name="v2_r5"> R5</label>
-                            </div>
-                        </div>
-                        <div class="voie-row">
-                            <input type="text" placeholder="Nom de la Voie" class="voie-nom">
-                            <div class="rangs-checkboxes">
-                                <label><input type="checkbox" name="v3_r1"> R1</label>
-                                <label><input type="checkbox" name="v3_r2"> R2</label>
-                                <label><input type="checkbox" name="v3_r3"> R3</label>
-                                <label><input type="checkbox" name="v3_r4"> R4</label>
-                                <label><input type="checkbox" name="v3_r5"> R5</label>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                    <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="loadAvatar(event)">
+                </div>
             </div>
-        </div>
 
-        <!-- PAGE 2 : ÉQUIPEMENT, MAGIE, COMPÉTENCES & INFORMATIONS -->
-        <div class="grimoire-spread page-2">
-            <div class="grimoire-page">
-                <!-- Combat & Défense -->
-                <section class="section-box combat-box">
-                    <h2>État & Combat</h2>
-                    <div class="grid-3">
-                        <div class="field">
-                            <label for="pv_max">PV Max</label>
-                            <input type="number" id="pv_max" value="10">
-                        </div>
-                        <div class="field">
-                            <label for="pv_actuels">PV Actuels</label>
-                            <input type="number" id="pv_actuels" value="10">
-                        </div>
-                        <div class="field">
-                            <label for="defense">Défense (CAC)</label>
-                            <input type="number" id="defense" value="10">
-                        </div>
+            <!-- Bloc Identité -->
+            <div class="section-box bg-perso bg-perso-png">
+                <div class="bg-watermark"></div> 
+                
+                <h2>📜 Identité, Peuple & Classes</h2>
+                <div class="grid-identity">
+                    <div class="field-group">
+                        <label for="charName">Nom du Personnage</label>
+                        <input type="text" id="charName" class="input-spacing" oninput="autoSaveData()">
+                        
+                        <label for="charPeuple">Peuple</label>
+                        <select id="charPeuple" onchange="onPeupleChange(); autoSaveData();">
+                            <option value="Demi-elfe">Demi-elfe</option>
+                            <option value="Demi-orc">Demi-orc</option>
+                            <option value="Elfe haut">Elfe haut</option>
+                            <option value="Elfe sylvain">Elfe sylvain</option>
+                            <option value="Gnome">Gnome</option>
+                            <option value="Halfelin">Halfelin</option>
+                            <option value="Humain">Humain</option>
+                            <option value="Nain">Nain</option>
+                        </select>
                     </div>
-                </section>
 
-                <!-- Équipement -->
-                <section class="section-box equipement-box">
-                    <h2>Équipement & Trésors</h2>
-                    <textarea id="equipement" placeholder="Armes, armures, objets magiques, bourses..."></textarea>
-                </section>
-
-                <!-- BLOC COMPÉTENCES (Règles optionnelles) -->
-                <section class="section-box competences-box">
-                    <h2>Compétences (Règles Optionnelles)</h2>
-                    <textarea id="competences" placeholder="Listez ici vos maîtrises de compétences, artisanats, connaissances particulières..."></textarea>
-                </section>
-
-                <!-- BLOC LANGUES ET INFORMATIONS ADDITIONNELLES -->
-                <section class="section-box info-box">
-                    <h2>Langues et Informations Additionnelles</h2>
-                    <div class="grid-2">
-                        <div class="field">
-                            <label for="langues">Langues connues</label>
-                            <textarea id="langues" placeholder="Commun, Nain, Elfique..."></textarea>
-                        </div>
-                        <div class="field">
-                            <label for="notes_diverses">Informations additionnelles / Historique</label>
-                            <textarea id="notes_diverses" placeholder="Signes particuliers, divinité, background..."></textarea>
-                        </div>
+                    <div class="field-group">
+                        <label for="charProfile">Répartition</label>
+                        <select id="charProfile" onchange="onProfileModeChange(); autoSaveData();">
+                            <option value="Polyvalent">Polyv. (+2..-1)</option>
+                            <option value="Expert">Expert (+3..-1)</option>
+                            <option value="Spécialiste">Spécial. (+4..-1)</option>
+                        </select>
                     </div>
-                </section>
+
+                    <div class="field-group">
+                        <label for="charFamily">Famille de Profil</label>
+                        <select id="charFamily" class="input-spacing" onchange="onFamilyChange(); autoSaveData();">
+                            <option value="Aventurier">Aventurier</option>
+                            <option value="Combattant">Combattant</option>
+                            <option value="Mage">Mage</option>
+                            <option value="Mystique">Mystique</option>
+                        </select>
+
+                        <label for="charSubProfile">Profil (Spécialisation)</label>
+                        <select id="charSubProfile" onchange="autoSaveData()"></select>
+                    </div>
+                </div>
+
+                <div class="grid-identity grid-identity-duo">
+                    <div class="field-group">
+                        <label for="charIdeal">Idéal héroïque</label>
+                        <select id="charIdeal" onchange="autoSaveData()">
+                            <option value="">-- Choisir un idéal --</option>
+                            <option value="Abnégation">Abnégation</option>
+                            <option value="Clémence">Clémence</option>
+                            <option value="Compassion">Compassion</option>
+                            <option value="Courage">Courage</option>
+                            <option value="Égalité">Égalité</option>
+                            <option value="Fraternité">Fraternité</option>
+                            <option value="Honneur">Honneur</option>
+                            <option value="Justice">Justice</option>
+                            <option value="Liberté">Liberté</option>
+                            <option value="Loyauté">Loyauté</option>
+                            <option value="Protection">Protection</option>
+                            <option value="Solidarité">Solidarité</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label for="charFlaw">Travers</label>
+                        <select id="charFlaw" onchange="autoSaveData()">
+                            <option value="">-- Choisir un travers --</option>
+                            <option value="Alcoolique">Alcoolique</option>
+                            <option value="Couard">Couard</option>
+                            <option value="Cupide">Cupide</option>
+                            <option value="Colérique">Colérique</option>
+                            <option value="Distrait">Distrait</option>
+                            <option value="Fanfaron">Fanfaron</option>
+                            <option value="Gourmand">Gourmand</option>
+                            <option value="Impatient">Impatient</option>
+                            <option value="Orgueilleux">Orgueilleux</option>
+                            <option value="Paranoïaque">Paranoïaque</option>
+                            <option value="Paresseux">Paresseux</option>
+                            <option value="Violent">Violent</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-group field-group-margin">
+                    <label for="charDescription">Description du Personnage</label>
+                    <textarea id="charDescription" placeholder="Apparence, historique, traits..." oninput="autoSaveData()"></textarea>
+                </div>
             </div>
-        </div>
-    </main>
 
-    <script src="script.js"></script>
+            <!-- Bloc Caractéristiques -->
+            <div class="section-box bg-carac bg-carac-png">
+                <div class="bg-watermark"></div> 
+                
+                <h2>💪 Caractéristiques</h2>
+                
+                <div id="repartitionZone">
+                    <label class="pool-label">Points de répartition (Glissez ou cliquez) :</label>
+                    <div id="poolContainer" class="pool-container"></div>
+                </div>
+
+                <div class="grid-stats" id="statsGridContainer">
+                    <script>
+                        const statsCOF2 = ['AGI', 'CON', 'FOR', 'PER', 'CHA', 'INT', 'VOL'];
+                        statsCOF2.forEach(stat => {
+                            document.write(`
+                                <div class="stat-box" id="box_${stat}" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropToken(event, '${stat}')">
+                                    <label>${stat}</label>
+                                    <div id="slot_${stat}" class="stat-slot-inner">
+                                        <span class="stat-empty-text">Vide</span>
+                                    </div>
+                                    <div>
+                                        <div class="stat-detail" id="mod_${stat}">Peuple: +0</div>
+                                        <div class="stat-total" id="tot_${stat}">Total: +0</div>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                    </script>
+                </div>
+
+                <div id="peupleOptions" style="display:none;">
+                    <label id="peupleLabelInstruction" class="peuple-instruction"></label>
+                    <div id="peupleChoicesContainer" class="peuple-row"></div>
+                </div>
+            </div>
+
+            <!-- Bloc Combat & Ressources -->
+            <div class="section-box bg-combat bg-combat-png">
+                <div class="bg-watermark"></div> 
+
+                <h2>⚔️ Combat & Ressources</h2>
+
+                <div class="grid-identity grid-identity-combat-1">
+                    <div class="field-group">
+                        <label for="charLevel">⭐ Niveau</label>
+                        <input type="number" id="charLevel" value="1" min="1" max="20" oninput="calculateTotals(); autoSaveData();">
+                    </div>
+                    <div class="field-group">
+                        <label for="extraConBonus">🛡️ Mod. CON Perm.</label>
+                        <select id="extraConBonus" class="stat-select" onchange="calculateTotals(); autoSaveData();">
+                            <option value="2">+2</option><option value="1">+1</option><option value="0" selected>+0</option><option value="-1">-1</option><option value="-2">-2</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label for="spellCount">✨ Sorts (*)</label>
+                        <input type="number" id="spellCount" value="0" min="0" max="20" oninput="calculateTotals(); autoSaveData();">
+                    </div>
+                    <div class="field-group">
+                        <label for="extraInitBonus">⚡ Init. Supp.</label>
+                        <input type="number" id="extraInitBonus" value="0" oninput="calculateTotals(); autoSaveData();">
+                    </div>
+                </div>
+
+                <div class="grid-identity grid-identity-combat-2">
+                    <div class="field-group">
+                        <label for="armorBonus">🛡️ Armure (DEF)</label>
+                        <select id="armorBonus" onchange="calculateTotals(); autoSaveData();">
+                            <option value="0">Aucune (+0)</option>
+                            <option value="1">Tissus matelassés, fourrures (+1)</option>
+                            <option value="2">Cuir simple (+2)</option>
+                            <option value="3">Cuir renforcé, broigne (+3)</option>
+                            <option value="4">Chemise de mailles (+4)</option>
+                            <option value="5">Cotte de mailles (+5)</option>
+                            <option value="6">Armure de plaques (+6)</option>
+                            <option value="7">Plaque complète (+7)</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label for="shieldBonus">🛡️ Bouclier (DEF)</label>
+                        <select id="shieldBonus" onchange="calculateTotals(); autoSaveData();">
+                            <option value="0">Aucun (+0)</option>
+                            <option value="1">Petit bouclier (+1)</option>
+                            <option value="2">Grand bouclier (+2)</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label for="extraDefBonus">🔮 Bonus DEF Magie</label>
+                        <input type="number" id="extraDefBonus" value="0" oninput="calculateTotals(); autoSaveData();">
+                    </div>
+                </div>
+
+                <div class="grid-identity grid-identity-combat-3">
+                    <div class="framed-stat-card"><label>🛡️ Défense</label><div id="displayDEF" class="display-card" contenteditable="true" oninput="markManualEdit('DEF'); autoSaveData();">--</div></div>
+                    <div class="framed-stat-card"><label>⚡ Initiative</label><div id="displayInit" class="display-card" contenteditable="true" oninput="markManualEdit('Init'); autoSaveData();">--</div></div>
+                    <div class="framed-stat-card"><label>✨ Mana (PM)</label><div id="displayPM" class="display-card" contenteditable="true" oninput="markManualEdit('PM'); autoSaveData();">--</div></div>
+                    <div class="framed-stat-card"><label>🍀 Chance (PC)</label><div id="displayPC" class="display-card" contenteditable="true" oninput="markManualEdit('PC'); autoSaveData();">--</div></div>
+                    <div class="framed-stat-card"><label>🧪 Récup. (DR)</label><div id="displayDR" class="display-card" contenteditable="true" oninput="markManualEdit('DR'); autoSaveData();">--</div></div>
+                </div>
+
+                <!-- Bloc groupé "Valeurs d'attaque" -->
+                <div class="attack-group-container">
+                    <div class="attack-group-title">⚔️ Valeurs d'attaque</div>
+                    <div class="grid-identity grid-identity-combat-4" style="margin-bottom: 0;">
+                        <div class="framed-stat-card">
+                            <label class="flex-label"><span>⚔️ Contact</span><select id="contactStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR</option><option value="AGI">AGI</option></select></label>
+                            <div class="flex-atk-row">
+                                <span class="fixed-die-inline">1d20</span>
+                                <div id="displayAtkContact" class="display-card flex-grow-card" contenteditable="true" oninput="markManualEdit('AtkContact'); autoSaveData();">--</div>
+                                <input type="number" id="extraAtkContact" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
+                            </div>
+                        </div>
+                        <div class="framed-stat-card">
+                            <label class="flex-label"><span>🏹 Distance</span><select id="distanceStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="AGI">AGI</option><option value="PER">PER</option></select></label>
+                            <div class="flex-atk-row">
+                                <span class="fixed-die-inline">1d20</span>
+                                <div id="displayAtkDistance" class="display-card flex-grow-card" contenteditable="true" oninput="markManualEdit('AtkDistance'); autoSaveData();">--</div>
+                                <input type="number" id="extraAtkDistance" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
+                            </div>
+                        </div>
+                        <div class="framed-stat-card">
+                            <label>🔮 Magique</label>
+                            <div class="flex-atk-row">
+                                <span class="fixed-die-inline">1d20</span>
+                                <div id="displayAtkMagique" class="display-card flex-grow-card" contenteditable="true" oninput="markManualEdit('AtkMagique'); autoSaveData();">--</div>
+                                <input type="number" id="extraAtkMagique" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group field-group-margin">
+                    <label>❤️ Points de Vie (Actuels / Max)</label>
+                    <div class="pv-container">
+                        <button onclick="adjustCurrentPV(-1)">-</button>
+                        <span id="displayPV" class="pv-display-text" contenteditable="true" oninput="autoSaveData()">--</span>
+                        <button onclick="adjustCurrentPV(1)">+</button>
+                    </div>
+                </div>
+
+                <div class="info-box info-box-margin">
+                    <label class="info-box-label">Spécificités de la Famille :</label>
+                    <div id="familyBonusText" class="family-bonus-desc">-</div>
+                </div>
+            </div>
+
+            <!-- ===== BLOC : Compagnon animal / Familier ===== -->
+            <div class="section-box">
+                <div class="bg-watermark"></div>
+                <h2>
+                    🐾 <input type="text" id="compName" class="companion-header-input" value="LOUP" oninput="autoSaveData()">
+                </h2>
+                
+                <input type="text" id="compType" class="companion-type-input" value="CRÉATURE VIVANTE" oninput="autoSaveData()">
+
+                <div class="companion-stats-grid">
+                    <div class="companion-stat-box"><label>AGI</label><input type="text" id="compAGI" value="+1" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>CON</label><input type="text" id="compCON" value="+1*" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>FOR</label><input type="text" id="compFOR" value="+2" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>PER</label><input type="text" id="compPER" value="+2*" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>CHA</label><input type="text" id="compCHA" value="-2" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>INT</label><input type="text" id="compINT" value="-3" oninput="autoSaveData()"></div>
+                    <div class="companion-stat-box"><label>VOL</label><input type="text" id="compVOL" value="+2" oninput="autoSaveData()"></div>
+                </div>
+
+                <div class="companion-line-row">
+                    <label>🛡️ Défense</label>
+                    <input type="text" id="compDef" value="[12 + rang dans la voie]" oninput="autoSaveData()">
+                </div>
+                <div class="companion-line-row">
+                    <label>❤️ Points de Vigueurs</label>
+                    <input type="text" id="compPv" value="[niv. du rôdeur × 4]" oninput="autoSaveData()">
+                </div>
+                <div class="companion-line-row">
+                    <label>⚡ Initiative</label>
+                    <input type="text" id="compInit" value="[Init. du rôdeur]" oninput="autoSaveData()">
+                </div>
+                <div class="companion-line-row">
+                    <label>⚔️ Attaque & DM</label>
+                    <input type="text" id="compAtkDm" value="[Atq. magique] DM 1d4+2" oninput="autoSaveData()">
+                </div>
+
+                <div class="field-group field-group-margin">
+                    <label for="compDescription">Description / gestion du compagnon / familier</label>
+                    <textarea id="compDescription" placeholder="Notes, règles spéciales..." oninput="autoSaveData()"></textarea>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===== PAGE 2 : Armes, Sorts, Équipement & Voies ===== -->
+        <div class="grimoire-page">
+            
+            <div class="section-box">
+                <div class="bg-watermark"></div> 
+                
+                <h2>🎒 Armes, Sorts & Équipement</h2>
+                
+                <h3 class="sub-section-title">⚔️ Armes & Capacités Offensives (Jet fixe : 1d20)</h3>
+                <div id="weaponsContainer"></div>
+                <button class="main-btn btn-spacing-bottom" type="button" onclick="addWeaponRow();">+ Ajouter une Arme / Sort</button>
+
+                <h3 class="sub-section-title">🎒 Équipement & Inventaire</h3>
+                <div id="equipmentContainer"></div>
+                <button class="main-btn" type="button" onclick="addEquipmentRow();">+ Ajouter un objet</button>
+            </div>
+
+            <div class="section-box">
+                <div class="bg-watermark"></div>
+                <h2>📜 Voies & Capacités</h2>
+                
+                <div class="voies-grid">
+                    <script>
+                        const voiesConfig = [
+                            { defaultName: "Voie du peuple", label: "VOIE 1 :" },
+                            { defaultName: "", label: "VOIE 2 :" },
+                            { defaultName: "", label: "VOIE 3 :" },
+                            { defaultName: "", label: "VOIE 4 :" },
+                            { defaultName: "", label: "VOIE 5 :" },
+                            { defaultName: "", label: "Prestige :" }
+                        ];
+
+                        voiesConfig.forEach((v, index) => {
+                            let rangsHTML = '';
+                            for (let r = 1; r <= 5; r++) {
+                                rangsHTML += `
+                                    <div class="voie-rang-row">
+                                        <div class="rang-top-line">
+                                            <span class="rang-title">Rang ${r} :</span>
+                                            <input type="text" class="rang-name-input" placeholder="Nom de la capacité" oninput="autoSaveData()">
+                                        </div>
+                                        <textarea class="rang-desc-textarea" placeholder="Description de la capacité..." oninput="autoSaveData()"></textarea>
+                                    </div>
+                                `;
+                            }
+                            document.write(`
+                                <div class="voie-card" id="voie_${index}">
+                                    <div class="voie-header">
+                                        <span class="voie-label-title">${v.label}</span>
+                                        <input type="text" class="voie-name-input" value="${v.defaultName}" placeholder="Nom de la voie" oninput="autoSaveData()">
+                                    </div>
+                                    <div class="voie-rangs">
+                                        ${rangsHTML}
+                                    </div>
+                                </div>
+                            `);
+                        });
+                    </script>
+                </div>
+            </div>
+
+            <button class="main-btn btn-export-json" onclick="exportJSON()">💾 Exporter les données (JSON)</button>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const statsList = ['AGI', 'CON', 'FOR', 'PER', 'CHA', 'INT', 'VOL'];
+    let currentPV = null;
+    let avatarBase64 = "";
+
+    let manualOverrides = {
+        DEF: false, Init: false, PM: false, PC: false, DR: false,
+        AtkContact: false, AtkDistance: false, AtkMagique: false
+    };
+
+    let assignedStats = { AGI: null, CON: null, FOR: null, PER: null, CHA: null, INT: null, VOL: null };
+    let availableTokens = [];
+
+    const profilePools = {
+        "Polyvalent": [2, 2, 2, 1, 1, 0, -1],
+        "Expert": [3, 2, 1, 1, 0, 0, -1],
+        "Spécialiste": [4, 2, 1, 0, 0, -1, -1]
+    };
+
+    const subProfilesData = {
+        "Aventurier": [{ name: "Arquebusier", page: "p62" }, { name: "Barde", page: "p66" }, { name: "Rôdeur", page: "p70" }, { name: "Voleur", page: "p74" }],
+        "Combattant": [{ name: "Barbare", page: "p79" }, { name: "Chevalier", page: "p83" }, { name: "Guerrier", page: "p87" }],
+        "Mage": [{ name: "Ensorceleur", page: "p92" }, { name: "Forgesort", page: "p97" }, { name: "Magicien", page: "p102" }, { name: "Sorcier", page: "p107" }],
+        "Mystique": [{ name: "Druide", page: "p113" }, { name: "Moine", page: "p118" }, { name: "Prêtre", page: "p122" }]
+    };
+
+    const officialWeapons = [
+        { name: "-- Arme personnalisée --", die: "1d6" },
+        { name: "Mains nues", die: "1d3" },
+        { name: "Bâton", die: "1d4" },
+        { name: "Bâton ferré", die: "1d6" },
+        { name: "Dague", die: "1d4" },
+        { name: "Épée à deux mains", die: "2d6" },
+        { name: "Épée bâtarde", die: "1d8" },
+        { name: "Épée courte", die: "1d6" },
+        { name: "Épée longue", die: "1d8" },
+        { name: "Épieu", die: "1d6" },
+        { name: "Fléau", die: "1d6" },
+        { name: "Fléau à deux mains", die: "1d10" },
+        { name: "Gourdin", die: "1d4" },
+        { name: "Hache", die: "1d8" },
+        { name: "Hache à deux mains", die: "2d6" },
+        { name: "Lance (Contact)", die: "1d6" },
+        { name: "Lance de cavalerie", die: "2d6" },
+        { name: "Marteau", die: "1d6" },
+        { name: "Masse", die: "1d6" },
+        { name: "Pique", die: "1d10" },
+        { name: "Rapière", die: "1d6" },
+        { name: "Stylet", die: "1d3" },
+        { name: "Vivelame", die: "1d10" },
+        { name: "Arbalète de poing", die: "1d6" },
+        { name: "Arbalète légère", die: "2d4" },
+        { name: "Arbalète lourde", die: "2d6" },
+        { name: "Arc court", die: "1d6" },
+        { name: "Arc long", die: "1d8" },
+        { name: "Couteaux de lancer", die: "1d4" },
+        { name: "Fronde", die: "1d4" },
+        { name: "Hachette (lancer)", die: "1d6" },
+        { name: "Javelot", die: "1d6" },
+        { name: "Lance (lancer)", die: "1d6" },
+        { name: "Lance-pierre", die: "1d3" },
+        { name: "Pétoire", die: "1d10" },
+        { name: "Mousquet", die: "2d6" }
+    ];
+
+    function markManualEdit(fieldKey) {
+        const el = document.getElementById(getCardElementId(fieldKey));
+        if (el && el.innerText.trim() === "") {
+            manualOverrides[fieldKey] = false;
+            calculateTotals();
+        } else {
+            manualOverrides[fieldKey] = true;
+        }
+    }
+
+    function getCardElementId(fieldKey) {
+        switch(fieldKey) {
+            case 'DEF': return 'displayDEF';
+            case 'Init': return 'displayInit';
+            case 'PM': return 'displayPM';
+            case 'PC': return 'displayPC';
+            case 'DR': return 'displayDR';
+            case 'AtkContact': return 'displayAtkContact';
+            case 'AtkDistance': return 'displayAtkDistance';
+            case 'AtkMagique': return 'displayAtkMagique';
+            default: return '';
+        }
+    }
+
+    function loadAvatar(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                avatarBase64 = e.target.result;
+                const preview = document.getElementById('avatarPreview');
+                preview.src = avatarBase64;
+                preview.style.display = 'block';
+                document.getElementById('avatarPlaceholder').style.display = 'none';
+                autoSaveData();
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function onProfileModeChange() {
+        let mode = document.getElementById('charProfile').value;
+        let basePool = profilePools[mode] || [2, 2, 2, 1, 1, 0, -1];
+        availableTokens = [...basePool];
+        statsList.forEach(s => assignedStats[s] = null);
+        renderPoolAndSlots();
+        calculateTotals();
+    }
+
+    function renderPoolAndSlots() {
+        let poolContainer = document.getElementById('poolContainer');
+        poolContainer.innerHTML = '';
+        
+        if (availableTokens.length === 0) {
+            poolContainer.innerHTML = '<span class="pool-empty-msg">Tous les points sont attribués. Cliquez sur une carac. pour en récupérer un.</span>';
+        } else {
+            availableTokens.forEach((val, index) => {
+                let token = document.createElement('div');
+                token.className = 'draggable-token' + (val < 0 ? ' negative' : '');
+                token.draggable = true;
+                token.innerText = (val >= 0 ? '+' : '') + val;
+                token.dataset.val = val;
+                token.dataset.index = index;
+                
+                token.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', JSON.stringify({val: val, index: index, source: 'pool'}));
+                });
+                poolContainer.appendChild(token);
+            });
+        }
+
+        statsList.forEach(stat => {
+            let slot = document.getElementById('slot_' + stat);
+            let val = assignedStats[stat];
+            if (val !== null && val !== undefined) {
+                let badge = document.createElement('div');
+                badge.className = 'stat-assigned-badge' + (val < 0 ? ' negative' : '');
+                badge.innerText = (val >= 0 ? '+' : '') + val;
+                badge.title = "Cliquer pour renvoyer dans la réserve";
+                badge.onclick = () => {
+                    availableTokens.push(val);
+                    assignedStats[stat] = null;
+                    renderPoolAndSlots();
+                    calculateTotals();
+                    autoSaveData();
+                };
+                slot.innerHTML = '';
+                slot.appendChild(badge);
+            } else {
+                slot.innerHTML = '<span class="stat-empty-text">Glissez ici</span>';
+            }
+        });
+        
+        updatePeupleOptionsDynamic();
+    }
+
+    function allowDrop(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+    function removeDropStyle(e) { e.currentTarget.classList.remove('drag-over'); }
+
+    function dropToken(e, stat) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        const rawData = e.dataTransfer.getData('text/plain');
+        if (!rawData) return;
+        const data = JSON.parse(rawData);
+        
+        if (assignedStats[stat] !== null && assignedStats[stat] !== undefined) {
+            availableTokens.push(assignedStats[stat]);
+        }
+        if (data.source === 'pool') {
+            availableTokens.splice(data.index, 1);
+        }
+        assignedStats[stat] = data.val;
+        renderPoolAndSlots();
+        calculateTotals();
+        autoSaveData();
+    }
+
+    function getPeupleBonuses() {
+        let peuple = document.getElementById('charPeuple').value;
+        let bonuses = { AGI: 0, CON: 0, FOR: 0, PER: 0, CHA: 0, INT: 0, VOL: 0 };
+
+        if (peuple === 'Demi-elfe' || peuple === 'Demi-orc') {
+            let opt1 = document.getElementById('opt_bonus1')?.value;
+            let opt2 = document.getElementById('opt_malus1')?.value;
+            if (opt1) bonuses[opt1] += 1;
+            if (opt2) bonuses[opt2] -= 1;
+        } else if (['Elfe haut', 'Elfe sylvain', 'Gnome', 'Halfelin'].includes(peuple)) {
+            let opt1 = document.getElementById('opt_bonus1')?.value;
+            if (opt1) bonuses[opt1] += 1;
+            bonuses.FOR -= 1;
+        } else if (peuple === 'Humain') {
+            let opt1 = document.getElementById('opt_bonus1')?.value;
+            if (opt1) bonuses[opt1] += 1;
+        } else if (peuple === 'Nain') {
+            let opt1 = document.getElementById('opt_bonus1')?.value;
+            if (opt1) bonuses[opt1] += 1;
+            bonuses.AGI -= 1;
+        }
+        return bonuses;
+    }
+
+    function onFamilyChange() {
+        let family = document.getElementById('charFamily').value;
+        let subSelect = document.getElementById('charSubProfile');
+        let textElement = document.getElementById('familyBonusText');
+
+        subSelect.innerHTML = '';
+        if (subProfilesData[family]) {
+            subProfilesData[family].forEach(sub => {
+                let opt = document.createElement('option');
+                opt.value = sub.name;
+                opt.textContent = `${sub.name} (${sub.page})`;
+                subSelect.appendChild(opt);
+            });
+        }
+
+        if (family === 'Aventurier') textElement.innerText = "Gain de 4 PV/niv + 1 PC supp. Type de DR : d8";
+        else if (family === 'Combattant') textElement.innerText = "Gain de 5 PV/niv. Conçu pour le front. Type de DR : d10";
+        else if (family === 'Mage') textElement.innerText = "Gain de 3 PV/niv + Capacité rang 2 supp. Type de DR : d6";
+        else if (family === 'Mystique') textElement.innerText = "Gain de 4 PV/niv + 1 DR supp. Type de DR : d8";
+        calculateTotals();
+    }
+
+    function onPeupleChange() {
+        let container = document.getElementById('peupleOptions');
+        container.style.display = 'block';
+        updatePeupleOptionsDynamic();
+        calculateTotals();
+        autoSaveData();
+    }
+
+    function updatePeupleOptionsDynamic() {
+        let peuple = document.getElementById('charPeuple').value;
+        let instruction = document.getElementById('peupleLabelInstruction');
+        let choicesContainer = document.getElementById('peupleChoicesContainer');
+
+        if (!choicesContainer) return;
+        
+        let oldOpt1 = document.getElementById('opt_bonus1')?.value;
+        choicesContainer.innerHTML = '';
+
+        if (peuple === 'Demi-elfe') {
+            instruction.innerText = "Ajustements du Demi-elfe : Un bonus (+1) et un malus (-1).";
+            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="PER" ${oldOpt1==='PER'?'selected':''}>PER</option><option value="CHA" ${oldOpt1==='CHA'?'selected':''}>CHA</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR</option><option value="CON">CON</option></select></div>`;
+        } else if (peuple === 'Demi-orc') {
+            instruction.innerText = "Ajustements du Demi-orc : Un bonus (+1) et un malus (-1).";
+            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="FOR" ${oldOpt1==='FOR'?'selected':''}>FOR</option><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); autoSaveData();"><option value="CHA">CHA</option><option value="INT">INT</option></select></div>`;
+        } else if (['Elfe haut', 'Elfe sylvain', 'Gnome', 'Halfelin'].includes(peuple)) {
+            let options = peuple === 'Elfe haut' ? '<option value="INT">INT</option><option value="CHA">CHA</option>' : peuple === 'Elfe sylvain' ? '<option value="AGI">AGI</option><option value="PER">PER</option>' : peuple === 'Gnome' ? '<option value="INT">INT</option><option value="PER">PER</option>' : '<option value="AGI">AGI</option><option value="VOL">VOL</option>';
+            instruction.innerText = `Ajustements de l'${peuple} : +1 au choix, et -1 FOR.`;
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();">${options}</select></div><div class="malus-text-badge">Malus : -1 FOR</div>`;
+        } else if (peuple === 'Humain') {
+            let minVal = Math.min(...statsList.map(s => assignedStats[s] !== null ? assignedStats[s] : 0));
+            let lowestStats = statsList.filter(s => (assignedStats[s] !== null ? assignedStats[s] : 0) === minVal);
+
+            instruction.innerText = "Ajustements de l'Humain : +1 sur l'une de ses caractéristiques.";
+            let optionsHTML = lowestStats.map(s => {
+                return `<option value="${s}" ${s === oldOpt1 ? 'selected' : ''}>${s}</option>`;
+            }).join('');
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();">${optionsHTML}</select></div>`;
+        } else if (peuple === 'Nain') {
+            instruction.innerText = "Ajustements du Nain : +1 CON ou VOL, et -1 AGI.";
+            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON</option><option value="VOL" ${oldOpt1==='VOL'?'selected':''}>VOL</option></select></div><div class="malus-text-badge">Malus : -1 AGI</div>`;
+        }
+    }
+
+    function addWeaponRow(data = {}) {
+        const container = document.getElementById('weaponsContainer');
+        const rowId = 'weapon_' + Date.now() + Math.random().toString(36).substr(2, 5);
+        
+        const diceOptions = ['1d3', '1d4', '1d6', '1d8', '1d10', '1d12', '1d20', '2d4', '2d6'];
+        let dmDieOpts = diceOptions.map(d => `<option value="${d}" ${d === (data.dmDie || '1d6') ? 'selected' : ''}>${d}</option>`).join('');
+
+        let scaleOpts = (selectedVal) => {
+            let opts = '';
+            for(let i = -5; i <= 5; i++) {
+                let valStr = (i >= 0 ? '+' : '') + i;
+                opts += `<option value="${valStr}" ${valStr === String(selectedVal) ? 'selected' : ''}>${valStr}</option>`;
+            }
+            return opts;
+        };
+
+        let weaponSelectOpts = officialWeapons.map(w => `<option value="${w.name}" data-die="${w.die}" ${w.name === data.weaponPreset ? 'selected' : ''}>${w.name}</option>`).join('');
+
+        const row = document.createElement('div');
+        row.className = 'weapon-row';
+        row.id = rowId;
+        row.innerHTML = `
+            <div class="field-group">
+                <label>⚔️ Arme / Sort</label>
+                <div class="sub-flex-row" style="gap: 4px;">
+                    <select class="w-preset" onchange="onWeaponPresetChange('${rowId}')">${weaponSelectOpts}</select>
+                    <input type="text" class="w-name" value="${data.name || ''}" placeholder="Nom perso." oninput="autoSaveData()">
+                </div>
+            </div>
+            <div class="field-group">
+                <label>🎯 Atk (1d20)</label>
+                <div class="sub-flex-row">
+                    <span class="fixed-die-inline">1d20</span>
+                    <select class="w-atk-mod" onchange="autoSaveData()">${scaleOpts(data.atkMod !== undefined ? data.atkMod : '+0')}</select>
+                </div>
+            </div>
+            <div class="field-group">
+                <label>💥 DM</label>
+                <div class="sub-flex-row">
+                    <select class="w-dm-die" onchange="autoSaveData()">${dmDieOpts}</select>
+                    <select class="w-dm-mod" onchange="autoSaveData()">${scaleOpts(data.dmMod !== undefined ? data.dmMod : '+0')}</select>
+                    <button type="button" class="btn-delete-row" onclick="document.getElementById('${rowId}').remove(); autoSaveData();">×</button>
+                </div>
+            </div>
+        `;
+        container.appendChild(row);
+    }
+
+    function onWeaponPresetChange(rowId) {
+        const row = document.getElementById(rowId);
+        if(!row) return;
+        const presetSelect = row.querySelector('.w-preset');
+        const nameInput = row.querySelector('.w-name');
+        const dieSelect = row.querySelector('.w-dm-die');
+        
+        const selectedOpt = presetSelect.options[presetSelect.selectedIndex];
+        const weaponName = selectedOpt.value;
+        const defaultDie = selectedOpt.getAttribute('data-die');
+
+        if(weaponName !== "-- Arme personnalisée --") {
+            nameInput.value = weaponName;
+            if(defaultDie) {
+                dieSelect.value = defaultDie;
+            }
+        } else {
+            nameInput.value = "";
+        }
+        autoSaveData();
+    }
+
+    function addEquipmentRow(data = {}) {
+        const container = document.getElementById('equipmentContainer');
+        const rowId = 'eq_' + Date.now() + Math.random().toString(36).substr(2, 5);
+        const row = document.createElement('div');
+        row.className = 'eq-row';
+        row.id = rowId;
+        row.innerHTML = `
+            <div class="field-group"><label>📦 Objet</label><input type="text" class="eq-name" value="${data.name || ''}" placeholder="Objet" oninput="autoSaveData()"></div>
+            <div class="field-group"><label>🔢 Qté</label><input type="text" class="eq-qty" value="${data.qty || '1'}" oninput="autoSaveData()"></div>
+            <div class="eq-delete-wrapper"><button type="button" class="btn-delete-row-eq" onclick="document.getElementById('${rowId}').remove(); autoSaveData();">×</button></div>
+        `;
+        container.appendChild(row);
+    }
+
+    function calculateTotals() {
+        let peupleBonuses = getPeupleBonuses();
+        let level = parseInt(document.getElementById('charLevel').value) || 1;
+
+        statsList.forEach(stat => {
+            let profilVal = assignedStats[stat] !== null && assignedStats[stat] !== undefined ? assignedStats[stat] : 0;
+            let peupleBonus = peupleBonuses[stat] || 0;
+            let total = profilVal + peupleBonus;
+            document.getElementById('mod_' + stat).innerText = `Peuple: ${peupleBonus >= 0 ? "+" + peupleBonus : peupleBonus}`;
+            document.getElementById('tot_' + stat).innerText = `Total: ${total >= 0 ? "+" + total : total}`;
+        });
+
+        let agiTotal = (assignedStats['AGI'] !== null ? assignedStats['AGI'] : 0) + (peupleBonuses['AGI'] || 0);
+        let armorBonus = parseInt(document.getElementById('armorBonus').value) || 0;
+        let shieldBonus = parseInt(document.getElementById('shieldBonus').value) || 0;
+        let extraDef = parseInt(document.getElementById('extraDefBonus').value) || 0;
+        if (!manualOverrides.DEF) {
+            document.getElementById('displayDEF').innerText = 10 + agiTotal + armorBonus + shieldBonus + extraDef;
+        }
+
+        let perTotal = (assignedStats['PER'] !== null ? assignedStats['PER'] : 0) + (peupleBonuses['PER'] || 0);
+        let extraInit = parseInt(document.getElementById('extraInitBonus').value) || 0;
+        if (!manualOverrides.Init) {
+            document.getElementById('displayInit').innerText = 10 + perTotal + extraInit;
+        }
+
+        let forTotal = (assignedStats['FOR'] !== null ? assignedStats['FOR'] : 0) + (peupleBonuses['FOR'] || 0);
+        let volTotal = (assignedStats['VOL'] !== null ? assignedStats['VOL'] : 0) + (peupleBonuses['VOL'] || 0);
+
+        let contactBaseVal = (document.getElementById('contactStatChoice').value === 'AGI') ? agiTotal : forTotal;
+        let distanceBaseVal = (document.getElementById('distanceStatChoice').value === 'PER') ? perTotal : agiTotal;
+
+        let atkContact = level + contactBaseVal + (parseInt(document.getElementById('extraAtkContact').value) || 0);
+        let atkDistance = level + distanceBaseVal + (parseInt(document.getElementById('extraAtkDistance').value) || 0);
+        let atkMagique = level + volTotal + (parseInt(document.getElementById('extraAtkMagique').value) || 0);
+
+        if (!manualOverrides.AtkContact) document.getElementById('displayAtkContact').innerText = (atkContact >= 0 ? "+" : "") + atkContact;
+        if (!manualOverrides.AtkDistance) document.getElementById('displayAtkDistance').innerText = (atkDistance >= 0 ? "+" : "") + atkDistance;
+        if (!manualOverrides.AtkMagique) document.getElementById('displayAtkMagique').innerText = (atkMagique >= 0 ? "+" : "") + atkMagique;
+
+        let spellCount = parseInt(document.getElementById('spellCount').value) || 0;
+        if (!manualOverrides.PM) {
+            document.getElementById('displayPM').innerText = volTotal + spellCount;
+        }
+
+        let chaTotal = (assignedStats['CHA'] !== null ? assignedStats['CHA'] : 0) + (peupleBonuses['CHA'] || 0);
+        let family = document.getElementById('charFamily').value;
+        let peupleVal = document.getElementById('charPeuple').value;
+        let pcCalc = 2 + chaTotal;
+        if (family === 'Aventurier') pcCalc += 1;
+        if (peupleVal === 'Humain') pcCalc += 1;
+        if (!manualOverrides.PC) {
+            document.getElementById('displayPC').innerText = pcCalc;
+        }
+
+        let conTotal = (assignedStats['CON'] !== null ? assignedStats['CON'] : 0) + (peupleBonuses['CON'] || 0) + (parseInt(document.getElementById('extraConBonus').value) || 0);
+        let basePV = family === 'Combattant' ? 5 : (family === 'Mage' ? 3 : 4);
+        let maxPV = (basePV * 2) + conTotal;
+        for (let i = 2; i <= level; i++) maxPV += Math.max(1, basePV + conTotal);
+
+        if (currentPV === null || currentPV > maxPV) currentPV = maxPV;
+        document.getElementById('displayPV').innerText = `${currentPV} / ${maxPV}`;
+
+        let baseDR = Math.max(0, 2 + conTotal + (family === 'Mystique' ? 1 : 0));
+        let dieType = family === 'Combattant' ? "d10" : (family === 'Mage' ? "d6" : "d8");
+        if (!manualOverrides.DR) {
+            document.getElementById('displayDR').innerText = `${baseDR} ${dieType}`;
+        }
+    }
+
+    function adjustCurrentPV(amount) {
+        let level = parseInt(document.getElementById('charLevel').value) || 1;
+        let family = document.getElementById('charFamily').value;
+        let conTotal = (assignedStats['CON'] !== null ? assignedStats['CON'] : 0) + (getPeupleBonuses()['CON'] || 0) + (parseInt(document.getElementById('extraConBonus').value) || 0);
+        let basePV = family === 'Combattant' ? 5 : (family === 'Mage' ? 3 : 4);
+        let maxPV = (basePV * 2) + conTotal;
+        for (let i = 2; i <= level; i++) maxPV += Math.max(1, basePV + conTotal);
+
+        if (currentPV === null) currentPV = maxPV;
+        currentPV = Math.max(0, Math.min(maxPV, currentPV + amount));
+        document.getElementById('displayPV').innerText = `${currentPV} / ${maxPV}`;
+        autoSaveData();
+    }
+
+    function gatherSheetData() {
+        const weaponsData = Array.from(document.querySelectorAll('.weapon-row')).map(row => ({
+            weaponPreset: row.querySelector('.w-preset').value,
+            name: row.querySelector('.w-name').value,
+            atkMod: row.querySelector('.w-atk-mod').value,
+            dmDie: row.querySelector('.w-dm-die').value,
+            dmMod: row.querySelector('.w-dm-mod').value
+        }));
+
+        const equipmentData = Array.from(document.querySelectorAll('.eq-row')).map(row => ({
+            name: row.querySelector('.eq-name').value,
+            qty: row.querySelector('.eq-qty').value
+        }));
+
+        const voiesData = Array.from(document.querySelectorAll('.voie-card')).map(card => {
+            const voieName = card.querySelector('.voie-name-input').value;
+            const rangs = Array.from(card.querySelectorAll('.voie-rang-row')).map(row => {
+                const rangName = row.querySelector('.rang-name-input').value;
+                const rangDesc = row.querySelector('.rang-desc-textarea').value;
+                return { rangName, rangDesc };
+            });
+            return { voieName, rangs };
+        });
+
+        return {
+            name: document.getElementById('charName').value,
+            ideal: document.getElementById('charIdeal').value,
+            flaw: document.getElementById('charFlaw').value,
+            description: document.getElementById('charDescription').value,
+            profile: document.getElementById('charProfile').value,
+            family: document.getElementById('charFamily').value,
+            subProfile: document.getElementById('charSubProfile').value,
+            peuple: document.getElementById('charPeuple').value,
+            level: document.getElementById('charLevel').value,
+            extraConBonus: document.getElementById('extraConBonus').value,
+            spellCount: document.getElementById('spellCount').value,
+            extraInitBonus: document.getElementById('extraInitBonus').value,
+            armorBonus: document.getElementById('armorBonus').value,
+            shieldBonus: document.getElementById('shieldBonus').value,
+            extraDefBonus: document.getElementById('extraDefBonus').value,
+            contactStatChoice: document.getElementById('contactStatChoice').value,
+            distanceStatChoice: document.getElementById('distanceStatChoice').value,
+            extraAtkContact: document.getElementById('extraAtkContact').value,
+            extraAtkDistance: document.getElementById('extraAtkDistance').value,
+            extraAtkMagique: document.getElementById('extraAtkMagique').value,
+            currentPV: currentPV, avatar: avatarBase64,
+            weapons: weaponsData, equipment: equipmentData, voies: voiesData,
+            assignedStats: assignedStats, availableTokens: availableTokens,
+            manualOverrides: manualOverrides,
+            manualValues: {
+                DEF: document.getElementById('displayDEF').innerText,
+                Init: document.getElementById('displayInit').innerText,
+                PM: document.getElementById('displayPM').innerText,
+                PC: document.getElementById('displayPC').innerText,
+                DR: document.getElementById('displayDR').innerText,
+                AtkContact: document.getElementById('displayAtkContact').innerText,
+                AtkDistance: document.getElementById('displayAtkDistance').innerText,
+                AtkMagique: document.getElementById('displayAtkMagique').innerText
+            },
+            peupleChoices: { 
+                opt1: document.getElementById('opt_bonus1')?.value, 
+                optMalus1: document.getElementById('opt_malus1')?.value
+            },
+            companion: {
+                name: document.getElementById('compName').value,
+                type: document.getElementById('compType').value,
+                agi: document.getElementById('compAGI').value,
+                con: document.getElementById('compCON').value,
+                for: document.getElementById('compFOR').value,
+                per: document.getElementById('compPER').value,
+                cha: document.getElementById('compCHA').value,
+                int: document.getElementById('compINT').value,
+                vol: document.getElementById('compVOL').value,
+                def: document.getElementById('compDef').value,
+                pv: document.getElementById('compPv').value,
+                init: document.getElementById('compInit').value,
+                atkDm: document.getElementById('compAtkDm').value,
+                description: document.getElementById('compDescription').value
+            }
+        };
+    }
+
+    function autoSaveData() {
+        const data = gatherSheetData();
+        localStorage.setItem('cof2_character', JSON.stringify(data));
+    }
+
+    function manualSaveData() {
+        autoSaveData();
+        alert("Fiche enregistrée avec succès !");
+    }
+
+    function loadData() {
+        const saved = localStorage.getItem('cof2_character');
+        if (saved) {
+            const data = JSON.parse(saved);
+            document.getElementById('charName').value = data.name || '';
+            if(data.ideal) document.getElementById('charIdeal').value = data.ideal;
+            if(data.flaw) document.getElementById('charFlaw').value = data.flaw;
+            if(data.description) document.getElementById('charDescription').value = data.description;
+            document.getElementById('charProfile').value = data.profile || 'Polyvalent';
+            if(data.family) document.getElementById('charFamily').value = data.family;
+            onFamilyChange();
+            if(data.subProfile) document.getElementById('charSubProfile').value = data.subProfile;
+
+            document.getElementById('charPeuple').value = data.peuple || 'Demi-elfe';
+            document.getElementById('charLevel').value = data.level || 1;
+            if(data.extraConBonus) document.getElementById('extraConBonus').value = data.extraConBonus;
+            if(data.spellCount !== undefined) document.getElementById('spellCount').value = data.spellCount;
+            if(data.extraInitBonus !== undefined) document.getElementById('extraInitBonus').value = data.extraInitBonus;
+            if(data.armorBonus !== undefined) document.getElementById('armorBonus').value = data.armorBonus;
+            if(data.shieldBonus !== undefined) document.getElementById('shieldBonus').value = data.shieldBonus;
+            if(data.extraDefBonus !== undefined) document.getElementById('extraDefBonus').value = data.extraDefBonus;
+            if(data.contactStatChoice) document.getElementById('contactStatChoice').value = data.contactStatChoice;
+            if(data.distanceStatChoice) document.getElementById('distanceStatChoice').value = data.distanceStatChoice;
+            if(data.extraAtkContact !== undefined) document.getElementById('extraAtkContact').value = data.extraAtkContact;
+            if(data.extraAtkDistance !== undefined) document.getElementById('extraAtkDistance').value = data.extraAtkDistance;
+            if(data.extraAtkMagique !== undefined) document.getElementById('extraAtkMagique').value = data.extraAtkMagique;
+            currentPV = data.currentPV !== undefined ? data.currentPV : null;
+
+            if (data.manualOverrides) manualOverrides = data.manualOverrides;
+
+            if (data.avatar) {
+                avatarBase64 = data.avatar;
+                const preview = document.getElementById('avatarPreview');
+                preview.src = avatarBase64;
+                preview.style.display = 'block';
+                document.getElementById('avatarPlaceholder').style.display = 'none';
+            }
+
+            if (data.assignedStats) assignedStats = data.assignedStats;
+            if (data.availableTokens) availableTokens = data.availableTokens;
+            else onProfileModeChange();
+
+            onPeupleChange();
+
+            if (data.peupleChoices) {
+                if(document.getElementById('opt_bonus1')) document.getElementById('opt_bonus1').value = data.peupleChoices.opt1 || '';
+                if(document.getElementById('opt_malus1')) document.getElementById('opt_malus1').value = data.peupleChoices.optMalus1 || '';
+            }
+
+            if (data.manualValues) {
+                if (manualOverrides.DEF && data.manualValues.DEF) document.getElementById('displayDEF').innerText = data.manualValues.DEF;
+                if (manualOverrides.Init && data.manualValues.Init) document.getElementById('displayInit').innerText = data.manualValues.Init;
+                if (manualOverrides.PM && data.manualValues.PM) document.getElementById('displayPM').innerText = data.manualValues.PM;
+                if (manualOverrides.PC && data.manualValues.PC) document.getElementById('displayPC').innerText = data.manualValues.PC;
+                if (manualOverrides.DR && data.manualValues.DR) document.getElementById('displayDR').innerText = data.manualValues.DR;
+                if (manualOverrides.AtkContact && data.manualValues.AtkContact) document.getElementById('displayAtkContact').innerText = data.manualValues.AtkContact;
+                if (manualOverrides.AtkDistance && data.manualValues.AtkDistance) document.getElementById('displayAtkDistance').innerText = data.manualValues.AtkDistance;
+                if (manualOverrides.AtkMagique && data.manualValues.AtkMagique) document.getElementById('displayAtkMagique').innerText = data.manualValues.AtkMagique;
+            }
+
+            if (data.companion) {
+                document.getElementById('compName').value = data.companion.name || 'LOUP';
+                document.getElementById('compType').value = data.companion.type || 'CRÉATURE VIVANTE';
+                document.getElementById('compAGI').value = data.companion.agi || '+1';
+                document.getElementById('compCON').value = data.companion.con || '+1*';
+                document.getElementById('compFOR').value = data.companion.for || '+2';
+                document.getElementById('compPER').value = data.companion.per || '+2*';
+                document.getElementById('compCHA').value = data.companion.cha || '-2';
+                document.getElementById('compINT').value = data.companion.int || '-3';
+                document.getElementById('compVOL').value = data.companion.vol || '+2';
+                document.getElementById('compDef').value = data.companion.def || '[12 + rang dans la voie]';
+                document.getElementById('compPv').value = data.companion.pv || '[niv. du rôdeur × 4]';
+                document.getElementById('compInit').value = data.companion.init || '[Init. du rôdeur]';
+                document.getElementById('compAtkDm').value = data.companion.atkDm || '[Atq. magique] DM 1d4+2';
+                document.getElementById('compDescription').value = data.companion.description || '';
+            }
+
+            document.getElementById('weaponsContainer').innerHTML = '';
+            (data.weapons && data.weapons.length > 0) ? data.weapons.forEach(w => addWeaponRow(w)) : addWeaponRow({weaponPreset: 'Épée courte', name: 'Épée courte', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
+
+            document.getElementById('equipmentContainer').innerHTML = '';
+            (data.equipment && data.equipment.length > 0) ? data.equipment.forEach(e => addEquipmentRow(e)) : addEquipmentRow({name: 'Rations de voyage', qty: '1'});
+
+            if (data.voies && data.voies.length > 0) {
+                data.voies.forEach((voie, index) => {
+                    const card = document.getElementById('voie_' + index);
+                    if (card) {
+                        card.querySelector('.voie-name-input').value = voie.voieName || '';
+                        const rangRows = card.querySelectorAll('.voie-rang-row');
+                        voie.rangs.forEach((rangData, rIndex) => {
+                            if (rangRows[rIndex]) {
+                                rangRows[rangRows.length > 0 ? rIndex : 0].querySelector('.rang-name-input').value = rangData.rangName || '';
+                                rangRows[rIndex].querySelector('.rang-desc-textarea').value = rangData.rangDesc || '';
+                            }
+                        });
+                    }
+                });
+            }
+
+            calculateTotals();
+        } else {
+            onPeupleChange();
+            onFamilyChange();
+            onProfileModeChange();
+            addWeaponRow({weaponPreset: 'Épée courte', name: 'Épée courte', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
+            addEquipmentRow({name: 'Rations de voyage', qty: '1'});
+        }
+    }
+
+    function resetCharacterSheet() {
+        if (confirm("Voulez-vous vraiment effacer cette fiche et recommencer à zéro ?")) {
+            localStorage.removeItem('cof2_character');
+            location.reload();
+        }
+    }
+
+    function exportJSON() {
+        const data = gatherSheetData();
+        data.currentPV = currentPV;
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type : 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = (data.name || 'personnage') + '_cof2.json';
+        a.click();
+    }
+
+    function exportToPNG() {
+        const grimoire = document.querySelector('.grimoire-spread');
+        if (!grimoire) {
+            alert("Erreur : Impossible de trouver la zone du grimoire à capturer.");
+            return;
+        }
+
+        const textareas = grimoire.querySelectorAll('textarea');
+        const replacements = [];
+
+        textareas.forEach(ta => {
+            const div = document.createElement('div');
+            div.className = ta.className;
+            div.style.cssText = window.getComputedStyle(ta).cssText;
+            div.style.display = 'block';
+            div.style.whiteSpace = 'pre-wrap';
+            div.style.wordBreak = 'break-word';
+            div.style.overflow = 'hidden';
+            div.style.height = 'auto';
+            div.style.minHeight = ta.style.height || `${ta.scrollHeight}px`;
+            div.innerHTML = ta.value.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>');
+
+            ta.parentNode.insertBefore(div, ta);
+            ta.style.display = 'none';
+            replacements.push({ textarea: ta, placeholder: div });
+        });
+
+        grimoire.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+            input.setAttribute('value', input.value);
+        });
+
+        html2canvas(grimoire, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: null,
+            ignoreElements: (element) => {
+                return element.classList && element.classList.contains('no-export');
+            }
+        }).then(canvas => {
+            replacements.forEach(item => {
+                item.placeholder.parentNode.insertBefore(item.textarea, item.placeholder);
+                item.placeholder.remove();
+                item.textarea.style.display = '';
+            });
+
+            const link = document.createElement('a');
+            let charName = document.getElementById('charName').value.trim();
+            link.download = (charName ? charName : 'personnage') + '_cof2.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(err => {
+            console.error("Erreur lors de l'export PNG :", err);
+            replacements.forEach(item => {
+                item.placeholder.parentNode.insertBefore(item.textarea, item.placeholder);
+                item.placeholder.remove();
+                item.textarea.style.display = '';
+            });
+            alert("Une erreur est survenue lors de la génération de l'image.");
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadData();
+        
+        const rootElement = document.documentElement;
+        let currentSize = 0.9;
+        const sizeDisplay = document.getElementById('fontSizeDisplay');
+        
+        const updateFontSize = (newSize) => {
+            if (newSize >= 0.7 && newSize <= 1.4) {
+                currentSize = Math.round(newSize * 10) / 10;
+                rootElement.style.setProperty('--global-font-size', currentSize + 'rem');
+                if(sizeDisplay) sizeDisplay.textContent = currentSize + 'rem';
+            }
+        };
+
+        const btnInc = document.getElementById('btnIncreaseFont');
+        const btnDec = document.getElementById('btnDecreaseFont');
+        if(btnInc) btnInc.addEventListener('click', () => updateFontSize(currentSize + 0.1));
+        if(btnDec) btnDec.addEventListener('click', () => updateFontSize(currentSize - 0.1));
+
+        const fontSelect = document.getElementById('globalFontSelect');
+        if(fontSelect) {
+            fontSelect.addEventListener('change', (e) => {
+                rootElement.style.setProperty('--global-font-family', e.target.value);
+            });
+        }
+    });
+</script>
+
 </body>
 </html>
