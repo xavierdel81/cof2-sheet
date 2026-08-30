@@ -301,7 +301,7 @@ input, select, textarea {
     border-radius: 4px;
     background: rgba(255, 253, 249, 0.95);
     font-family: var(--global-font-family);
-    font-weight: bold; /* Mis en gras pour la saisie utilisateur */
+    font-weight: bold;
     color: var(--text-main);
     font-size: var(--global-font-size);
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
@@ -829,7 +829,7 @@ button.main-btn:hover {
     padding: 3px 6px;
     font-size: var(--global-font-size);
     font-family: var(--global-font-family);
-    font-weight: bold; /* Mis en gras */
+    font-weight: bold;
     border-radius: 3px;
     width: 100%;
 }
@@ -877,7 +877,7 @@ button.main-btn:hover {
     padding: 3px 6px;
     font-size: var(--global-font-size);
     font-family: var(--global-font-family);
-    font-weight: bold; /* Mis en gras */
+    font-weight: bold;
     box-shadow: none;
     width: 100%;
 }
@@ -893,7 +893,7 @@ button.main-btn:hover {
     padding: 5px;
     font-size: calc(var(--global-font-size) * 0.9);
     font-family: var(--global-font-family);
-    font-weight: bold; /* Mis en gras pour la description des voies */
+    font-weight: bold;
     min-height: 45px;
     resize: vertical;
     width: 100%;
@@ -994,7 +994,6 @@ button.main-btn:hover {
     font-size: 0.85rem;
 }
 
-/* Mise en gras globale des labels, titres et champs utilisateur */
 .font-control-panel label,
 .section-box label, 
 .section-box .field-label, 
@@ -1019,3 +1018,4 @@ textarea,
 .rang-desc-textarea {
     font-weight: bold;
 }
+```[cite: 1, 2]
