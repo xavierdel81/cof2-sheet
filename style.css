@@ -993,3 +993,25 @@ button.main-btn:hover {
     padding: 3px 6px;
     font-size: 0.85rem;
 }
+
+/* Mise en gras de tous les petits textes / labels / libellés */
+.font-control-panel label,
+.section-box label, 
+.section-box .field-label, 
+.section-box h3,
+.section-box legend,
+label,
+.pool-label,
+.pool-empty-msg,
+.peuple-instruction,
+.malus-text-badge,
+.info-box-label,
+.family-bonus-desc,
+.sub-section-title,
+.rang-title,
+.voie-label-title,
+.flex-label span,
+.companion-stat-box label,
+.companion-line-row label {
+    font-weight: bold;
+}
