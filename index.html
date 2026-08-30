@@ -592,347 +592,293 @@
     function getPeupleBonuses() {
         let peuple = document.getElementById('charPeuple').value;
         let bonuses = { AGI: 0, CON: 0, FOR: 0, PER: 0, CHA: 0, INT: 0, VOL: 0 };
-
-        if (peuple === 'Demi-elfe' || peuple === 'Demi-orc') {
-            let opt1 = document.getElementById('opt_bonus1')?.value;
-            let opt2 = document.getElementById('opt_malus1')?.value;
-            if (opt1) bonuses[opt1] += 1;
-            if (opt2) bonuses[opt2] -= 1;
-        } else if (['Elfe haut', 'Elfe sylvain', 'Gnome', 'Halfelin'].includes(peuple)) {
-            let opt1 = document.getElementById('opt_bonus1')?.value;
-            if (opt1) bonuses[opt1] += 1;
-            bonuses.FOR -= 1;
+        
+        if (peuple === 'Demi-elfe') {
+            bonuses.AGI = 1;
+            let subChoice = document.getElementById('peupleSubChoice1');
+            if (subChoice && subChoice.value) {
+                bonuses[subChoice.value] = (bonuses[subChoice.value] || 0) + 1;
+            }
+        } else if (peuple === 'Demi-orc') {
+            bonuses.FOR = 1;
+            bonuses.CON = 1;
+        } else if (peuple === 'Elfe haut') {
+            bonuses.AGI = 1;
+            bonuses.INT = 1;
+        } else if (peuple === 'Elfe sylvain') {
+            bonuses.AGI = 1;
+            bonuses.PER = 1;
+        } else if (peuple === 'Gnome') {
+            bonuses.CON = 1;
+            bonuses.INT = 1;
+        } else if (peuple === 'Halfelin') {
+            bonuses.AGI = 1;
+            bonuses.PER = 1;
         } else if (peuple === 'Humain') {
-            let opt1 = document.getElementById('opt_bonus1')?.value;
-            if (opt1) bonuses[opt1] += 1;
+            let subChoice = document.getElementById('peupleSubChoice1');
+            if (subChoice && subChoice.value) {
+                bonuses[subChoice.value] = 1;
+            }
         } else if (peuple === 'Nain') {
-            let opt1 = document.getElementById('opt_bonus1')?.value;
-            if (opt1) bonuses[opt1] += 1;
-            bonuses.AGI -= 1;
+            bonuses.CON = 1;
+            bonuses.VOL = 1;
         }
         return bonuses;
+    }
+
+    function updatePeupleOptionsDynamic() {
+        let peuple = document.getElementById('charPeuple').value;
+        let container = document.getElementById('peupleOptions');
+        let instruction = document.getElementById('peupleLabelInstruction');
+        let choicesContainer = document.getElementById('peupleChoicesContainer');
+        
+        choicesContainer.innerHTML = '';
+        
+        if (peuple === 'Demi-elfe') {
+            container.style.display = 'block';
+            instruction.innerText = "Demi-elfe : +1 en AGI et +1 dans une autre caractéristique au choix :";
+            let select = document.createElement('select');
+            select.id = 'peupleSubChoice1';
+            select.className = 'sub-select-inline';
+            select.onchange = () => { calculateTotals(); autoSaveData(); };
+            statsList.forEach(s => {
+                if (s !== 'AGI') {
+                    let opt = document.createElement('option');
+                    opt.value = s;
+                    opt.innerText = s;
+                    select.appendChild(opt);
+                }
+            });
+            choicesContainer.appendChild(select);
+        } else if (peuple === 'Humain') {
+            container.style.display = 'block';
+            instruction.innerText = "Humain : +1 dans une caractéristique au choix :";
+            let select = document.createElement('select');
+            select.id = 'peupleSubChoice1';
+            select.className = 'sub-select-inline';
+            select.onchange = () => { calculateTotals(); autoSaveData(); };
+            statsList.forEach(s => {
+                let opt = document.createElement('option');
+                opt.value = s;
+                opt.innerText = s;
+                select.appendChild(opt);
+            });
+            choicesContainer.appendChild(select);
+        } else {
+            container.style.display = 'none';
+        }
+    }
+
+    function onPeupleChange() {
+        updatePeupleOptionsDynamic();
+        calculateTotals();
     }
 
     function onFamilyChange() {
         let family = document.getElementById('charFamily').value;
         let subSelect = document.getElementById('charSubProfile');
-        let textElement = document.getElementById('familyBonusText');
-
         subSelect.innerHTML = '';
-        if (subProfilesData[family]) {
-            subProfilesData[family].forEach(sub => {
-                let opt = document.createElement('option');
-                opt.value = sub.name;
-                opt.textContent = `${sub.name} (${sub.page})`;
-                subSelect.appendChild(opt);
-            });
-        }
-
-        if (family === 'Aventurier') textElement.innerText = "Gain de 4 PV/niv + 1 PC supp. Type de DR : d8";
-        else if (family === 'Combattant') textElement.innerText = "Gain de 5 PV/niv. Conçu pour le front. Type de DR : d10";
-        else if (family === 'Mage') textElement.innerText = "Gain de 3 PV/niv + Capacité rang 2 supp. Type de DR : d6";
-        else if (family === 'Mystique') textElement.innerText = "Gain de 4 PV/niv + 1 DR supp. Type de DR : d8";
+        
+        let list = subProfilesData[family] || [];
+        list.forEach(item => {
+            let opt = document.createElement('option');
+            opt.value = item.name;
+            opt.innerText = `${item.name} (${item.page})`;
+            subSelect.appendChild(opt);
+        });
+        
+        updateFamilyBonusText();
         calculateTotals();
     }
 
-    function onPeupleChange() {
-        let container = document.getElementById('peupleOptions');
-        container.style.display = 'block';
-        updatePeupleOptionsDynamic();
-        calculateTotals();
-        autoSaveData();
-    }
-
-    function updatePeupleOptionsDynamic() {
-        let peuple = document.getElementById('charPeuple').value;
-        let instruction = document.getElementById('peupleLabelInstruction');
-        let choicesContainer = document.getElementById('peupleChoicesContainer');
-
-        if (!choicesContainer) return;
+    function updateFamilyBonusText() {
+        let family = document.getElementById('charFamily').value;
+        let textEl = document.getElementById('familyBonusText');
         
-        let oldOpt1 = document.getElementById('opt_bonus1')?.value;
-        choicesContainer.innerHTML = '';
-
-        if (peuple === 'Demi-elfe') {
-            instruction.innerText = "Ajustements du Demi-elfe : Un bonus (+1) et un malus (-1).";
-            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="PER" ${oldOpt1==='PER'?'selected':''}>PER</option><option value="CHA" ${oldOpt1==='CHA'?'selected':''}>CHA</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR</option><option value="CON">CON</option></select></div>`;
-        } else if (peuple === 'Demi-orc') {
-            instruction.innerText = "Ajustements du Demi-orc : Un bonus (+1) et un malus (-1).";
-            choicesContainer.innerHTML = `<div><label>Bonus :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="FOR" ${oldOpt1==='FOR'?'selected':''}>FOR</option><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON</option></select></div><div><label>Malus :</label><select id="opt_malus1" onchange="calculateTotals(); autoSaveData();"><option value="CHA">CHA</option><option value="INT">INT</option></select></div>`;
-        } else if (['Elfe haut', 'Elfe sylvain', 'Gnome', 'Halfelin'].includes(peuple)) {
-            let options = peuple === 'Elfe haut' ? '<option value="INT">INT</option><option value="CHA">CHA</option>' : peuple === 'Elfe sylvain' ? '<option value="AGI">AGI</option><option value="PER">PER</option>' : peuple === 'Gnome' ? '<option value="INT">INT</option><option value="PER">PER</option>' : '<option value="AGI">AGI</option><option value="VOL">VOL</option>';
-            instruction.innerText = `Ajustements de l'${peuple} : +1 au choix, et -1 FOR.`;
-            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();">${options}</select></div><div class="malus-text-badge">Malus : -1 FOR</div>`;
-        } else if (peuple === 'Humain') {
-            let minVal = Math.min(...statsList.map(s => assignedStats[s] !== null ? assignedStats[s] : 0));
-            let lowestStats = statsList.filter(s => (assignedStats[s] !== null ? assignedStats[s] : 0) === minVal);
-
-            instruction.innerText = "Ajustements de l'Humain : +1 sur l'une de ses caractéristiques.";
-            let optionsHTML = lowestStats.map(s => {
-                return `<option value="${s}" ${s === oldOpt1 ? 'selected' : ''}>${s}</option>`;
-            }).join('');
-            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();">${optionsHTML}</select></div>`;
-        } else if (peuple === 'Nain') {
-            instruction.innerText = "Ajustements du Nain : +1 CON ou VOL, et -1 AGI.";
-            choicesContainer.innerHTML = `<div><label>Bonus (+1) :</label><select id="opt_bonus1" onchange="calculateTotals(); autoSaveData();"><option value="CON" ${oldOpt1==='CON'?'selected':''}>CON</option><option value="VOL" ${oldOpt1==='VOL'?'selected':''}>VOL</option></select></div><div class="malus-text-badge">Malus : -1 AGI</div>`;
+        let desc = "";
+        switch(family) {
+            case 'Aventurier':
+                desc = "• PV par niveau : 6 + mod. CON\n• Profil polyvalent et accès à des capacités utilitaires et de roublardise.";
+                break;
+            case 'Combattant':
+                desc = "• PV par niveau : 8 + mod. CON\n• Maîtrise totale des armures lourdes et des armes de contact puissantes.";
+                break;
+            case 'Mage':
+                desc = "• PV par niveau : 4 + mod. CON\n• Maîtrise des arcanes, récupération de Mana facilitée.";
+                break;
+            case 'Mystique':
+                desc = "• PV par niveau : 6 + mod. CON\n• Lien étroit avec la nature ou le divin, capacités de soutien et de soins.";
+                break;
+            default:
+                desc = "-";
         }
-    }
-
-    function addWeaponRow(data = {}) {
-        const container = document.getElementById('weaponsContainer');
-        const rowId = 'weapon_' + Date.now() + Math.random().toString(36).substr(2, 5);
-        
-        const diceOptions = ['1d3', '1d4', '1d6', '1d8', '1d10', '1d12', '1d20', '2d4', '2d6'];
-        let dmDieOpts = diceOptions.map(d => `<option value="${d}" ${d === (data.dmDie || '1d6') ? 'selected' : ''}>${d}</option>`).join('');
-
-        let scaleOpts = (selectedVal) => {
-            let opts = '';
-            for(let i = -5; i <= 5; i++) {
-                let valStr = (i >= 0 ? '+' : '') + i;
-                opts += `<option value="${valStr}" ${valStr === String(selectedVal) ? 'selected' : ''}>${valStr}</option>`;
-            }
-            return opts;
-        };
-
-        let weaponSelectOpts = officialWeapons.map(w => `<option value="${w.name}" data-die="${w.die}" ${w.name === data.weaponPreset ? 'selected' : ''}>${w.name}</option>`).join('');
-
-        const row = document.createElement('div');
-        row.className = 'weapon-row';
-        row.id = rowId;
-        row.innerHTML = `
-            <div class="field-group">
-                <label>⚔️ Arme / Sort</label>
-                <div class="sub-flex-row" style="gap: 4px;">
-                    <select class="w-preset" onchange="onWeaponPresetChange('${rowId}')">${weaponSelectOpts}</select>
-                    <input type="text" class="w-name" value="${data.name || ''}" placeholder="Nom perso." oninput="autoSaveData()">
-                </div>
-            </div>
-            <div class="field-group">
-                <label>🎯 Atk (1d20)</label>
-                <div class="sub-flex-row">
-                    <span class="fixed-die-inline">1d20</span>
-                    <select class="w-atk-mod" onchange="autoSaveData()">${scaleOpts(data.atkMod !== undefined ? data.atkMod : '+0')}</select>
-                </div>
-            </div>
-            <div class="field-group">
-                <label>💥 DM</label>
-                <div class="sub-flex-row">
-                    <select class="w-dm-die" onchange="autoSaveData()">${dmDieOpts}</select>
-                    <select class="w-dm-mod" onchange="autoSaveData()">${scaleOpts(data.dmMod !== undefined ? data.dmMod : '+0')}</select>
-                    <button type="button" class="btn-delete-row" onclick="document.getElementById('${rowId}').remove(); autoSaveData();">×</button>
-                </div>
-            </div>
-        `;
-        container.appendChild(row);
-    }
-
-    function onWeaponPresetChange(rowId) {
-        const row = document.getElementById(rowId);
-        if(!row) return;
-        const presetSelect = row.querySelector('.w-preset');
-        const nameInput = row.querySelector('.w-name');
-        const dieSelect = row.querySelector('.w-dm-die');
-        
-        const selectedOpt = presetSelect.options[presetSelect.selectedIndex];
-        const weaponName = selectedOpt.value;
-        const defaultDie = selectedOpt.getAttribute('data-die');
-
-        if(weaponName !== "-- Arme personnalisée --") {
-            nameInput.value = weaponName;
-            if(defaultDie) {
-                dieSelect.value = defaultDie;
-            }
-        } else {
-            nameInput.value = "";
-        }
-        autoSaveData();
-    }
-
-    function addEquipmentRow(data = {}) {
-        const container = document.getElementById('equipmentContainer');
-        const rowId = 'eq_' + Date.now() + Math.random().toString(36).substr(2, 5);
-        const row = document.createElement('div');
-        row.className = 'eq-row';
-        row.id = rowId;
-        row.innerHTML = `
-            <div class="field-group"><label>📦 Objet</label><input type="text" class="eq-name" value="${data.name || ''}" placeholder="Objet" oninput="autoSaveData()"></div>
-            <div class="field-group"><label>🔢 Qté</label><input type="text" class="eq-qty" value="${data.qty || '1'}" oninput="autoSaveData()"></div>
-            <div class="eq-delete-wrapper"><button type="button" class="btn-delete-row-eq" onclick="document.getElementById('${rowId}').remove(); autoSaveData();">×</button></div>
-        `;
-        container.appendChild(row);
+        textEl.innerText = desc;
     }
 
     function calculateTotals() {
-        let peupleBonuses = getPeupleBonuses();
-        let level = parseInt(document.getElementById('charLevel').value) || 1;
+        let bonuses = getPeupleBonuses();
+        let finalTotals = {};
 
         statsList.forEach(stat => {
-            let profilVal = assignedStats[stat] !== null && assignedStats[stat] !== undefined ? assignedStats[stat] : 0;
-            let peupleBonus = peupleBonuses[stat] || 0;
-            let total = profilVal + peupleBonus;
-            document.getElementById('mod_' + stat).innerText = `Peuple: ${peupleBonus >= 0 ? "+" + peupleBonus : peupleBonus}`;
-            document.getElementById('tot_' + stat).innerText = `Total: ${total >= 0 ? "+" + total : total}`;
+            let base = assignedStats[stat] !== null ? assignedStats[stat] : 0;
+            let bonusPeuple = bonuses[stat] || 0;
+            let total = base + bonusPeuple;
+            finalTotals[stat] = total;
+
+            let modEl = document.getElementById(`mod_${stat}`);
+            let totEl = document.getElementById(`tot_${stat}`);
+            if (modEl) modEl.innerText = `Peuple: ${bonusPeuple >= 0 ? '+' : ''}${bonusPeuple}`;
+            if (totEl) totEl.innerText = `Total: ${total >= 0 ? '+' : ''}${total}`;
         });
 
-        let agiTotal = (assignedStats['AGI'] !== null ? assignedStats['AGI'] : 0) + (peupleBonuses['AGI'] || 0);
-        let armorBonus = parseInt(document.getElementById('armorBonus').value) || 0;
-        let shieldBonus = parseInt(document.getElementById('shieldBonus').value) || 0;
-        let extraDef = parseInt(document.getElementById('extraDefBonus').value) || 0;
-        if (!manualOverrides.DEF) {
-            document.getElementById('displayDEF').innerText = 10 + agiTotal + armorBonus + shieldBonus + extraDef;
-        }
-
-        let perTotal = (assignedStats['PER'] !== null ? assignedStats['PER'] : 0) + (peupleBonuses['PER'] || 0);
-        let extraInit = parseInt(document.getElementById('extraInitBonus').value) || 0;
-        if (!manualOverrides.Init) {
-            document.getElementById('displayInit').innerText = 10 + perTotal + extraInit;
-        }
-
-        let forTotal = (assignedStats['FOR'] !== null ? assignedStats['FOR'] : 0) + (peupleBonuses['FOR'] || 0);
-        let volTotal = (assignedStats['VOL'] !== null ? assignedStats['VOL'] : 0) + (peupleBonuses['VOL'] || 0);
-
-        let contactBaseVal = (document.getElementById('contactStatChoice').value === 'AGI') ? agiTotal : forTotal;
-        let distanceBaseVal = (document.getElementById('distanceStatChoice').value === 'PER') ? perTotal : agiTotal;
-
-        let atkContact = level + contactBaseVal + (parseInt(document.getElementById('extraAtkContact').value) || 0);
-        let atkDistance = level + distanceBaseVal + (parseInt(document.getElementById('extraAtkDistance').value) || 0);
-        let atkMagique = level + volTotal + (parseInt(document.getElementById('extraAtkMagique').value) || 0);
-
-        if (!manualOverrides.AtkContact) document.getElementById('displayAtkContact').innerText = (atkContact >= 0 ? "+" : "") + atkContact;
-        if (!manualOverrides.AtkDistance) document.getElementById('displayAtkDistance').innerText = (atkDistance >= 0 ? "+" : "") + atkDistance;
-        if (!manualOverrides.AtkMagique) document.getElementById('displayAtkMagique').innerText = (atkMagique >= 0 ? "+" : "") + atkMagique;
-
-        // Formule Mana (PM) : VOL + nb de sorts/capacités magiques notés avec *
-        let spellCount = parseInt(document.getElementById('spellCount').value) || 0;
-        if (!manualOverrides.PM) {
-            document.getElementById('displayPM').innerText = volTotal + spellCount;
-        }
-
-        // Formule Chance (PC) : 2 + CHA (+1 si famille Aventurier et +1 si peuple Humain)
-        let chaTotal = (assignedStats['CHA'] !== null ? assignedStats['CHA'] : 0) + (peupleBonuses['CHA'] || 0);
+        let level = parseInt(document.getElementById('charLevel').value) || 1;
+        let extraConPerm = parseInt(document.getElementById('extraConBonus').value) || 0;
+        let totalConMod = finalTotals['CON'] + extraConPerm;
         let family = document.getElementById('charFamily').value;
-        let peupleVal = document.getElementById('charPeuple').value;
-        let pcCalc = 2 + chaTotal;
-        if (family === 'Aventurier') pcCalc += 1;
-        if (peupleVal === 'Humain') pcCalc += 1;
-        if (!manualOverrides.PC) {
-            document.getElementById('displayPC').innerText = pcCalc;
+
+        // Calcul PV max selon la famille
+        let basePvPerLevel = 6;
+        if (family === 'Combattant') basePvPerLevel = 8;
+        if (family === 'Mage') basePvPerLevel = 4;
+        if (family === 'Mystique') basePvPerLevel = 6;
+
+        let maxPV = (basePvPerLevel + totalConMod) * level;
+        if (maxPV < level) maxPV = level; // Minimum 1 PV par niveau
+
+        let pvDisplay = document.getElementById('displayPV');
+        if (pvDisplay && (pvDisplay.innerText.trim() === "--" || currentPV === null)) {
+            currentPV = maxPV;
+            pvDisplay.innerText = `${currentPV} / ${maxPV}`;
         }
 
-        let conTotal = (assignedStats['CON'] !== null ? assignedStats['CON'] : 0) + (peupleBonuses['CON'] || 0) + (parseInt(document.getElementById('extraConBonus').value) || 0);
-        let basePV = family === 'Combattant' ? 5 : (family === 'Mage' ? 3 : 4);
-        let maxPV = (basePV * 2) + conTotal;
-        for (let i = 2; i <= level; i++) maxPV += Math.max(1, basePV + conTotal);
+        // Calcul DEF
+        if (!manualOverrides.DEF) {
+            let agiMod = finalTotals['AGI'];
+            let armor = parseInt(document.getElementById('armorBonus').value) || 0;
+            let shield = parseInt(document.getElementById('shieldBonus').value) || 0;
+            let extraDef = parseInt(document.getElementById('extraDefBonus').value) || 0;
+            let defTotal = 10 + agiMod + armor + shield + extraDef;
+            document.getElementById('displayDEF').innerText = defTotal;
+        }
 
-        if (currentPV === null || currentPV > maxPV) currentPV = maxPV;
-        document.getElementById('displayPV').innerText = `${currentPV} / ${maxPV}`;
+        // Calcul Initiative
+        if (!manualOverrides.Init) {
+            let agiMod = finalTotals['AGI'];
+            let extraInit = parseInt(document.getElementById('extraInitBonus').value) || 0;
+            let initTotal = agiMod + extraInit;
+            document.getElementById('displayInit').innerText = (initTotal >= 0 ? '+' : '') + initTotal;
+        }
 
-        let baseDR = Math.max(0, 2 + conTotal + (family === 'Mystique' ? 1 : 0));
-        let dieType = family === 'Combattant' ? "d10" : (family === 'Mage' ? "d6" : "d8");
+        // Calcul PM (Mana)
+        if (!manualOverrides.PM) {
+            let intMod = finalTotals['INT'];
+            let wisMod = finalTotals['VOL'];
+            let castingMod = Math.max(intMod, wisMod);
+            let pmTotal = (castingMod * level) + (level * 2); // Règle standard COF2 adaptable
+            if (pmTotal < 0) pmTotal = 0;
+            document.getElementById('displayPM').innerText = pmTotal;
+        }
+
+        // Calcul PC (Chance)
+        if (!manualOverrides.PC) {
+            document.getElementById('displayPC').innerText = Math.max(1, 3 + Math.floor(level / 2));
+        }
+
+        // Calcul DR (Récupération)
         if (!manualOverrides.DR) {
-            document.getElementById('displayDR').innerText = `${baseDR} ${dieType}`;
+            document.getElementById('displayDR').innerText = Math.max(1, Math.floor(level / 2));
+        }
+
+        // Calcul Atk Contact
+        if (!manualOverrides.AtkContact) {
+            let statChoice = document.getElementById('contactStatChoice').value;
+            let chosenMod = finalTotals[statChoice] || 0;
+            let extraAtk = parseInt(document.getElementById('extraAtkContact').value) || 0;
+            let atkContactTotal = chosenMod + Math.floor(level / 2) + extraAtk;
+            document.getElementById('displayAtkContact').innerText = (atkContactTotal >= 0 ? '+' : '') + atkContactTotal;
+        }
+
+        // Calcul Atk Distance
+        if (!manualOverrides.AtkDistance) {
+            let statChoice = document.getElementById('distanceStatChoice').value;
+            let chosenMod = finalTotals[statChoice] || 0;
+            let extraAtk = parseInt(document.getElementById('extraAtkDistance').value) || 0;
+            let atkDistTotal = chosenMod + Math.floor(level / 2) + extraAtk;
+            document.getElementById('displayAtkDistance').innerText = (atkDistTotal >= 0 ? '+' : '') + atkDistTotal;
+        }
+
+        // Calcul Atk Magique
+        if (!manualOverrides.AtkMagique) {
+            let intMod = finalTotals['INT'];
+            let wisMod = finalTotals['VOL'];
+            let bestCastMod = Math.max(intMod, wisMod);
+            let extraAtk = parseInt(document.getElementById('extraAtkMagique').value) || 0;
+            let atkMagTotal = bestCastMod + Math.floor(level / 2) + extraAtk;
+            document.getElementById('displayAtkMagique').innerText = (atkMagTotal >= 0 ? '+' : '') + atkMagTotal;
         }
     }
 
     function adjustCurrentPV(amount) {
-        let level = parseInt(document.getElementById('charLevel').value) || 1;
-        let family = document.getElementById('charFamily').value;
-        let conTotal = (assignedStats['CON'] !== null ? assignedStats['CON'] : 0) + (getPeupleBonuses()['CON'] || 0) + (parseInt(document.getElementById('extraConBonus').value) || 0);
-        let basePV = family === 'Combattant' ? 5 : (family === 'Mage' ? 3 : 4);
-        let maxPV = (basePV * 2) + conTotal;
-        for (let i = 2; i <= level; i++) maxPV += Math.max(1, basePV + conTotal);
-
-        if (currentPV === null) currentPV = maxPV;
-        currentPV = Math.max(0, Math.min(maxPV, currentPV + amount));
-        document.getElementById('displayPV').innerText = `${currentPV} / ${maxPV}`;
-        autoSaveData();
+        let pvDisplay = document.getElementById('displayPV');
+        // Logique simplifiée d'ajustement des PV actuels
+        let text = pvDisplay.innerText;
+        let parts = text.split('/');
+        if (parts.length === 2) {
+            let cur = parseInt(parts[0]) + amount;
+            let max = parts[1].trim();
+            currentPV = cur;
+            pvDisplay.innerText = `${cur} / ${max}`;
+            autoSaveData();
+        }
     }
 
-    function gatherSheetData() {
-        const weaponsData = Array.from(document.querySelectorAll('.weapon-row')).map(row => ({
-            weaponPreset: row.querySelector('.w-preset').value,
-            name: row.querySelector('.w-name').value,
-            atkMod: row.querySelector('.w-atk-mod').value,
-            dmDie: row.querySelector('.w-dm-die').value,
-            dmMod: row.querySelector('.w-dm-mod').value
-        }));
+    function addWeaponRow(data = null) {
+        let container = document.getElementById('weaponsContainer');
+        let div = document.createElement('div');
+        div.className = 'weapon-row-item';
+        
+        let optionsHTML = officialWeapons.map(w => `<option value="${w.name}" ${data && data.weaponName === w.name ? 'selected' : ''}>${w.name} (${w.die})</option>`).join('');
 
-        const equipmentData = Array.from(document.querySelectorAll('.eq-row')).map(row => ({
-            name: row.querySelector('.eq-name').value,
-            qty: row.querySelector('.eq-qty').value
-        }));
+        div.innerHTML = `
+            <select class="weapon-select" onchange="onWeaponSelect(this); autoSaveData();">
+                ${optionsHTML}
+            </select>
+            <input type="text" class="weapon-name-input" placeholder="Nom personnalisé" value="${data ? data.name : ''}" oninput="autoSaveData()">
+            <input type="text" class="weapon-dm-input" placeholder="Dégâts (ex: 1d8+2)" value="${data ? data.dm : '1d6'}" oninput="autoSaveData()">
+            <input type="text" class="weapon-portee-input" placeholder="Portée" value="${data ? data.portee : 'Contact'}" oninput="autoSaveData()">
+            <button type="button" class="btn-delete-row" onclick="this.parentElement.remove(); autoSaveData();">❌</button>
+        `;
+        container.appendChild(div);
+    }
 
-        const voiesData = Array.from(document.querySelectorAll('.voie-card')).map(card => {
-            const voieName = card.querySelector('.voie-name-input').value;
-            const rangs = Array.from(card.querySelectorAll('.voie-rang-row')).map(row => {
-                const rangName = row.querySelector('.rang-name-input').value;
-                const rangDesc = row.querySelector('.rang-desc-textarea').value;
-                return { rangName, rangDesc };
-            });
-            return { voieName, rangs };
-        });
+    function onWeaponSelect(selectEl) {
+        let row = selectEl.parentElement;
+        let nameInput = row.querySelector('.weapon-name-input');
+        let dmInput = row.querySelector('.weapon-dm-input');
+        let selectedVal = selectEl.value;
+        
+        let found = officialWeapons.find(w => w.name === selectedVal);
+        if (found && selectedVal !== "-- Arme personnalisée --") {
+            nameInput.value = selectedVal;
+            dmInput.value = found.die;
+        }
+    }
 
-        return {
-            name: document.getElementById('charName').value,
-            ideal: document.getElementById('charIdeal').value,
-            flaw: document.getElementById('charFlaw').value,
-            description: document.getElementById('charDescription').value,
-            profile: document.getElementById('charProfile').value,
-            family: document.getElementById('charFamily').value,
-            subProfile: document.getElementById('charSubProfile').value,
-            peuple: document.getElementById('charPeuple').value,
-            level: document.getElementById('charLevel').value,
-            extraConBonus: document.getElementById('extraConBonus').value,
-            spellCount: document.getElementById('spellCount').value,
-            extraInitBonus: document.getElementById('extraInitBonus').value,
-            armorBonus: document.getElementById('armorBonus').value,
-            shieldBonus: document.getElementById('shieldBonus').value,
-            extraDefBonus: document.getElementById('extraDefBonus').value,
-            contactStatChoice: document.getElementById('contactStatChoice').value,
-            distanceStatChoice: document.getElementById('distanceStatChoice').value,
-            extraAtkContact: document.getElementById('extraAtkContact').value,
-            extraAtkDistance: document.getElementById('extraAtkDistance').value,
-            extraAtkMagique: document.getElementById('extraAtkMagique').value,
-            currentPV: currentPV, avatar: avatarBase64,
-            weapons: weaponsData, equipment: equipmentData, voies: voiesData,
-            assignedStats: assignedStats, availableTokens: availableTokens,
-            manualOverrides: manualOverrides,
-            manualValues: {
-                DEF: document.getElementById('displayDEF').innerText,
-                Init: document.getElementById('displayInit').innerText,
-                PM: document.getElementById('displayPM').innerText,
-                PC: document.getElementById('displayPC').innerText,
-                DR: document.getElementById('displayDR').innerText,
-                AtkContact: document.getElementById('displayAtkContact').innerText,
-                AtkDistance: document.getElementById('displayAtkDistance').innerText,
-                AtkMagique: document.getElementById('displayAtkMagique').innerText
-            },
-            peupleChoices: { 
-                opt1: document.getElementById('opt_bonus1')?.value, 
-                optMalus1: document.getElementById('opt_malus1')?.value
-            },
-            companion: {
-                name: document.getElementById('compName').value,
-                type: document.getElementById('compType').value,
-                agi: document.getElementById('compAGI').value,
-                con: document.getElementById('compCON').value,
-                for: document.getElementById('compFOR').value,
-                per: document.getElementById('compPER').value,
-                cha: document.getElementById('compCHA').value,
-                int: document.getElementById('compINT').value,
-                vol: document.getElementById('compVOL').value,
-                def: document.getElementById('compDef').value,
-                pv: document.getElementById('compPv').value,
-                init: document.getElementById('compInit').value,
-                atkDm: document.getElementById('compAtkDm').value,
-                description: document.getElementById('compDescription').value
-            }
-        };
+    function addEquipmentRow(text = '') {
+        let container = document.getElementById('equipmentContainer');
+        let div = document.createElement('div');
+        div.className = 'equipment-row-item';
+        div.innerHTML = `
+            <input type="text" class="equipment-input" placeholder="Objet, potion, équipement..." value="${text}" oninput="autoSaveData()">
+            <button type="button" class="btn-delete-row" onclick="this.parentElement.remove(); autoSaveData();">❌</button>
+        `;
+        container.appendChild(div);
     }
 
     function autoSaveData() {
-        const data = gatherSheetData();
-        localStorage.setItem('cof2_character', JSON.stringify(data));
+        // Sauvegarde automatique locale
+        let data = collectAllData();
+        localStorage.setItem('cof2_character_sheet', JSON.stringify(data));
     }
 
     function manualSaveData() {
@@ -940,222 +886,57 @@
         alert("Fiche enregistrée avec succès !");
     }
 
-    function loadData() {
-        const saved = localStorage.getItem('cof2_character');
-        if (saved) {
-            const data = JSON.parse(saved);
-            document.getElementById('charName').value = data.name || '';
-            if(data.ideal) document.getElementById('charIdeal').value = data.ideal;
-            if(data.flaw) document.getElementById('charFlaw').value = data.flaw;
-            if(data.description) document.getElementById('charDescription').value = data.description;
-            document.getElementById('charProfile').value = data.profile || 'Polyvalent';
-            if(data.family) document.getElementById('charFamily').value = data.family;
-            onFamilyChange();
-            if(data.subProfile) document.getElementById('charSubProfile').value = data.subProfile;
-
-            document.getElementById('charPeuple').value = data.peuple || 'Demi-elfe';
-            document.getElementById('charLevel').value = data.level || 1;
-            if(data.extraConBonus) document.getElementById('extraConBonus').value = data.extraConBonus;
-            if(data.spellCount !== undefined) document.getElementById('spellCount').value = data.spellCount;
-            if(data.extraInitBonus !== undefined) document.getElementById('extraInitBonus').value = data.extraInitBonus;
-            if(data.armorBonus !== undefined) document.getElementById('armorBonus').value = data.armorBonus;
-            if(data.shieldBonus !== undefined) document.getElementById('shieldBonus').value = data.shieldBonus;
-            if(data.extraDefBonus !== undefined) document.getElementById('extraDefBonus').value = data.extraDefBonus;
-            if(data.contactStatChoice) document.getElementById('contactStatChoice').value = data.contactStatChoice;
-            if(data.distanceStatChoice) document.getElementById('distanceStatChoice').value = data.distanceStatChoice;
-            if(data.extraAtkContact !== undefined) document.getElementById('extraAtkContact').value = data.extraAtkContact;
-            if(data.extraAtkDistance !== undefined) document.getElementById('extraAtkDistance').value = data.extraAtkDistance;
-            if(data.extraAtkMagique !== undefined) document.getElementById('extraAtkMagique').value = data.extraAtkMagique;
-            currentPV = data.currentPV !== undefined ? data.currentPV : null;
-
-            if (data.manualOverrides) manualOverrides = data.manualOverrides;
-
-            if (data.avatar) {
-                avatarBase64 = data.avatar;
-                const preview = document.getElementById('avatarPreview');
-                preview.src = avatarBase64;
-                preview.style.display = 'block';
-                document.getElementById('avatarPlaceholder').style.display = 'none';
-            }
-
-            if (data.assignedStats) assignedStats = data.assignedStats;
-            if (data.availableTokens) availableTokens = data.availableTokens;
-            else onProfileModeChange();
-
-            onPeupleChange();
-
-            if (data.peupleChoices) {
-                if(document.getElementById('opt_bonus1')) document.getElementById('opt_bonus1').value = data.peupleChoices.opt1 || '';
-                if(document.getElementById('opt_malus1')) document.getElementById('opt_malus1').value = data.peupleChoices.optMalus1 || '';
-            }
-
-            if (data.manualValues) {
-                if (manualOverrides.DEF && data.manualValues.DEF) document.getElementById('displayDEF').innerText = data.manualValues.DEF;
-                if (manualOverrides.Init && data.manualValues.Init) document.getElementById('displayInit').innerText = data.manualValues.Init;
-                if (manualOverrides.PM && data.manualValues.PM) document.getElementById('displayPM').innerText = data.manualValues.PM;
-                if (manualOverrides.PC && data.manualValues.PC) document.getElementById('displayPC').innerText = data.manualValues.PC;
-                if (manualOverrides.DR && data.manualValues.DR) document.getElementById('displayDR').innerText = data.manualValues.DR;
-                if (manualOverrides.AtkContact && data.manualValues.AtkContact) document.getElementById('displayAtkContact').innerText = data.manualValues.AtkContact;
-                if (manualOverrides.AtkDistance && data.manualValues.AtkDistance) document.getElementById('displayAtkDistance').innerText = data.manualValues.AtkDistance;
-                if (manualOverrides.AtkMagique && data.manualValues.AtkMagique) document.getElementById('displayAtkMagique').innerText = data.manualValues.AtkMagique;
-            }
-
-            if (data.companion) {
-                document.getElementById('compName').value = data.companion.name || 'LOUP';
-                document.getElementById('compType').value = data.companion.type || 'CRÉATURE VIVANTE';
-                document.getElementById('compAGI').value = data.companion.agi || '+1';
-                document.getElementById('compCON').value = data.companion.con || '+1*';
-                document.getElementById('compFOR').value = data.companion.for || '+2';
-                document.getElementById('compPER').value = data.companion.per || '+2*';
-                document.getElementById('compCHA').value = data.companion.cha || '-2';
-                document.getElementById('compINT').value = data.companion.int || '-3';
-                document.getElementById('compVOL').value = data.companion.vol || '+2';
-                document.getElementById('compDef').value = data.companion.def || '[12 + rang dans la voie]';
-                document.getElementById('compPv').value = data.companion.pv || '[niv. du rôdeur × 4]';
-                document.getElementById('compInit').value = data.companion.init || '[Init. du rôdeur]';
-                document.getElementById('compAtkDm').value = data.companion.atkDm || '[Atq. magique] DM 1d4+2';
-                document.getElementById('compDescription').value = data.companion.description || '';
-            }
-
-            document.getElementById('weaponsContainer').innerHTML = '';
-            (data.weapons && data.weapons.length > 0) ? data.weapons.forEach(w => addWeaponRow(w)) : addWeaponRow({weaponPreset: 'Épée courte', name: 'Épée courte', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
-
-            document.getElementById('equipmentContainer').innerHTML = '';
-            (data.equipment && data.equipment.length > 0) ? data.equipment.forEach(e => addEquipmentRow(e)) : addEquipmentRow({name: 'Rations de voyage', qty: '1'});
-
-            if (data.voies && data.voies.length > 0) {
-                data.voies.forEach((voie, index) => {
-                    const card = document.getElementById('voie_' + index);
-                    if (card) {
-                        card.querySelector('.voie-name-input').value = voie.voieName || '';
-                        const rangRows = card.querySelectorAll('.voie-rang-row');
-                        voie.rangs.forEach((rangData, rIndex) => {
-                            if (rangRows[rIndex]) {
-                                rangRows[rangRows.length > 0 ? rIndex : 0].querySelector('.rang-name-input').value = rangData.rangName || '';
-                                rangRows[rIndex].querySelector('.rang-desc-textarea').value = rangData.rangDesc || '';
-                            }
-                        });
-                    }
-                });
-            }
-
-            calculateTotals();
-        } else {
-            onPeupleChange();
-            onFamilyChange();
-            onProfileModeChange();
-            addWeaponRow({weaponPreset: 'Épée courte', name: 'Épée courte', atkMod: '+0', dmDie: '1d6', dmMod: '+0'});
-            addEquipmentRow({name: 'Rations de voyage', qty: '1'});
-        }
+    function collectAllData() {
+        return {
+            charName: document.getElementById('charName').value,
+            charPeuple: document.getElementById('charPeuple').value,
+            charProfile: document.getElementById('charProfile').value,
+            charFamily: document.getElementById('charFamily').value,
+            charSubProfile: document.getElementById('charSubProfile').value,
+            charIdeal: document.getElementById('charIdeal').value,
+            charFlaw: document.getElementById('charFlaw').value,
+            charDescription: document.getElementById('charDescription').value,
+            charLevel: document.getElementById('charLevel').value,
+            avatarBase64: avatarBase64,
+            assignedStats: assignedStats
+        };
     }
 
     function resetCharacterSheet() {
-        if (confirm("Voulez-vous vraiment effacer cette fiche et recommencer à zéro ?")) {
-            localStorage.removeItem('cof2_character');
+        if (confirm("Voulez-vous vraiment effacer la fiche actuelle pour en créer une nouvelle ?")) {
+            localStorage.removeItem('cof2_character_sheet');
             location.reload();
         }
     }
 
     function exportJSON() {
-        const data = gatherSheetData();
-        data.currentPV = currentPV;
-        const blob = new Blob([JSON.stringify(data, null, 2)], {type : 'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = (data.name || 'personnage') + '_cof2.json';
-        a.click();
+        let data = collectAllData();
+        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+        let downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", (document.getElementById('charName').value || 'personnage') + "_cof2.json");
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
     }
 
     function exportToPNG() {
-        const grimoire = document.querySelector('.grimoire-spread');
-        if (!grimoire) {
-            alert("Erreur : Impossible de trouver la zone du grimoire à capturer.");
-            return;
-        }
-
-        const textareas = grimoire.querySelectorAll('textarea');
-        const replacements = [];
-
-        textareas.forEach(ta => {
-            const div = document.createElement('div');
-            div.className = ta.className;
-            div.style.cssText = window.getComputedStyle(ta).cssText;
-            div.style.display = 'block';
-            div.style.whiteSpace = 'pre-wrap';
-            div.style.wordBreak = 'break-word';
-            div.style.overflow = 'hidden';
-            div.style.height = 'auto';
-            div.style.minHeight = ta.style.height || `${ta.scrollHeight}px`;
-            div.innerHTML = ta.value.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>');
-
-            ta.parentNode.insertBefore(div, ta);
-            ta.style.display = 'none';
-            replacements.push({ textarea: ta, placeholder: div });
-        });
-
-        grimoire.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
-            input.setAttribute('value', input.value);
-        });
-
-        html2canvas(grimoire, {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: null,
-            ignoreElements: (element) => {
-                return element.classList && element.classList.contains('no-export');
-            }
-        }).then(canvas => {
-            replacements.forEach(item => {
-                item.placeholder.parentNode.insertBefore(item.textarea, item.placeholder);
-                item.placeholder.remove();
-                item.textarea.style.display = '';
-            });
-
-            const link = document.createElement('a');
-            let charName = document.getElementById('charName').value.trim();
-            link.download = (charName ? charName : 'personnage') + '_cof2.png';
+        window.scrollTo(0, 0);
+        html2canvas(document.querySelector('.grimoire-spread'), { scale: 2 }).then(canvas => {
+            let link = document.createElement('a');
+            link.download = (document.getElementById('charName').value || 'personnage') + '_cof2.png';
             link.href = canvas.toDataURL('image/png');
-            link.click();
-        }).catch(err => {
-            console.error("Erreur lors de l'export PNG :", err);
-            replacements.forEach(item => {
-                item.placeholder.parentNode.insertBefore(item.textarea, item.placeholder);
-                item.placeholder.remove();
-                item.textarea.style.display = '';
-            });
-            alert("Une erreur est survenue lors de la génération de l'image.");
+            link.link.click();
         });
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        loadData();
-        
-        const rootElement = document.documentElement;
-        let currentSize = 0.9;
-        const sizeDisplay = document.getElementById('fontSizeDisplay');
-        
-        const updateFontSize = (newSize) => {
-            if (newSize >= 0.7 && newSize <= 1.4) {
-                currentSize = Math.round(newSize * 10) / 10;
-                rootElement.style.setProperty('--global-font-size', currentSize + 'rem');
-                if(sizeDisplay) sizeDisplay.textContent = currentSize + 'rem';
-            }
-        };
-
-        const btnInc = document.getElementById('btnIncreaseFont');
-        const btnDec = document.getElementById('btnDecreaseFont');
-        if(btnInc) btnInc.addEventListener('click', () => updateFontSize(currentSize + 0.1));
-        if(btnDec) btnDec.addEventListener('click', () => updateFontSize(currentSize - 0.1));
-
-        const fontSelect = document.getElementById('globalFontSelect');
-        if(fontSelect) {
-            fontSelect.addEventListener('change', (e) => {
-                rootElement.style.setProperty('--global-font-family', e.target.value);
-            });
-        }
-    });
+    // Initialisation au chargement
+    window.onload = function() {
+        onProfileModeChange();
+        onFamilyChange();
+        addWeaponRow();
+        addEquipmentRow();
+    };
 </script>
 
 </body>
