@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
-    <link rel="stylesheet" href="style.css?v=18">
+    <link rel="stylesheet" href="style.css?v=19">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
@@ -829,28 +829,33 @@
         const row = document.createElement('div');
         row.className = 'skill-row';
         row.id = rowId;
-        row.style.cssText = "display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 8px; background: rgba(244, 239, 230, 0.85); padding: 8px; border: 1px solid #d4c5b9; border-radius: 6px; margin-bottom: 8px; align-items: center; position: relative; z-index: 2;";
+        row.style.cssText = "display: flex; flex-direction: column; gap: 6px; background: rgba(244, 239, 230, 0.85); padding: 8px; border: 1px solid #d4c5b9; border-radius: 6px; margin-bottom: 8px; position: relative; z-index: 2;";
         
         row.innerHTML = `
-            <div class="field-group">
-                <label>🎓 Compétence</label>
-                <select class="sk-name" onchange="onSkillSelectChange('${rowId}'); autoSaveData();">${skillOpts}</select>
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 8px; align-items: center;">
+                <div class="field-group">
+                    <label>🎓 Compétence</label>
+                    <select class="sk-name" onchange="onSkillSelectChange('${rowId}'); autoSaveData();">${skillOpts}</select>
+                </div>
+                <div class="field-group">
+                    <label>⚡ Carac. Assoc.</label>
+                    <div class="sk-stat-display display-card" style="padding: 6px 12px; text-align: center; background: rgba(255,255,255,0.6);">--</div>
+                    <input type="hidden" class="sk-stat" value="">
+                </div>
+                <div class="field-group">
+                    <label>➕ Rang / Bonus</label>
+                    <input type="text" class="sk-bonus" value="${data.bonus !== undefined ? data.bonus : '+0'}" oninput="updateSkillTotal('${rowId}'); autoSaveData();">
+                </div>
+                <div class="field-group" style="align-items: center;">
+                    <label>Total</label>
+                    <div class="sk-total display-card" style="padding: 6px 12px; text-align: center; min-width: 45px;">+0</div>
+                </div>
+                <div style="display: flex; align-items: flex-end;">
+                    <button type="button" class="btn-delete-row-eq" onclick="document.getElementById('${rowId}').remove(); autoSaveData();">×</button>
+                </div>
             </div>
-            <div class="field-group">
-                <label>⚡ Carac. Assoc.</label>
-                <div class="sk-stat-display display-card" style="padding: 6px 12px; text-align: center; background: rgba(255,255,255,0.6);">--</div>
-                <input type="hidden" class="sk-stat" value="">
-            </div>
-            <div class="field-group">
-                <label>➕ Rang / Bonus</label>
-                <input type="text" class="sk-bonus" value="${data.bonus !== undefined ? data.bonus : '+0'}" oninput="updateSkillTotal('${rowId}'); autoSaveData();">
-            </div>
-            <div class="field-group" style="align-items: center;">
-                <label>Total</label>
-                <div class="sk-total display-card" style="padding: 6px 12px; text-align: center; min-width: 45px;">+0</div>
-            </div>
-            <div style="display: flex; align-items: flex-end;">
-                <button type="button" class="btn-delete-row-eq" onclick="document.getElementById('${rowId}').remove(); autoSaveData();">×</button>
+            <div class="field-group" style="width: 100%;">
+                <input type="text" class="sk-subtext" value="${data.subText || ''}" placeholder="Précisions (ex: héraldique, géographie, ...)" oninput="autoSaveData()" style="font-size: 0.85rem; font-style: italic; background: rgba(255,255,255,0.7); border: 1px dashed #c2b2a3; padding: 4px 8px; border-radius: 4px;">
             </div>
         `;
         container.appendChild(row);
@@ -885,7 +890,6 @@
         let statVal = 0;
         
         if (stat.includes('/')) {
-            // Si la compétence a une carac double (ex: Équitation AGI/CHA), on prend la meilleure
             let parts = stat.split('/');
             let val1 = (assignedStats[parts[0]] !== null && assignedStats[parts[0]] !== undefined ? assignedStats[parts[0]] : 0) + (peupleBonuses[parts[0]] || 0);
             let val2 = (assignedStats[parts[1]] !== null && assignedStats[parts[1]] !== undefined ? assignedStats[parts[1]] : 0) + (peupleBonuses[parts[1]] || 0);
@@ -1009,7 +1013,8 @@
 
         const skillsData = Array.from(document.querySelectorAll('.skill-row')).map(row => ({
             skillName: row.querySelector('.sk-name').value,
-            bonus: row.querySelector('.sk-bonus').value
+            bonus: row.querySelector('.sk-bonus').value,
+            subText: row.querySelector('.sk-subtext').value
         }));
 
         const voiesData = Array.from(document.querySelectorAll('.voie-card')).map(card => {
