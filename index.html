@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Créateur de Fiche - Grimoire COF2</title>
-    <link rel="stylesheet" href="style.css?v=17">
+    <link rel="stylesheet" href="style.css?v=18">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
@@ -247,7 +247,6 @@
                     <div class="framed-stat-card"><label>🧪 Récup. (DR)</label><div id="displayDR" class="display-card" contenteditable="true" oninput="markManualEdit('DR'); autoSaveData();">--</div></div>
                 </div>
 
-                <!-- Bloc groupé "Valeurs d'attaque" -->
                 <div class="attack-group-container">
                     <div class="attack-group-title">⚔️ Valeurs d'attaque</div>
                     <div class="grid-identity grid-identity-combat-4" style="margin-bottom: 0;">
@@ -293,7 +292,7 @@
                 </div>
             </div>
 
-            <!-- ===== BLOC : Compagnon animal / Familier ===== -->
+            <!-- Bloc Compagnon animal / Familier -->
             <div class="section-box">
                 <div class="bg-watermark"></div>
                 <h2>
@@ -335,7 +334,7 @@
                 </div>
             </div>
 
-        </div>
+        </div> <!-- Fin de la PAGE 1 -->
 
         <!-- ===== PAGE 2 : Armes, Sorts, Équipement & Voies ===== -->
         <div class="grimoire-page">
@@ -400,9 +399,9 @@
 
             <button class="main-btn btn-export-json" onclick="exportJSON()">💾 Exporter les données (JSON)</button>
 
-        </div>
+        </div> <!-- Fin de la PAGE 2 -->
 
-    </div>
+    </div> <!-- Fin du .grimoire-spread -->
 </div>
 
 <script>
@@ -410,7 +409,6 @@
     let currentPV = null;
     let avatarBase64 = "";
 
-    // Suivi des surcharges manuelles
     let manualOverrides = {
         DEF: false, Init: false, PM: false, PC: false, DR: false,
         AtkContact: false, AtkDistance: false, AtkMagique: false
@@ -736,14 +734,13 @@
         let totalConMod = finalTotals['CON'] + extraConPerm;
         let family = document.getElementById('charFamily').value;
 
-        // Calcul PV max selon la famille
         let basePvPerLevel = 6;
         if (family === 'Combattant') basePvPerLevel = 8;
         if (family === 'Mage') basePvPerLevel = 4;
         if (family === 'Mystique') basePvPerLevel = 6;
 
         let maxPV = (basePvPerLevel + totalConMod) * level;
-        if (maxPV < level) maxPV = level; // Minimum 1 PV par niveau
+        if (maxPV < level) maxPV = level;
 
         let pvDisplay = document.getElementById('displayPV');
         if (pvDisplay && (pvDisplay.innerText.trim() === "--" || currentPV === null)) {
@@ -751,7 +748,6 @@
             pvDisplay.innerText = `${currentPV} / ${maxPV}`;
         }
 
-        // Calcul DEF
         if (!manualOverrides.DEF) {
             let agiMod = finalTotals['AGI'];
             let armor = parseInt(document.getElementById('armorBonus').value) || 0;
@@ -761,7 +757,6 @@
             document.getElementById('displayDEF').innerText = defTotal;
         }
 
-        // Calcul Initiative
         if (!manualOverrides.Init) {
             let agiMod = finalTotals['AGI'];
             let extraInit = parseInt(document.getElementById('extraInitBonus').value) || 0;
@@ -769,27 +764,23 @@
             document.getElementById('displayInit').innerText = (initTotal >= 0 ? '+' : '') + initTotal;
         }
 
-        // Calcul PM (Mana)
         if (!manualOverrides.PM) {
             let intMod = finalTotals['INT'];
             let wisMod = finalTotals['VOL'];
             let castingMod = Math.max(intMod, wisMod);
-            let pmTotal = (castingMod * level) + (level * 2); // Règle standard COF2 adaptable
+            let pmTotal = (castingMod * level) + (level * 2);
             if (pmTotal < 0) pmTotal = 0;
             document.getElementById('displayPM').innerText = pmTotal;
         }
 
-        // Calcul PC (Chance)
         if (!manualOverrides.PC) {
             document.getElementById('displayPC').innerText = Math.max(1, 3 + Math.floor(level / 2));
         }
 
-        // Calcul DR (Récupération)
         if (!manualOverrides.DR) {
             document.getElementById('displayDR').innerText = Math.max(1, Math.floor(level / 2));
         }
 
-        // Calcul Atk Contact
         if (!manualOverrides.AtkContact) {
             let statChoice = document.getElementById('contactStatChoice').value;
             let chosenMod = finalTotals[statChoice] || 0;
@@ -798,7 +789,6 @@
             document.getElementById('displayAtkContact').innerText = (atkContactTotal >= 0 ? '+' : '') + atkContactTotal;
         }
 
-        // Calcul Atk Distance
         if (!manualOverrides.AtkDistance) {
             let statChoice = document.getElementById('distanceStatChoice').value;
             let chosenMod = finalTotals[statChoice] || 0;
@@ -807,7 +797,6 @@
             document.getElementById('displayAtkDistance').innerText = (atkDistTotal >= 0 ? '+' : '') + atkDistTotal;
         }
 
-        // Calcul Atk Magique
         if (!manualOverrides.AtkMagique) {
             let intMod = finalTotals['INT'];
             let wisMod = finalTotals['VOL'];
@@ -820,7 +809,6 @@
 
     function adjustCurrentPV(amount) {
         let pvDisplay = document.getElementById('displayPV');
-        // Logique simplifiée d'ajustement des PV actuels
         let text = pvDisplay.innerText;
         let parts = text.split('/');
         if (parts.length === 2) {
@@ -876,7 +864,6 @@
     }
 
     function autoSaveData() {
-        // Sauvegarde automatique locale
         let data = collectAllData();
         localStorage.setItem('cof2_character_sheet', JSON.stringify(data));
     }
@@ -926,11 +913,10 @@
             let link = document.createElement('a');
             link.download = (document.getElementById('charName').value || 'personnage') + '_cof2.png';
             link.href = canvas.toDataURL('image/png');
-            link.link.click();
+            link.click();
         });
     }
 
-    // Initialisation au chargement
     window.onload = function() {
         onProfileModeChange();
         onFamilyChange();
