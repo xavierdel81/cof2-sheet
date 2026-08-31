@@ -929,121 +929,69 @@ button.main-btn:hover {
 .companion-type-input {
     background: var(--border-primary);
     color: #f7f3e8;
-    border: 1px solid #b39b7d;
-    border-radius: 3px;
-    padding: 3px 6px;
-    font-size: 0.75rem;
-    font-family: var(--global-font-family);
-    text-transform: uppercase;
+    border: 1px solid var(--border-secondary);
+    padding: 5px 8px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
     font-weight: bold;
+    text-align: center;
+    border-radius: 4px;
+    margin-bottom: 10px;
     width: 100%;
-    margin-bottom: 8px;
+    box-sizing: border-box;
 }
 
 .companion-stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
-    gap: 5px;
-    margin-bottom: 8px;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 10px;
 }
 
 .companion-stat-box {
-    background: rgba(255, 253, 249, 0.85);
+    background: rgba(244, 239, 230, 0.9);
     border: 1px solid #b8a79a;
     border-radius: 4px;
     padding: 4px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .companion-stat-box label {
-    font-size: 0.65rem !important;
-    display: block;
-    margin-bottom: 2px;
-    color: var(--border-primary);
+    font-size: 0.7rem !important;
+    margin-bottom: 0;
 }
 
 .companion-stat-box input {
     text-align: center;
-    font-weight: bold;
+    padding: 3px;
     font-size: 0.85rem;
-    padding: 2px;
-    height: 24px;
+    height: 26px;
 }
 
 .companion-line-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: space-between;
+    gap: 10px;
     background: rgba(244, 239, 230, 0.85);
     border: 1px solid #d4c5b9;
-    padding: 6px 8px;
+    padding: 5px 8px;
     border-radius: 4px;
     margin-bottom: 6px;
 }
 
 .companion-line-row label {
-    font-size: 0.75rem !important;
-    min-width: 90px;
+    font-size: 0.8rem !important;
     margin-bottom: 0;
-    color: #5a3d28;
+    white-space: nowrap;
 }
 
 .companion-line-row input {
-    flex-grow: 1;
+    width: 60%;
     padding: 3px 6px;
     font-size: 0.85rem;
-}
-
-.font-control-panel label,
-.section-box label, 
-.section-box .field-label, 
-.section-box h3,
-.section-box legend,
-label,
-.pool-label,
-.pool-empty-msg,
-.peuple-instruction,
-.malus-text-badge,
-.info-box-label,
-.family-bonus-desc,
-.sub-section-title,
-.rang-title,
-.voie-label-title,
-.flex-label span,
-.companion-stat-box label,
-.companion-line-row label,
-input, 
-select, 
-textarea,
-.rang-desc-textarea {
-    font-weight: bold;
-}
-
-/* ÉCRAN : Texte en noir pur et sans contour pour une saisie claire */
-.section-box.bg-perso textarea,
-.section-box.bg-perso-png textarea {
-    color: #fff08d;
-    -webkit-text-stroke: 2px #000000;
-    paint-order: stroke fill;
-}
-
-/* IMPRESSION : Application de la couleur claire et du contour noir */
-@media print {
-    body {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        background-image: none !important;
-        background-color: #fff !important;
-    }
-
-    .section-box.bg-perso textarea,
-    .section-box.bg-perso-png textarea {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        color: #fff08d !important;
-        -webkit-text-stroke: 2px #000000 !important;
-        paint-order: stroke fill !important;
-        background: rgba(255, 253, 249, 0.95) !important;
-        border: 1px solid #b8a79a !important;
-    }
+    text-align: right;
 }
