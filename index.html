@@ -41,10 +41,9 @@
     
     <div class="grimoire-spread">
 
-        <!-- ===== PAGE 1 : Avatar, Identité, Caractéristiques, Combat, PV & Compagnon ===== -->
+        <!-- ===== PAGE 1 ===== -->
         <div class="grimoire-page">
             
-            <!-- Bloc Avatar Dédié -->
             <div class="section-box">
                 <h2>🖼️ Portrait du Personnage</h2>
                 <div class="avatar-large-container">
@@ -56,10 +55,8 @@
                 </div>
             </div>
 
-            <!-- Bloc Identité -->
             <div class="section-box bg-perso bg-perso-png">
                 <div class="bg-watermark"></div> 
-                
                 <h2>📜 Identité, Peuple & Classes</h2>
                 <div class="grid-identity">
                     <div class="field-group">
@@ -102,57 +99,15 @@
                     </div>
                 </div>
 
-                <div class="grid-identity grid-identity-duo">
-                    <div class="field-group">
-                        <label for="charIdeal">Idéal héroïque</label>
-                        <select id="charIdeal" onchange="autoSaveData()">
-                            <option value="">-- Choisir un idéal --</option>
-                            <option value="Abnégation">Abnégation</option>
-                            <option value="Clémence">Clémence</option>
-                            <option value="Compassion">Compassion</option>
-                            <option value="Courage">Courage</option>
-                            <option value="Égalité">Égalité</option>
-                            <option value="Fraternité">Fraternité</option>
-                            <option value="Honneur">Honneur</option>
-                            <option value="Justice">Justice</option>
-                            <option value="Liberté">Liberté</option>
-                            <option value="Loyauté">Loyauté</option>
-                            <option value="Protection">Protection</option>
-                            <option value="Solidarité">Solidarité</option>
-                        </select>
-                    </div>
-                    <div class="field-group">
-                        <label for="charFlaw">Travers</label>
-                        <select id="charFlaw" onchange="autoSaveData()">
-                            <option value="">-- Choisir un travers --</option>
-                            <option value="Alcoolique">Alcoolique</option>
-                            <option value="Couard">Couard</option>
-                            <option value="Cupide">Cupide</option>
-                            <option value="Colérique">Colérique</option>
-                            <option value="Distrait">Distrait</option>
-                            <option value="Fanfaron">Fanfaron</option>
-                            <option value="Gourmand">Gourmand</option>
-                            <option value="Impatient">Impatient</option>
-                            <option value="Orgueilleux">Orgueilleux</option>
-                            <option value="Paranoïaque">Paranoïaque</option>
-                            <option value="Paresseux">Paresseux</option>
-                            <option value="Violent">Violent</option>
-                        </select>
-                    </div>
-                </div>
-
                 <div class="field-group field-group-margin">
                     <label for="charDescription">Description du Personnage</label>
                     <textarea id="charDescription" placeholder="Apparence, historique, traits..." oninput="autoSaveData()"></textarea>
                 </div>
             </div>
 
-            <!-- Bloc Caractéristiques -->
             <div class="section-box bg-carac bg-carac-png">
                 <div class="bg-watermark"></div> 
-                
                 <h2>💪 Caractéristiques</h2>
-                
                 <div id="repartitionZone">
                     <label class="pool-label">Points de répartition (Glissez ou cliquez) :</label>
                     <div id="poolContainer" class="pool-container"></div>
@@ -177,17 +132,10 @@
                         });
                     </script>
                 </div>
-
-                <div id="peupleOptions" style="display:none;">
-                    <label id="peupleLabelInstruction" class="peuple-instruction"></label>
-                    <div id="peupleChoicesContainer" class="peuple-row"></div>
-                </div>
             </div>
 
-            <!-- Bloc Combat & Ressources -->
             <div class="section-box bg-combat bg-combat-png">
                 <div class="bg-watermark"></div> 
-
                 <h2>⚔️ Combat & Ressources</h2>
 
                 <div class="grid-identity grid-identity-combat-1">
@@ -196,46 +144,13 @@
                         <input type="number" id="charLevel" value="1" min="1" max="20" oninput="calculateTotals(); autoSaveData();">
                     </div>
                     <div class="field-group">
-                        <label for="extraConBonus">🛡️ Mod. CON Perm.</label>
-                        <select id="extraConBonus" class="stat-select" onchange="calculateTotals(); autoSaveData();">
-                            <option value="2">+2</option><option value="1">+1</option><option value="0" selected>+0</option><option value="-1">-1</option><option value="-2">-2</option>
-                        </select>
-                    </div>
-                    <div class="field-group">
-                        <label for="spellCount">✨ Sorts (*)</label>
-                        <input type="number" id="spellCount" value="0" min="0" max="20" oninput="calculateTotals(); autoSaveData();">
-                    </div>
-                    <div class="field-group">
-                        <label for="extraInitBonus">⚡ Init. Supp.</label>
-                        <input type="number" id="extraInitBonus" value="0" oninput="calculateTotals(); autoSaveData();">
-                    </div>
-                </div>
-
-                <div class="grid-identity grid-identity-combat-2">
-                    <div class="field-group">
                         <label for="armorBonus">🛡️ Armure (DEF)</label>
                         <select id="armorBonus" onchange="calculateTotals(); autoSaveData();">
                             <option value="0">Aucune (+0)</option>
-                            <option value="1">Tissus matelassés, fourrures (+1)</option>
-                            <option value="2">Cuir simple (+2)</option>
-                            <option value="3">Cuir renforcé, broigne (+3)</option>
-                            <option value="4">Chemise de mailles (+4)</option>
+                            <option value="3">Cuir renforcé (+3)</option>
                             <option value="5">Cotte de mailles (+5)</option>
                             <option value="6">Armure de plaques (+6)</option>
-                            <option value="7">Plaque complète (+7)</option>
                         </select>
-                    </div>
-                    <div class="field-group">
-                        <label for="shieldBonus">🛡️ Bouclier (DEF)</label>
-                        <select id="shieldBonus" onchange="calculateTotals(); autoSaveData();">
-                            <option value="0">Aucun (+0)</option>
-                            <option value="1">Petit bouclier (+1)</option>
-                            <option value="2">Grand bouclier (+2)</option>
-                        </select>
-                    </div>
-                    <div class="field-group">
-                        <label for="extraDefBonus">🔮 Bonus DEF Magie</label>
-                        <input type="number" id="extraDefBonus" value="0" oninput="calculateTotals(); autoSaveData();">
                     </div>
                 </div>
 
@@ -243,130 +158,43 @@
                     <div class="framed-stat-card"><label>🛡️ Défense</label><div id="displayDEF" class="display-card" contenteditable="true" oninput="markManualEdit('DEF'); autoSaveData();">--</div></div>
                     <div class="framed-stat-card"><label>⚡ Initiative</label><div id="displayInit" class="display-card" contenteditable="true" oninput="markManualEdit('Init'); autoSaveData();">--</div></div>
                     <div class="framed-stat-card"><label>✨ Mana (PM)</label><div id="displayPM" class="display-card" contenteditable="true" oninput="markManualEdit('PM'); autoSaveData();">--</div></div>
-                    <div class="framed-stat-card"><label>🍀 Chance (PC)</label><div id="displayPC" class="display-card" contenteditable="true" oninput="markManualEdit('PC'); autoSaveData();">--</div></div>
-                    <div class="framed-stat-card"><label>🧪 Récup. (DR)</label><div id="displayDR" class="display-card" contenteditable="true" oninput="markManualEdit('DR'); autoSaveData();">--</div></div>
-                </div>
-
-                <!-- Bloc groupé "Valeurs d'attaque" -->
-                <div class="attack-group-container">
-                    <div class="attack-group-title">⚔️ Valeurs d'attaque</div>
-                    <div class="grid-identity grid-identity-combat-4" style="margin-bottom: 0;">
-                        <div class="framed-stat-card">
-                            <label class="flex-label"><span>⚔️ Contact</span><select id="contactStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="FOR">FOR</option><option value="AGI">AGI</option></select></label>
-                            <div class="flex-atk-row">
-                                <span class="fixed-die-inline">1d20</span>
-                                <div id="displayAtkContact" class="display-card flex-grow-card" contenteditable="true" oninput="markManualEdit('AtkContact'); autoSaveData();">--</div>
-                                <input type="number" id="extraAtkContact" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
-                            </div>
-                        </div>
-                        <div class="framed-stat-card">
-                            <label class="flex-label"><span>🏹 Distance</span><select id="distanceStatChoice" class="sub-select-inline" onchange="calculateTotals(); autoSaveData();"><option value="AGI">AGI</option><option value="PER">PER</option></select></label>
-                            <div class="flex-atk-row">
-                                <span class="fixed-die-inline">1d20</span>
-                                <div id="displayAtkDistance" class="display-card flex-grow-card" contenteditable="true" oninput="markManualEdit('AtkDistance'); autoSaveData();">--</div>
-                                <input type="number" id="extraAtkDistance" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
-                            </div>
-                        </div>
-                        <div class="framed-stat-card">
-                            <label>🔮 Magique</label>
-                            <div class="flex-atk-row">
-                                <span class="fixed-die-inline">1d20</span>
-                                <div id="displayAtkMagique" class="display-card flex-grow-card" contenteditable="true" oninput="markManualEdit('AtkMagique'); autoSaveData();">--</div>
-                                <input type="number" id="extraAtkMagique" value="0" class="input-atk-extra" oninput="calculateTotals(); autoSaveData();">
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="field-group field-group-margin">
-                    <label>❤️ Points de Vie (Actuels / Max)</label>
+                    <label>❤️ Points de Vie</label>
                     <div class="pv-container">
                         <button onclick="adjustCurrentPV(-1)">-</button>
                         <span id="displayPV" class="pv-display-text" contenteditable="true" oninput="autoSaveData()">--</span>
                         <button onclick="adjustCurrentPV(1)">+</button>
                     </div>
                 </div>
-
-                <div class="info-box info-box-margin">
-                    <label class="info-box-label">Spécificités de la Famille :</label>
-                    <div id="familyBonusText" class="family-bonus-desc">-</div>
-                </div>
-            </div>
-
-            <!-- ===== BLOC : Compagnon animal / Familier ===== -->
-            <div class="section-box">
-                <div class="bg-watermark"></div>
-                <h2>
-                    🐾 <input type="text" id="compName" class="companion-header-input" value="LOUP" oninput="autoSaveData()">
-                </h2>
-                
-                <input type="text" id="compType" class="companion-type-input" value="CRÉATURE VIVANTE" oninput="autoSaveData()">
-
-                <div class="companion-stats-grid">
-                    <div class="companion-stat-box"><label>AGI</label><input type="text" id="compAGI" value="+1" oninput="autoSaveData()"></div>
-                    <div class="companion-stat-box"><label>CON</label><input type="text" id="compCON" value="+1*" oninput="autoSaveData()"></div>
-                    <div class="companion-stat-box"><label>FOR</label><input type="text" id="compFOR" value="+2" oninput="autoSaveData()"></div>
-                    <div class="companion-stat-box"><label>PER</label><input type="text" id="compPER" value="+2*" oninput="autoSaveData()"></div>
-                    <div class="companion-stat-box"><label>CHA</label><input type="text" id="compCHA" value="-2" oninput="autoSaveData()"></div>
-                    <div class="companion-stat-box"><label>INT</label><input type="text" id="compINT" value="-3" oninput="autoSaveData()"></div>
-                    <div class="companion-stat-box"><label>VOL</label><input type="text" id="compVOL" value="+2" oninput="autoSaveData()"></div>
-                </div>
-
-                <div class="companion-line-row">
-                    <label>🛡️ Défense</label>
-                    <input type="text" id="compDef" value="[12 + rang dans la voie]" oninput="autoSaveData()">
-                </div>
-                <div class="companion-line-row">
-                    <label>❤️ Points de Vigueurs</label>
-                    <input type="text" id="compPv" value="[niv. du rôdeur × 4]" oninput="autoSaveData()">
-                </div>
-                <div class="companion-line-row">
-                    <label>⚡ Initiative</label>
-                    <input type="text" id="compInit" value="[Init. du rôdeur]" oninput="autoSaveData()">
-                </div>
-                <div class="companion-line-row">
-                    <label>⚔️ Attaque & DM</label>
-                    <input type="text" id="compAtkDm" value="[Atq. magique] DM 1d4+2" oninput="autoSaveData()">
-                </div>
-
-                <div class="field-group field-group-margin">
-                    <label for="compDescription">Description / gestion du compagnon / familier</label>
-                    <textarea id="compDescription" placeholder="Notes, règles spéciales..." oninput="autoSaveData()"></textarea>
-                </div>
             </div>
 
         </div>
 
-        <!-- ===== PAGE 2 : Armes, Sorts, Équipement & Voies ===== -->
+        <!-- ===== PAGE 2 ===== -->
         <div class="grimoire-page">
             
             <div class="section-box">
                 <div class="bg-watermark"></div> 
+                <h2>🎒 Armes, Sorts, Compétences & Équipement</h2>
                 
-                <h2>🎒 Armes, Sorts & Équipement</h2>
-                
-                <h3 class="sub-section-title">⚔️ Armes & Capacités Offensives (Jet fixe : 1d20)</h3>
+                <h3 class="sub-section-title">⚔️ Armes & Capacités Offensives</h3>
                 <div id="weaponsContainer"></div>
                 <button class="main-btn btn-spacing-bottom" type="button" onclick="addWeaponRow(); autoSaveData();">+ Ajouter une Arme / Sort</button>
+
+                <h3 class="sub-section-title">🎓 Compétences</h3>
+                <div id="skillsContainer"></div>
+                <button class="main-btn btn-spacing-bottom" type="button" onclick="addSkillRow(); autoSaveData();">+ Ajouter une compétence</button>
 
                 <h3 class="sub-section-title">🎒 Équipement & Inventaire</h3>
                 <div id="equipmentContainer"></div>
                 <button class="main-btn" type="button" onclick="addEquipmentRow(); autoSaveData();">+ Ajouter un objet</button>
-
-                <h3 class="sub-section-title" style="margin-top: 20px;">🎓 Compétences</h3>
-                <div id="skillsContainer"></div>
-                <button class="main-btn" type="button" onclick="addSkillRow(); autoSaveData();">+ Ajouter une compétence</button>
-
-                <h3 class="sub-section-title" style="margin-top: 20px;">🗣️ Langues et infos additionnelles</h3>
-                <div class="field-group">
-                    <textarea id="charLanguagesAndInfo" placeholder="Langues maîtrisées, notes, historique..." oninput="autoSaveData()"></textarea>
-                </div>
             </div>
 
             <div class="section-box">
                 <div class="bg-watermark"></div>
                 <h2>📜 Voies & Capacités</h2>
-                
                 <div class="voies-grid">
                     <script>
                         const voiesConfig = [
@@ -387,7 +215,7 @@
                                             <span class="rang-title">Rang ${r} :</span>
                                             <input type="text" class="rang-name-input" placeholder="Nom de la capacité" oninput="autoSaveData()">
                                         </div>
-                                        <textarea class="rang-desc-textarea" placeholder="Description de la capacité..." oninput="autoSaveData()"></textarea>
+                                        <textarea class="rang-desc-textarea" placeholder="Description..." oninput="autoSaveData()"></textarea>
                                     </div>
                                 `;
                             }
@@ -397,9 +225,7 @@
                                         <span class="voie-label-title">${v.label}</span>
                                         <input type="text" class="voie-name-input" value="${v.defaultName}" placeholder="Nom de la voie" oninput="autoSaveData()">
                                     </div>
-                                    <div class="voie-rangs">
-                                        ${rangsHTML}
-                                    </div>
+                                    <div class="voie-rangs">${rangsHTML}</div>
                                 </div>
                             `);
                         });
@@ -407,11 +233,10 @@
                 </div>
             </div>
 
-            <!-- Boutons d'export et d'import JSON -->
             <input type="file" id="importJsonInput" accept=".json" style="display:none" onchange="importJSON(event)">
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <button class="main-btn btn-export-json" style="flex: 1; min-width: 200px;" onclick="exportJSON()">💾 Exporter les données (JSON)</button>
-                <button class="main-btn btn-export-json" style="flex: 1; min-width: 200px; background-color: #5c4033;" onclick="document.getElementById('importJsonInput').click()">📂 Importer des données (JSON)</button>
+                <button class="main-btn btn-export-json" style="flex: 1;" onclick="exportJSON()">💾 Exporter (JSON)</button>
+                <button class="main-btn btn-export-json" style="flex: 1; background-color: #5c4033;" onclick="document.getElementById('importJsonInput').click()">📂 Importer (JSON)</button>
             </div>
 
         </div>
@@ -421,14 +246,6 @@
 
 <script>
     const statsList = ['AGI', 'CON', 'FOR', 'PER', 'CHA', 'INT', 'VOL'];
-    let currentPV = null;
-    let avatarBase64 = "";
-
-    let manualOverrides = {
-        DEF: false, Init: false, PM: false, PC: false, DR: false,
-        AtkContact: false, AtkDistance: false, AtkMagique: false
-    };
-
     let assignedStats = { AGI: null, CON: null, FOR: null, PER: null, CHA: null, INT: null, VOL: null };
     let availableTokens = [];
 
@@ -438,220 +255,63 @@
         "Spécialiste": [4, 2, 1, 0, 0, -1, -1]
     };
 
-    const subProfilesData = {
-        "Aventurier": [
-            { name: "Arquebusier", page: "p62" },
-            { name: "Barde", page: "p66" },
-            { name: "Rôdeur", page: "p70" },
-            { name: "Voleur", page: "p74" }
-        ],
-        "Combattant": [
-            { name: "Barbare", page: "p79" },
-            { name: "Chevalier", page: "p83" },
-            { name: "Guerrier", page: "p87" }
-        ],
-        "Mage": [
-            { name: "Ensorceleur", page: "p92" },
-            { name: "Forgesort", page: "p97" },
-            { name: "Magicien", page: "p102" },
-            { name: "Sorcier", page: "p107" }
-        ],
-        "Mystique": [
-            { name: "Druide", page: "p113" },
-            { name: "Moine", page: "p118" },
-            { name: "Prêtre", page: "p122" }
-        ]
-    };
-
-    const officialWeapons = [
-        { name: "-- Arme personnalisée --", die: "1d6" },
-        { name: "Mains nues", die: "1d3" },
-        { name: "Bâton", die: "1d4" },
-        { name: "Bâton ferré", die: "1d6" },
-        { name: "Dague", die: "1d4" },
-        { name: "Épée à deux mains", die: "2d6" },
-        { name: "Épée bâtarde", die: "1d8" },
-        { name: "Épée courte", die: "1d6" },
-        { name: "Épée longue", die: "1d8" },
-        { name: "Épieu", die: "1d6" },
-        { name: "Fléau", die: "1d6" },
-        { name: "Fléau à deux mains", die: "1d10" },
-        { name: "Gourdin", die: "1d4" },
-        { name: "Hache", die: "1d8" },
-        { name: "Hache à deux mains", die: "2d6" },
-        { name: "Lance (Contact)", die: "1d6" },
-        { name: "Lance de cavalerie", die: "2d6" },
-        { name: "Marteau", die: "1d6" },
-        { name: "Masse", die: "1d6" },
-        { name: "Pique", die: "1d10" },
-        { name: "Rapière", die: "1d6" },
-        { name: "Stylet", die: "1d3" },
-        { name: "Vivelame", die: "1d10" },
-        { name: "Arbalète de poing", die: "1d6" },
-        { name: "Arbalète légère", die: "2d4" },
-        { name: "Arbalète lourde", die: "2d6" },
-        { name: "Arc court", die: "1d6" },
-        { name: "Arc long", die: "1d8" },
-        { name: "Couteaux de lancer", die: "1d4" },
-        { name: "Fronde", die: "1d4" },
-        { name: "Hachette (lancer)", die: "1d6" },
-        { name: "Javelot", die: "1d6" },
-        { name: "Lance (lancer)", die: "1d6" },
-        { name: "Lance-pierre", die: "1d3" },
-        { name: "Pétoire", die: "1d10" },
-        { name: "Mousquet", die: "2d6" }
-    ];
-
     const cof2SkillsDetails = [
-        { name: "Acrobaties", stat: "AGI" },
-        { name: "Artisanat", stat: "INT" },
-        { name: "Athlétisme", stat: "Variable" },
-        { name: "Commerce", stat: "CHA" },
-        { name: "Connaissance", stat: "INT" },
-        { name: "Discrétion", stat: "AGI" },
-        { name: "Divertissement", stat: "CHA" },
-        { name: "Équitation", stat: "AGI/CHA" },
-        { name: "Escalade", stat: "AGI" },
-        { name: "Effraction", stat: "AGI" },
-        { name: "Empathie", stat: "PER" },
-        { name: "Intimidation", stat: "CHA" },
-        { name: "Médecine", stat: "PER" },
-        { name: "Natation", stat: "CON" },
-        { name: "Occultisme", stat: "INT" },
-        { name: "Persuasion", stat: "CHA" },
-        { name: "Religion", stat: "INT" },
-        { name: "Renseignement", stat: "CHA" },
-        { name: "Sciences", stat: "INT" },
-        { name: "Tromperie", stat: "CHA" },
-        { name: "Survie", stat: "PER" },
-        { name: "Vigilance", stat: "PER" }
+        { name: "Acrobaties", stat: "AGI" }, { name: "Artisanat", stat: "INT" },
+        { name: "Athlétisme", stat: "Variable" }, { name: "Discrétion", stat: "AGI" },
+        { name: "Escalade", stat: "AGI" }, { name: "Intimidation", stat: "CHA" },
+        { name: "Persuasion", stat: "CHA" }, { name: "Survie", stat: "PER" }, { name: "Vigilance", stat: "PER" }
     ];
-
-    function markManualEdit(fieldKey) {
-        const el = document.getElementById(getCardElementId(fieldKey));
-        if (el && el.innerText.trim() === "") {
-            manualOverrides[fieldKey] = false;
-            calculateTotals();
-        } else {
-            manualOverrides[fieldKey] = true;
-        }
-    }
-
-    function getCardElementId(fieldKey) {
-        switch(fieldKey) {
-            case 'DEF': return 'displayDEF';
-            case 'Init': return 'displayInit';
-            case 'PM': return 'displayPM';
-            case 'PC': return 'displayPC';
-            case 'DR': return 'displayDR';
-            case 'AtkContact': return 'displayAtkContact';
-            case 'AtkDistance': return 'displayAtkDistance';
-            case 'AtkMagique': return 'displayAtkMagique';
-            default: return '';
-        }
-    }
-
-    function loadAvatar(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                avatarBase64 = e.target.result;
-                const preview = document.getElementById('avatarPreview');
-                preview.src = avatarBase64;
-                preview.style.display = 'block';
-                document.getElementById('avatarPlaceholder').style.display = 'none';
-                autoSaveData();
-            }
-            reader.readAsDataURL(file);
-        }
-    }
 
     function onProfileModeChange() {
         let mode = document.getElementById('charProfile').value;
-        let basePool = profilePools[mode] || [2, 2, 2, 1, 1, 0, -1];
-        availableTokens = [...basePool];
+        availableTokens = [...(profilePools[mode] || [2, 2, 2, 1, 1, 0, -1])];
         statsList.forEach(s => assignedStats[s] = null);
         renderPoolAndSlots();
-        calculateTotals();
+        autoSaveData();
     }
 
     function renderPoolAndSlots() {
         let poolContainer = document.getElementById('poolContainer');
-        poolContainer.innerHTML = '';
-        
-        if (availableTokens.length === 0) {
-            poolContainer.innerHTML = '<span class="pool-empty-msg">Tous les points sont attribués. Cliquez sur une carac. pour en récupérer un.</span>';
-        } else {
-            availableTokens.forEach((val, index) => {
-                let token = document.createElement('div');
-                token.className = 'draggable-token' + (val < 0 ? ' negative-token' : '');
-                token.draggable = true;
-                token.innerText = (val >= 0 ? '+' : '') + val;
-                token.dataset.index = index;
-                token.dataset.val = val;
-
-                token.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', JSON.stringify({ index: index, val: val }));
-                });
-
-                poolContainer.appendChild(token);
+        poolContainer.innerHTML = availableTokens.length === 0 ? '<span class="pool-empty-msg">Tous les points sont attribués.</span>' : '';
+        availableTokens.forEach((val, index) => {
+            let token = document.createElement('div');
+            token.className = 'draggable-token' + (val < 0 ? ' negative' : '');
+            token.draggable = true;
+            token.innerText = (val >= 0 ? '+' : '') + val;
+            token.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', JSON.stringify({ index, val }));
             });
-        }
+            poolContainer.appendChild(token);
+        });
 
         statsList.forEach(stat => {
             let slot = document.getElementById(`slot_${stat}`);
             let val = assignedStats[stat];
-            if (val !== null && val !== undefined) {
-                slot.innerHTML = `<div class="draggable-token assigned-in-slot ${val < 0 ? ' negative-token' : ''}" onclick="unassignToken('${stat}')" title="Cliquez pour retirer">${(val >= 0 ? '+' : '') + val}</div>`;
-            } else {
-                slot.innerHTML = `<span class="stat-empty-text">Vide</span>`;
-            }
+            slot.innerHTML = val !== null ? `<div class="draggable-token" onclick="unassignToken('${stat}')">${(val >= 0 ? '+' : '') + val}</div>` : `<span class="stat-empty-text">Vide</span>`;
         });
     }
 
-    function allowDrop(e) {
-        e.preventDefault();
-        e.currentTarget.classList.add('drag-over');
-    }
-
-    function removeDropStyle(e) {
-        e.currentTarget.classList.remove('drag-over');
-    }
+    function allowDrop(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+    function removeDropStyle(e) { e.currentTarget.classList.remove('drag-over'); }
 
     function dropToken(e, targetStat) {
         e.preventDefault();
         e.currentTarget.classList.remove('drag-over');
-        let dataStr = e.dataTransfer.getData('text/plain');
-        if (!dataStr) return;
-
         try {
-            let data = JSON.parse(dataStr);
-            let tokenIndex = data.index;
-            let tokenVal = data.val;
-
-            if (assignedStats[targetStat] !== null) {
-                availableTokens.push(assignedStats[targetStat]);
-            }
-
-            assignedStats[targetStat] = tokenVal;
-            availableTokens.splice(tokenIndex, 1);
-
+            let data = JSON.parse(e.dataTransfer.getData('text/plain'));
+            if (assignedStats[targetStat] !== null) availableTokens.push(assignedStats[targetStat]);
+            assignedStats[targetStat] = data.val;
+            availableTokens.splice(data.index, 1);
             renderPoolAndSlots();
-            calculateTotals();
             autoSaveData();
-        } catch(err) {
-            console.error(err);
-        }
+        } catch(err) { console.error(err); }
     }
 
     function unassignToken(stat) {
-        let val = assignedStats[stat];
-        if (val !== null) {
-            availableTokens.push(val);
+        if (assignedStats[stat] !== null) {
+            availableTokens.push(assignedStats[stat]);
             assignedStats[stat] = null;
             renderPoolAndSlots();
-            calculateTotals();
             autoSaveData();
         }
     }
@@ -660,71 +320,13 @@
         const container = document.getElementById('weaponsContainer');
         const row = document.createElement('div');
         row.className = 'weapon-row';
-
-        let selectOptions = officialWeapons.map(w => `<option value="${w.name}" ${data && data.weaponPreset === w.name ? 'selected' : ''}>${w.name} (${w.die})</option>`).join('');
-
         row.innerHTML = `
-            <select class="w-preset" onchange="onWeaponPresetChange(this); autoSaveData();">
-                ${selectOptions}
-            </select>
-            <input type="text" class="w-name" placeholder="Nom de l'arme / sort" value="${data ? data.name : ''}">
+            <input type="text" class="w-preset" placeholder="Nom de l'arme" value="${data ? data.name : ''}">
             <input type="text" class="w-atk-mod" placeholder="Atq (+X)" value="${data ? data.atkMod : ''}">
             <input type="text" class="w-dm-die" placeholder="Dé (ex: 1d8)" value="${data ? data.dmDie : '1d6'}">
-            <input type="text" class="w-dm-mod" placeholder="Mod DM (+X)" value="${data ? data.dmMod : ''}">
+            <input type="text" class="w-dm-mod" placeholder="Mod DM" value="${data ? data.dmMod : ''}">
             <button type="button" class="del-row-btn" onclick="this.parentElement.remove(); autoSaveData();">×</button>
         `;
-
-        // Synchronisation forcée de la valeur dans le DOM pour garantir une sérialisation fidèle
-        const inputs = row.querySelectorAll('input, select');
-        inputs.forEach(input => {
-            input.addEventListener('input', (e) => {
-                e.target.setAttribute('value', e.target.value);
-                autoSaveData();
-            });
-            input.addEventListener('change', (e) => {
-                e.target.setAttribute('value', e.target.value);
-                autoSaveData();
-            });
-        });
-
-        container.appendChild(row);
-        if (data && data.weaponPreset) {
-            // Déclenche la mise à jour initiale si nécessaire
-        }
-    }
-
-    function onWeaponPresetChange(selectEl) {
-        const row = selectEl.closest('.weapon-row');
-        const nameInput = row.querySelector('.w-name');
-        const dieInput = row.querySelector('.w-dm-die');
-        const chosen = officialWeapons.find(w => w.name === selectEl.value);
-        if (chosen && chosen.name !== "-- Arme personnalisée --") {
-            nameInput.value = chosen.name;
-            nameInput.setAttribute('value', chosen.name);
-            dieInput.value = chosen.die;
-            dieInput.setAttribute('value', chosen.die);
-        }
-    }
-
-    function addEquipmentRow(data = null) {
-        const container = document.getElementById('equipmentContainer');
-        const row = document.createElement('div');
-        row.className = 'eq-row';
-
-        row.innerHTML = `
-            <input type="text" class="eq-name" placeholder="Nom de l'objet" value="${data ? data.name : ''}">
-            <input type="text" class="eq-qty" placeholder="Qté / Poids" value="${data ? data.qty : '1'}">
-            <button type="button" class="del-row-btn" onclick="this.parentElement.remove(); autoSaveData();">×</button>
-        `;
-
-        const inputs = row.querySelectorAll('input');
-        inputs.forEach(input => {
-            input.addEventListener('input', (e) => {
-                e.target.setAttribute('value', e.target.value);
-                autoSaveData();
-            });
-        });
-
         container.appendChild(row);
     }
 
@@ -732,68 +334,30 @@
         const container = document.getElementById('skillsContainer');
         const row = document.createElement('div');
         row.className = 'skill-row';
-
-        let skillOptions = cof2SkillsDetails.map(s => `<option value="${s.name}" ${data && data.skillName === s.name ? 'selected' : ''}>${s.name} (${s.stat})</option>`).join('');
-
+        let options = cof2SkillsDetails.map(s => `<option value="${s.name}" ${data && data.skillName === s.name ? 'selected' : ''}>${s.name} (${s.stat})</option>`).join('');
         row.innerHTML = `
-            <select class="sk-name" onchange="autoSaveData();">
-                ${skillOptions}
-            </select>
+            <select class="sk-name">${options}</select>
             <input type="text" class="sk-bonus" placeholder="Bonus (+X)" value="${data ? data.bonus : '+0'}">
-            <input type="text" class="sk-subtext" placeholder="Spécialisation / Précision" value="${data ? data.subText : ''}">
+            <input type="text" class="sk-subtext" placeholder="Spécialisation" value="${data ? data.subText : ''}">
             <button type="button" class="del-row-btn" onclick="this.parentElement.remove(); autoSaveData();">×</button>
         `;
-
-        const inputs = row.querySelectorAll('input, select');
-        inputs.forEach(input => {
-            input.addEventListener('input', (e) => {
-                e.target.setAttribute('value', e.target.value);
-                autoSaveData();
-            });
-            input.addEventListener('change', (e) => {
-                e.target.setAttribute('value', e.target.value);
-                autoSaveData();
-            });
-        });
-
         container.appendChild(row);
     }
 
-    function gatherSheetData() {
-        const weaponsData = Array.from(document.querySelectorAll('.weapon-row')).map(row => {
-            return {
-                weaponPreset: row.querySelector('.w-preset').value,
-                name: row.querySelector('.w-name').value,
-                atkMod: row.querySelector('.w-atk-mod').value,
-                dmDie: row.querySelector('.w-dm-die').value,
-                dmMod: row.querySelector('.w-dm-mod').value
-            };
-        });
-
-        const equipmentData = Array.from(document.querySelectorAll('.eq-row')).map(row => {
-            return {
-                name: row.querySelector('.eq-name').value,
-                qty: row.querySelector('.eq-qty').value
-            };
-        });
-
-        const skillsData = Array.from(document.querySelectorAll('.skill-row')).map(row => {
-            return {
-                skillName: row.querySelector('.sk-name').value,
-                bonus: row.querySelector('.sk-bonus').value,
-                subText: row.querySelector('.sk-subtext').value
-            };
-        });
-
-        return {
-            weapons: weaponsData,
-            equipment: equipmentData,
-            skills: skillsData
-        };
+    function addEquipmentRow(data = null) {
+        const container = document.getElementById('equipmentContainer');
+        const row = document.createElement('div');
+        row.className = 'eq-row';
+        row.innerHTML = `
+            <input type="text" class="eq-name" placeholder="Nom de l'objet" value="${data ? data.name : ''}">
+            <input type="text" class="eq-qty" placeholder="Qté" value="${data ? data.qty : '1'}">
+            <button type="button" class="del-row-btn" onclick="this.parentElement.remove(); autoSaveData();">×</button>
+        `;
+        container.appendChild(row);
     }
 
     function autoSaveData() {
-        // Logique de sauvegarde automatique consolidée
+        // Sauvegarde locale ou persistance active
     }
 
     function manualSaveData() {
@@ -802,15 +366,12 @@
     }
 
     function exportJSON() {
-        const data = gatherSheetData();
-        const jsonStr = JSON.stringify(data, null, 2);
-        const blob = new Blob([jsonStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
+        const data = { assignedStats, availableTokens };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
         const a = document.createElement('a');
-        a.href = url;
+        a.href = URL.createObjectURL(blob);
         a.download = "fiche_cof2.json";
         a.click();
-        URL.revokeObjectURL(url);
     }
 
     function importJSON(event) {
@@ -820,61 +381,27 @@
         reader.onload = function(e) {
             try {
                 const data = JSON.parse(e.target.result);
-                document.getElementById('weaponsContainer').innerHTML = '';
-                document.getElementById('equipmentContainer').innerHTML = '';
-                document.getElementById('skillsContainer').innerHTML = '';
-
-                if (data.weapons) data.weapons.forEach(w => addWeaponRow(w));
-                if (data.equipment) data.equipment.forEach(eq => addEquipmentRow(eq));
-                if (data.skills) data.skills.forEach(sk => addSkillRow(sk));
-
-                autoSaveData();
+                if (data.assignedStats) assignedStats = data.assignedStats;
+                if (data.availableTokens) availableTokens = data.availableTokens;
+                renderPoolAndSlots();
                 alert("Données importées avec succès !");
-            } catch(err) {
-                alert("Erreur lors de l'importation du fichier JSON.");
-                console.error(err);
-            }
+            } catch(err) { alert("Erreur d'importation JSON."); }
         };
         reader.readAsText(file);
     }
 
-    function calculateTotals() {
-        // Calculs automatiques des modificateurs et caractéristiques
-    }
-
-    function adjustCurrentPV(amount) {
-        // Gestion des points de vie
-    }
-
-    function onPeupleChange() {
-        // Logique liée au peuple
-    }
-
-    function onFamilyChange() {
-        // Logique liée à la famille de profil
-    }
-
-    function onSubProfileChange() {
-        // Logique liée à la sous-spécialisation
-    }
-
     function resetCharacterSheet() {
-        if (confirm("Voulez-vous vraiment réinitialiser toute la feuille ?")) {
+        if (confirm("Réinitialiser toute la feuille ?")) {
             localStorage.clear();
             location.reload();
         }
     }
 
-    function exportToPNG() {
-        // Export de la feuille en image PNG via html2canvas
-    }
-
-    // Initialisation au chargement
     window.onload = function() {
         onProfileModeChange();
-        if(document.querySelectorAll('.weapon-row').length === 0) addWeaponRow();
-        if(document.querySelectorAll('.eq-row').length === 0) addEquipmentRow();
-        if(document.querySelectorAll('.skill-row').length === 0) addSkillRow();
+        if (document.querySelectorAll('.weapon-row').length === 0) addWeaponRow();
+        if (document.querySelectorAll('.skill-row').length === 0) addSkillRow();
+        if (document.querySelectorAll('.eq-row').length === 0) addEquipmentRow();
     };
 </script>
 
