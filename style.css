@@ -552,9 +552,9 @@ button.main-btn:hover {
     margin-bottom: 5px;
 }
 
-.weapon-row, .eq-row, .skill-row {
+.weapon-row, .eq-row {
     display: grid;
-    grid-template-columns: 2fr 1.5fr 1.5fr 1fr 1fr auto;
+    grid-template-columns: 2fr 1.5fr 1.5fr;
     gap: 8px;
     background: rgba(244, 239, 230, 0.85);
     padding: 8px;
@@ -570,18 +570,33 @@ button.main-btn:hover {
     grid-template-columns: 3fr 1fr auto; 
 }
 
-.skill-row {
-    grid-template-columns: 2fr 1fr 2fr auto;
+.sub-flex-row {
+    display: flex;
+    gap: 3px;
 }
 
-.del-row-btn {
+.btn-delete-row {
+    background: #8b3a3a;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 0 6px;
+}
+
+.eq-delete-wrapper {
+    display: flex;
+    align-items: flex-end;
+}
+
+.btn-delete-row-eq {
     background: #8b3a3a;
     color: #fff;
     border: none;
     border-radius: 3px;
     cursor: pointer;
     padding: 5px 8px;
-    font-weight: bold;
+    height: 32px;
 }
 
 .info-box {
@@ -702,6 +717,15 @@ button.main-btn:hover {
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.25) !important;
 }
 
+.section-box.bg-combat .grid-identity-combat-4 .flex-label span,
+.section-box.bg-combat .grid-identity-combat-4 .framed-stat-card > label,
+.grid-identity-combat-4 .flex-label span,
+.grid-identity-combat-4 .framed-stat-card > label {
+    font-size: 1.15rem !important;
+    color: #ffd700 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 1) !important;
+}
+
 .flex-label span {
     white-space: nowrap;
     font-size: 0.7rem;
@@ -718,6 +742,7 @@ button.main-btn:hover {
     display: inline-block;
     box-sizing: border-box;
     margin-top: 0;
+    transform: none;
 }
 
 .flex-atk-row {
@@ -809,6 +834,10 @@ button.main-btn:hover {
     width: 100%;
 }
 
+.voie-name-input::placeholder {
+    color: rgba(247, 243, 232, 0.6);
+}
+
 .voie-rangs {
     display: flex;
     flex-direction: column;
@@ -823,6 +852,10 @@ button.main-btn:hover {
     background: rgba(255, 253, 249, 0.6);
 }
 
+.voie-rang-row:last-child {
+    border-bottom: none;
+}
+
 .rang-top-line {
     display: flex;
     align-items: center;
@@ -834,6 +867,7 @@ button.main-btn:hover {
     font-weight: bold;
     color: var(--border-primary);
     white-space: nowrap;
+    font-family: var(--global-font-family);
 }
 
 .rang-name-input {
@@ -842,8 +876,14 @@ button.main-btn:hover {
     border-radius: 3px;
     padding: 3px 6px;
     font-size: var(--global-font-size);
+    font-family: var(--global-font-family);
     font-weight: bold;
+    box-shadow: none;
     width: 100%;
+}
+
+.rang-name-input:focus {
+    border-color: var(--border-primary);
 }
 
 .rang-desc-textarea {
@@ -852,10 +892,20 @@ button.main-btn:hover {
     border-radius: 3px;
     padding: 5px;
     font-size: calc(var(--global-font-size) * 0.9);
+    font-family: var(--global-font-family);
+    font-weight: bold;
     min-height: 45px;
     resize: vertical;
     width: 100%;
     box-sizing: border-box;
+    box-shadow: none;
+    line-height: 1.4;
+    overflow-y: hidden;
+}
+
+.rang-desc-textarea:focus {
+    background: rgba(255, 253, 249, 0.98);
+    border-color: var(--border-primary);
 }
 
 .companion-header-input {
@@ -870,6 +920,12 @@ button.main-btn:hover {
     padding: 2px 4px;
 }
 
+.companion-header-input:focus {
+    background: rgba(255, 253, 249, 0.2);
+    outline: none;
+    border-bottom: 1px solid #000000;
+}
+
 .companion-type-input {
     background: var(--border-primary);
     color: #f7f3e8;
@@ -877,6 +933,8 @@ button.main-btn:hover {
     border-radius: 3px;
     padding: 3px 6px;
     font-size: 0.75rem;
+    font-family: var(--global-font-family);
+    text-transform: uppercase;
     font-weight: bold;
     width: 100%;
     margin-bottom: 8px;
@@ -934,4 +992,58 @@ button.main-btn:hover {
     flex-grow: 1;
     padding: 3px 6px;
     font-size: 0.85rem;
+}
+
+.font-control-panel label,
+.section-box label, 
+.section-box .field-label, 
+.section-box h3,
+.section-box legend,
+label,
+.pool-label,
+.pool-empty-msg,
+.peuple-instruction,
+.malus-text-badge,
+.info-box-label,
+.family-bonus-desc,
+.sub-section-title,
+.rang-title,
+.voie-label-title,
+.flex-label span,
+.companion-stat-box label,
+.companion-line-row label,
+input, 
+select, 
+textarea,
+.rang-desc-textarea {
+    font-weight: bold;
+}
+
+/* ÉCRAN : Texte en noir pur et sans contour pour une saisie claire */
+.section-box.bg-perso textarea,
+.section-box.bg-perso-png textarea {
+    color: #000000;
+    -webkit-text-stroke: 0px #000000;
+    paint-order: stroke fill;
+}
+
+/* IMPRESSION : Application de la couleur claire et du contour noir */
+@media print {
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background-image: none !important;
+        background-color: #fff !important;
+    }
+
+    .section-box.bg-perso textarea,
+    .section-box.bg-perso-png textarea {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color: #fff08d !important;
+        -webkit-text-stroke: 2px #000000 !important;
+        paint-order: stroke fill !important;
+        background: rgba(255, 253, 249, 0.95) !important;
+        border: 1px solid #b8a79a !important;
+    }
 }
