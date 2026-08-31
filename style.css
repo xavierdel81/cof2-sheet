@@ -1019,6 +1019,7 @@ textarea,
     font-weight: bold;
 }
 
+/* ÉCRAN : Texte en noir pur et sans contour pour une saisie claire */
 .section-box.bg-perso textarea,
 .section-box.bg-perso-png textarea {
     color: #000000;
@@ -1026,7 +1027,7 @@ textarea,
     paint-order: stroke fill;
 }
 
-/* RÈGLES D'IMPRESSION (FORCAGE COULEURS ET TEXTE CONTOURÉ) */
+/* IMPRESSION : Application de la couleur claire et du contour noir */
 @media print {
     body {
         -webkit-print-color-adjust: exact;
@@ -1046,4 +1047,3 @@ textarea,
         border: 1px solid #b8a79a !important;
     }
 }
-```[cite: 9]
