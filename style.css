@@ -915,30 +915,21 @@ button.main-btn:hover {
     font-family: 'Cinzel', serif;
     font-size: 1.1rem;
     font-weight: bold;
-    color: #000000;
-    width: 100%;
+    color: #2c221e;
+    width: auto;
+    display: inline-block;
     padding: 2px 4px;
 }
 
-.companion-header-input:focus {
-    background: rgba(255, 253, 249, 0.2);
-    outline: none;
-    border-bottom: 1px solid #000000;
-}
-
 .companion-type-input {
-    background: var(--border-primary);
-    color: #f7f3e8;
-    border: 1px solid var(--border-secondary);
-    padding: 5px 8px;
-    font-family: 'Cinzel', serif;
-    font-size: 0.8rem;
-    font-weight: bold;
-    text-align: center;
+    background: rgba(255, 253, 249, 0.85);
+    border: 1px solid #b8a79a;
     border-radius: 4px;
+    font-size: 0.85rem;
+    padding: 5px 8px;
     margin-bottom: 10px;
-    width: 100%;
-    box-sizing: border-box;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .companion-stats-grid {
@@ -949,44 +940,40 @@ button.main-btn:hover {
 }
 
 .companion-stat-box {
-    background: rgba(244, 239, 230, 0.9);
+    background: rgba(244, 239, 230, 0.85);
     border: 1px solid #b8a79a;
     border-radius: 4px;
     padding: 4px;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
 }
 
 .companion-stat-box label {
-    font-size: 0.7rem !important;
-    margin-bottom: 0;
+    font-size: 0.65rem;
+    display: block;
+    margin-bottom: 2px;
 }
 
 .companion-stat-box input {
     text-align: center;
     padding: 3px;
-    font-size: 0.85rem;
-    height: 26px;
+    font-size: 0.8rem;
+    font-weight: bold;
 }
 
 .companion-line-row {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    align-items: center;
     background: rgba(244, 239, 230, 0.85);
-    border: 1px solid #d4c5b9;
-    padding: 5px 8px;
+    border: 1px solid #b8a79a;
     border-radius: 4px;
+    padding: 5px 8px;
     margin-bottom: 6px;
 }
 
 .companion-line-row label {
-    font-size: 0.8rem !important;
+    font-size: 0.75rem;
     margin-bottom: 0;
-    white-space: nowrap;
 }
 
 .companion-line-row input {
@@ -995,3 +982,4 @@ button.main-btn:hover {
     font-size: 0.85rem;
     text-align: right;
 }
+```[cite: 5, 6]
