@@ -408,7 +408,12 @@
                 </div>
             </div>
 
-            <button class="main-btn btn-export-json" onclick="exportJSON()">💾 Exporter les données (JSON)</button>
+            <!-- Boutons d'export et d'import JSON -->
+            <input type="file" id="importJsonInput" accept=".json" style="display:none" onchange="importJSON(event)">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="main-btn btn-export-json" style="flex: 1; min-width: 200px;" onclick="exportJSON()">💾 Exporter les données (JSON)</button>
+                <button class="main-btn btn-export-json" style="flex: 1; min-width: 200px; background-color: #5c4033;" onclick="document.getElementById('importJsonInput').click()">📂 Importer des données (JSON)</button>
+            </div>
 
         </div>
 
@@ -1234,6 +1239,24 @@
         a.click();
     }
 
+    function importJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                localStorage.setItem('cof2_character', JSON.stringify(data));
+                alert("Données importées avec succès ! Rechargement de la fiche...");
+                location.reload();
+            } catch (err) {
+                console.error("Erreur de lecture du JSON :", err);
+                alert("Le fichier sélectionné n'est pas un fichier JSON valide.");
+            }
+        };
+        reader.readAsText(file);
+    }
+
     function exportToPNG() {
         const grimoire = document.querySelector('.grimoire-spread');
         if (!grimoire) {
@@ -1327,4 +1350,3 @@
 
 </body>
 </html>
-```[cite: 9]
