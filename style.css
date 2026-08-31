@@ -1018,4 +1018,10 @@ textarea,
 .rang-desc-textarea {
     font-weight: bold;
 }
+.section-box.bg-perso textarea,
+.section-box.bg-perso-png textarea {
+    color: #d9d9d9;
+    -webkit-text-stroke: 1px #000000;
+    paint-order: stroke fill;
+}
 ```[cite: 1, 2]
