@@ -272,6 +272,28 @@ h2 {
     text-transform: uppercase;
 }
 
+.section-box.bg-perso label, 
+.section-box.bg-perso .field-label, 
+.section-box.bg-perso h3,
+.section-box.bg-perso legend,
+.section-box.bg-perso-png label, 
+.section-box.bg-perso-png .field-label, 
+.section-box.bg-perso-png h3,
+.section-box.bg-perso-png legend {
+    color: #fff08d; 
+    font-weight: bold;
+    font-family: var(--global-font-family); 
+    font-size: calc(var(--global-font-size) * 0.85); 
+    -webkit-text-stroke: 0.5px #000;
+    text-shadow: 
+        -2px -2px 0 #000,  
+         2px -2px 0 #000,
+        -2px  2px 0 #000,
+         2px  2px 0 #000,
+         0px 2px 4px rgba(0, 0, 0, 0.9);
+    text-transform: uppercase;
+}
+
 .field-group {
     display: flex;
     flex-direction: column;
@@ -995,3 +1017,4 @@ button.main-btn:hover {
     font-size: 0.85rem;
     text-align: right;
 }
+```[cite: 7]
