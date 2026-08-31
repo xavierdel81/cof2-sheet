@@ -309,6 +309,7 @@ input, select, textarea {
     box-sizing: border-box;
     position: relative;
     z-index: 2;
+    text-align: left; /* Correction appliquée ici pour forcer l'alignement à gauche */
 }
 
 input:focus, select:focus, textarea:focus {
@@ -982,4 +983,3 @@ button.main-btn:hover {
     font-size: 0.85rem;
     text-align: right;
 }
-```[cite: 5, 6]
