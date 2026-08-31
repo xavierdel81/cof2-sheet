@@ -1216,12 +1216,29 @@
     }
 
     function resetCharacterSheet() {
-        if (confirm("Voulez-vous vraiment effacer cette fiche et recommencer à zéro ?")) {
-            localStorage.removeItem('cof2_character');
-            location.reload();
-        }
-    }
+    if (confirm("Voulez-vous vraiment effacer cette fiche et recommencer à zéro ?")) {
+        localStorage.removeItem('cof2_character');
+        
+        // Vider explicitement les zones de texte et de description
+        document.getElementById('charName').value = '';
+        document.getElementById('charDescription').value = '';
+        document.getElementById('charLanguagesAndInfo').value = '';
+        document.getElementById('compName').value = '';
+        document.getElementById('compType').value = '';
+        document.getElementById('compDescription').value = '';
+        
+        // Vider toutes les descriptions des voies
+        document.querySelectorAll('.voie-card').forEach(card => {
+            card.querySelector('.voie-name-input').value = '';
+            card.querySelectorAll('.voie-rang-row').forEach(row => {
+                row.querySelector('.rang-name-input').value = '';
+                row.querySelector('.rang-desc-textarea').value = '';
+            });
+        });
 
+        location.reload();
+    }
+}
     function exportJSON() {
         const data = gatherSheetData();
         data.currentPV = currentPV;
