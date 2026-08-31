@@ -1022,8 +1022,8 @@ textarea,
 /* ÉCRAN : Texte en noir pur et sans contour pour une saisie claire */
 .section-box.bg-perso textarea,
 .section-box.bg-perso-png textarea {
-    color: #000000;
-    -webkit-text-stroke: 0px #000000;
+    color: #fff08d;
+    -webkit-text-stroke: 2px #000000;
     paint-order: stroke fill;
 }
 
@@ -1040,7 +1040,7 @@ textarea,
     .section-box.bg-perso-png textarea {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
-        color: #d9d9d9 !important;
+        color: #fff08d !important;
         -webkit-text-stroke: 2px #000000 !important;
         paint-order: stroke fill !important;
         background: rgba(255, 253, 249, 0.95) !important;
