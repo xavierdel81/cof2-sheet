@@ -983,3 +983,8 @@ button.main-btn:hover {
     font-size: 0.85rem;
     text-align: right;
 }
+/* Forçage absolu de l'alignement à gauche pour tous les champs de texte de combat / attaque */
+input[id*="attaque"], input[class*="attaque"], input[name*="attaque"] {
+    text-align: left !important;
+    direction: ltr !important;
+}
